@@ -1,0 +1,51 @@
+{
+  "name": "com.camsys.assetcloud.needsforecaster",
+  "version": "0.0.0",
+  "description": "This is the frontend for the Needs Forecaster module of CS Asset Cloud.",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/camsys/CSAssetCloud.git"
+  },
+  "license": "See README.txt",
+  "main": "src/index.js",
+  "homepage": "./",
+  "dependencies": {
+    "apollo-boost": "^0.4.9",
+    "graphql": "^15.5.0",
+    "jsonpointer": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
+    "react": "16.14.0",
+    "react-bootstrap": "^1.5.1",
+    "react-bootstrap-typeahead": "^6.0.0",
+    "react-calendar-timeline": "^0.28.0",
+    "react-dom": "16.14.0",
+    "react-dropzone-uploader": "^2.11.0",
+    "react-icons": "^4.4.0",
+    "react-resize-panel": "^0.3.5",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "3.4.1",
+    "react-select": "^5.8.0",
+    "react-split-pane": "^0.1.92",
+    "react-stomp": "^5.1.0",
+    "react-toastify": "8.2.0",
+    "react-use-cookie": "^1.4.0",
+    "universal-cookie": "^4.0.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && rm -rf ../resources/static/* && cp -a build/static/* ../resources/static",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:8080",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

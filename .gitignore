@@ -1,0 +1,17 @@
+.DS_Store
+derby.log
+**/node_modules/**
+**/resources/static/js/**
+**/resources/static/css/**
+**/bin/**
+**/target/**
+**/build/**
+**/.project
+.project
+.settings
+**/.settings
+**/.classpath
+*.yml~
+.idea/*
+*.iml
+lib/*

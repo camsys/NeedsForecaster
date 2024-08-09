@@ -1,0 +1,398 @@
+body,
+html {
+    overscroll-behavior-x: none;
+    font-family: sans-serif;
+}
+
+form,
+input,
+button,
+.rbt-menu {
+    font-size: .85rem !important;
+}
+
+.ag-cell {
+    font-size: .80rem !important;
+}
+
+.errors {
+    display: none;
+    font-size: .75rem !important;
+}
+
+.navbar {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+}
+
+.navbar-dark span.img {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFUAAAAeCAYAAABdalL1AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAK9SURBVHgB3ZpNaxNBHId/k91YEbEFwZuYgod4q1QPSS+5aTzVDyBd8eUaewhNitDsrUf9AEL8DCKl9ZD1G/QgiCe3INZCUiIFk7S7O84/pSWGNU3amdlsHgj7wh6Sh2eGSSYMY0CllpuZvhwUAs4scZnCReFoBozZxazzBhHAECGnMgP2SryTGUiAA47B2NPljOMiIiKRqkJm1HX2olWqEpno1rkt6nwcZZ29aJGqSiYh5mG7uOBUMEYolapSpsBNcFHngrONMUOJVMUywTl7a1xBZfmu08QYIlVqeqOUum60126ZDQsKCNg0dtkj55uf+QxZtD14X1zIor5yv2JCAiQTSK6JhKyGdxX0ks2hMY+2mQVnUznGkIMkvO+/gISctjhjVTpeSGr6w+scDAiZ9CE5VEB1tpIP4SVuQjb+zh54qwNZ+EeHNh3PJfVUJuQVE0ZPnZANCQ3qB5CI0yxnXDoZSaoumSSxZeZxZNyGChQIFfMIt09Oh5pMdMkkaJi3knkx7K9BBf6POoI9uYsGMfG5jeK92ZPrgaXqlEl1dowsOuY8VBHs7ksX2oUHdu9laKk6ZRKq6yRIqP9zH7Lpr5T4p9T0x1ULLLEETTJ11EmoEtqlr1KiW+qxTEOUyVPQhM9u4M+lRaV1EiqFhlVKmN2hjkA84dvQyMHUk+MTrmZ9S9z5ulNI1n/PQRF1I/G+EXI/0h+pVfK89IlGXgUK8eDPVtfzbv/9BCYQHULF+KqGCSUmTuqLla2CaqGEj/9PlxMl9WV5c4kzKN9OGVQpMTFSSajYBahCA4MqJSZCqk6hAmdQpUTspT4rby5qFCo4e+kZ6yWVtbo1Z/qsBsalb9mEwcHdd+sPZs96Lral6hZKcARDfUGKZanRCB2uUiJ2pVqljZRuocSwlRKxKpWEJmHUuIw/sY3AKJUSfwF4iktEIRLhbQAAAABJRU5ErkJggg==');
+    background-repeat: no-repeat;
+    background-position: top left;
+    color: #ffffff;
+    width: 100px;
+    display: inline-block;
+    height: 30px;
+    font-size: 0em;
+}
+
+.navbar-light {
+    background-color: #C0C0C0;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #090909;
+}
+
+.react-calendar-timeline .rct-scroll{
+    overflow-x: hidden !important;
+}
+
+textarea.form-control[readonly] {
+    font-size: .80rem;
+    background-color: #000000;
+    color: #C0C0C0;
+}
+
+table,
+.dropdown-item {
+    font-size: .80rem;
+}
+
+.navbar-brand {
+    padding: 5px;
+    margin: 0px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1.3em;
+    color: #ffffff;
+    line-height: 2em;
+}
+
+.card-body ul {
+    padding-top: 10px;
+}
+
+.form-group.field-array .control-label[for] {
+    display: none;
+}
+
+.tools {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+.tools .help {
+    padding-right: 20px;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    padding: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0;
+}
+
+.col {
+    height: 90%;
+}
+
+#sidebar {
+    width: 25%;
+    float: left;
+    background-color: #F8F8F8;
+    color: #313537;
+    padding: 10px;
+    overflow-y: scroll;
+}
+
+#sidebar form legend {
+    border-bottom: 1px solid #C0C0C0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}
+
+#toolbar {
+    padding-bottom: 15px;
+}
+
+.error {
+    background-color: #FFCCCB77 !important;
+}
+
+.ag-cell-not-inline-editing input[type="checkbox"],
+.ag-cell-inline-editing input[type="checkbox"] {
+    margin: 10px;
+}
+
+.ag-cell-inline-editing {
+    overflow: visible !important;
+}
+
+.ag-cell-inline-editing input {
+    border: none;
+    height: 100%;
+    width: 100%;
+}
+
+.rbt-token {
+    font-size: .85rem;
+}
+
+.rbt-menu>.dropdown-item:hover,
+.rbt-menu>.dropdown-item {
+    display: block !important;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-decoration: none;
+}
+
+div.field div.rbt div {
+    height: auto !important;
+}
+
+.field .checkbox label span {
+    padding-left: 10px;
+}
+
+.field .checkbox label input {
+    padding: 20px;
+    padding-left: 30px;
+}
+
+.rjsf.disabled div.errors, .rjsf.disabled .text-danger {
+    display: none;
+}
+
+.errors .panel-title {
+    display: none;
+}
+
+.field .error-detail {
+    padding-top: 3px;
+    padding-left: 15px;
+    position: relative;
+    list-style: none;
+}
+
+.field .error-detail li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+.rjsf {
+    position: relative;
+}
+
+#toolbar .rjsf button[type=submit] {
+    position: fixed;
+    bottom: 10px;
+    left: calc(100vw - 25% + 10px);
+}
+
+#form {
+    position: relative;
+    height: calc(100vh - 120px);
+}
+
+.actions-column {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+.add-user-button {
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.container.events {
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+  
+  .searchBar {
+      height: 40px;
+      padding: 10px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      background-color: #C0C0C0;
+  }
+  
+  .searchBar span {
+      float: left;
+      height: 30px;
+      line-height:30px;  
+      padding: 0px;
+      margin: 5px;
+      margin-left: 0px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      width: 500px;
+  }
+  
+  .searchBar .zoom {
+    float: right;
+    width: 150px;
+    text-align: right;
+  }
+
+  .searchBar .nextprev {
+    float: left;
+    width: 150px;
+    text-align: left;
+  }
+
+  .SplitPane {
+    height: calc(100% - 120px);
+    padding: 0;
+    margin: 0;
+  }
+  
+  .searchBar.rbt div {
+      width: 500px;
+      height: 50px;
+  }
+  .pane {
+      overflow-y: hidden;
+      background-color: #ffffff;
+      height: 100%;
+      width: 100%;
+  }
+  
+  .pane.bottom {
+      background-color: #efefef;
+      padding: 15px;
+  }
+  
+  .pane.bottom .rjsf {
+    height: 100%;
+    background-color: #efefef;
+  }
+  
+  .pane.bottom .rjsf button[type=submit] {
+    display: none;
+  }
+  
+  .SplitPane, .pane {
+      position: relative !important;
+  }
+  
+  .react-calendar-timeline {
+      font-size: .75rem;
+  }
+  
+  .react-calendar-timeline .rct-header-root {
+      background: #efefef !important;
+  }
+  
+  .react-calendar-timeline .rct-dateHeader-primary {
+      background-color: #6e757c !important;
+  }
+  
+  .Resizer {
+      background: #000;
+      opacity: 0.2;
+      z-index: 1;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      -moz-background-clip: padding;
+      -webkit-background-clip: padding;
+      background-clip: padding-box;
+    }
+     
+    .Resizer:hover {
+      -webkit-transition: all 2s ease;
+      transition: all 2s ease;
+    }
+     
+    .Resizer.horizontal {
+      height: 11px;
+      margin: -5px 0;
+      border-top: 5px solid rgba(255, 255, 255, 0);
+      border-bottom: 5px solid rgba(255, 255, 255, 0);
+      cursor: row-resize;
+      width: 100%;
+    }
+     
+    .Resizer.horizontal:hover {
+      border-top: 5px solid rgba(0, 0, 0, 0.5);
+      border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+    }
+     
+    .Resizer.vertical {
+      width: 11px;
+      margin: 0 -5px;
+      border-left: 5px solid rgba(255, 255, 255, 0);
+      border-right: 5px solid rgba(255, 255, 255, 0);
+      cursor: col-resize;
+    }
+     
+    .Resizer.vertical:hover {
+      border-left: 5px solid rgba(0, 0, 0, 0.5);
+      border-right: 5px solid rgba(0, 0, 0, 0.5);
+    }
+    .Resizer.disabled {
+      cursor: not-allowed;
+    }
+    .Resizer.disabled:hover {
+      border-color: transparent;
+    }
+    .pane #overlay {
+      width: 400px;
+      text-align: center;
+      left: calc(50% - 200px);
+      top: 50%;
+      position: absolute;
+    }
+  
+    .pane.bottom #overlay {
+      width: 400px;
+      text-align: center;
+      left: calc(50% - 200px);
+      top: 25%;
+      position: absolute;
+    }
+
+    td p {
+        width: 80%;
+      }
+      
+      td p em {
+        display: block;
+        padding-top: 10px;
+      }
+      
+      .importLine {
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      
+      .importLine div.code {
+        background-color: #16151cdd;
+        color: #EFEFEF;
+      }
+      
+      .importLine div.code pre {
+        color: #EFEFEF;
+        padding: 10px;
+      }
+      
+      .importLine div.code span {
+        float: left;
+        background-color: #c7c7c7;
+        border-right: #C0C0C0;
+        color: #090909;
+        height: 100%;
+        padding: 9px;
+        font-family: monospace;
+      }

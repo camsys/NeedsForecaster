@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+
+    tools {
+       maven 'mvn'
+       jdk 'openjdk-15'
+    }
+
+    stages {
+        stage('Build Modules') {
+          steps {
+              dir('Core') {
+                git branch: 'master', changelog: false, credentialsId: 'jenkins-camsys-personal-token', poll: false, url: 'git@github.com:camsys/CSAssetCloud.git'
+                sh 'mvn -pl -NeedsForecaster,-Oversight clean install'
+              }
+		      sh "CI= mvn package -U"
+	        }
+	      }
+
+        stage('Build Docker Images') {
+          steps {
+            sh "mvn docker:build"
+          }
+        }
+
+        stage('Push Docker Images To Repos') {
+          steps {
+            withCredentials([[
+                 $class: 'AmazonWebServicesCredentialsBinding',
+                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                 credentialsId: 'mvn-deploy-assetcloud'
+             ]]) {
+               sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 212764437395.dkr.ecr.us-east-1.amazonaws.com"
+               sh "mvn docker:push -U"
+             }
+          }
+	      }
+
+        stage('Update Dev Environment') {
+          environment {
+            IMG_VERSION = sh(script:"mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep '^[^[]'", returnStdout: true).trim()
+          }
+          steps {
+            withCredentials([[
+                 $class: 'AmazonWebServicesCredentialsBinding',
+                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                 credentialsId: 'mvn-deploy-assetcloud'
+             ]]) {
+                script {
+                 // See for why xargs: https://superuser.com/questions/1306071/aws-cli-using-cli-input-json-in-a-pipeline
+                 NEEDSFORECASTER_REVISION = sh(script:"cat ${env.WORKSPACE}/task-template-dev.json \
+                 | jq '.containerDefinitions[0].image=\"212764437395.dkr.ecr.us-east-1.amazonaws.com/needs_forecaster:${env.IMG_VERSION}\"' \
+                 | xargs -0 aws ecs register-task-definition --cli-input-json \
+                 | jq .taskDefinition.revision", returnStdout: true).trim()
+
+                 sh "aws ecs update-service --cluster AssetCloud --service needs-forecaster-dev --task-definition asset-cloud-needs-forecaster-dev:${NEEDSFORECASTER_REVISION}"
+                }
+             }
+          }
+        }
+
+        stage('Update Sandbox Environment') {
+          environment {
+            IMG_VERSION = sh(script:"mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep '^[^[]'", returnStdout: true).trim()
+          }
+          steps {
+            withCredentials([[
+               $class: 'AmazonWebServicesCredentialsBinding',
+               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+               credentialsId: 'mvn-deploy-assetcloud'
+            ]]) {
+              input "Deployed to dev. Do you want to deploy to Sandbox?"
+              milestone(1)
+
+              script {
+               // See for why xargs: https://superuser.com/questions/1306071/aws-cli-using-cli-input-json-in-a-pipeline
+               NEEDSFORECASTER_REVISION = sh(script:"cat ${env.WORKSPACE}/task-template-sandbox.json \
+               | jq '.containerDefinitions[0].image=\"212764437395.dkr.ecr.us-east-1.amazonaws.com/needs_forecaster:${env.IMG_VERSION}\"' \
+               | xargs -0 aws ecs register-task-definition --cli-input-json \
+               | jq .taskDefinition.revision", returnStdout: true).trim()
+
+               sh "aws ecs update-service --cluster AssetCloud --service needs-forecaster-sandbox --task-definition asset-cloud-needs-forecaster-sandbox:${NEEDSFORECASTER_REVISION}"
+              }
+            }
+          }
+        }
+
+    }
+}
