@@ -1,12 +1,14 @@
+/* Inherited from Asset Inventory
+   Commented out styles were replaced for Needs Forecaster. */
 body,
 html {
     overscroll-behavior-x: none;
-    font-family: sans-serif;
+    /*font-family: sans-serif;*/
 }
 
 form,
 input,
-button,
+/*button,*/
 .rbt-menu {
     font-size: .85rem !important;
 }
@@ -92,9 +94,9 @@ table,
     width: 100%;
     height: 100%;
     max-width: 100%;
-    padding: 20px;
-    padding-left: 5px;
-    padding-right: 5px;
+    /*padding: 20px;*/
+    /*padding-left: 5px;*/
+    /*padding-right: 5px;*/
     margin: 0;
 }
 
@@ -217,182 +219,286 @@ div.field div.rbt div {
 .container.events {
     padding: 0px !important;
     margin: 0px !important;
-  }
-  
-  .searchBar {
-      height: 40px;
-      padding: 10px;
-      padding-top: 0px;
-      padding-bottom: 0px;
-      background-color: #C0C0C0;
-  }
-  
-  .searchBar span {
-      float: left;
-      height: 30px;
-      line-height:30px;  
-      padding: 0px;
-      margin: 5px;
-      margin-left: 0px;
-      margin-top: 0px;
-      margin-bottom: 0px;
-      width: 500px;
-  }
-  
-  .searchBar .zoom {
+}
+
+.searchBar {
+    height: 40px;
+    padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background-color: #C0C0C0;
+}
+
+.searchBar span {
+    float: left;
+    height: 30px;
+    line-height:30px;
+    padding: 0px;
+    margin: 5px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    width: 500px;
+}
+
+.searchBar .zoom {
     float: right;
     width: 150px;
     text-align: right;
-  }
+}
 
-  .searchBar .nextprev {
+.searchBar .nextprev {
     float: left;
     width: 150px;
     text-align: left;
-  }
+}
 
-  .SplitPane {
+.SplitPane {
     height: calc(100% - 120px);
     padding: 0;
     margin: 0;
-  }
-  
-  .searchBar.rbt div {
-      width: 500px;
-      height: 50px;
-  }
-  .pane {
-      overflow-y: hidden;
-      background-color: #ffffff;
-      height: 100%;
-      width: 100%;
-  }
-  
-  .pane.bottom {
-      background-color: #efefef;
-      padding: 15px;
-  }
-  
-  .pane.bottom .rjsf {
+}
+
+.searchBar.rbt div {
+    width: 500px;
+    height: 50px;
+}
+.pane {
+    overflow-y: hidden;
+    background-color: #ffffff;
+    height: 100%;
+    width: 100%;
+}
+
+.pane.bottom {
+    background-color: #efefef;
+    padding: 15px;
+}
+
+.pane.bottom .rjsf {
     height: 100%;
     background-color: #efefef;
-  }
-  
-  .pane.bottom .rjsf button[type=submit] {
-    display: none;
-  }
-  
-  .SplitPane, .pane {
-      position: relative !important;
-  }
-  
-  .react-calendar-timeline {
-      font-size: .75rem;
-  }
-  
-  .react-calendar-timeline .rct-header-root {
-      background: #efefef !important;
-  }
-  
-  .react-calendar-timeline .rct-dateHeader-primary {
-      background-color: #6e757c !important;
-  }
-  
-  .Resizer {
-      background: #000;
-      opacity: 0.2;
-      z-index: 1;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      -moz-background-clip: padding;
-      -webkit-background-clip: padding;
-      background-clip: padding-box;
-    }
-     
-    .Resizer:hover {
-      -webkit-transition: all 2s ease;
-      transition: all 2s ease;
-    }
-     
-    .Resizer.horizontal {
-      height: 11px;
-      margin: -5px 0;
-      border-top: 5px solid rgba(255, 255, 255, 0);
-      border-bottom: 5px solid rgba(255, 255, 255, 0);
-      cursor: row-resize;
-      width: 100%;
-    }
-     
-    .Resizer.horizontal:hover {
-      border-top: 5px solid rgba(0, 0, 0, 0.5);
-      border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-    }
-     
-    .Resizer.vertical {
-      width: 11px;
-      margin: 0 -5px;
-      border-left: 5px solid rgba(255, 255, 255, 0);
-      border-right: 5px solid rgba(255, 255, 255, 0);
-      cursor: col-resize;
-    }
-     
-    .Resizer.vertical:hover {
-      border-left: 5px solid rgba(0, 0, 0, 0.5);
-      border-right: 5px solid rgba(0, 0, 0, 0.5);
-    }
-    .Resizer.disabled {
-      cursor: not-allowed;
-    }
-    .Resizer.disabled:hover {
-      border-color: transparent;
-    }
-    .pane #overlay {
-      width: 400px;
-      text-align: center;
-      left: calc(50% - 200px);
-      top: 50%;
-      position: absolute;
-    }
-  
-    .pane.bottom #overlay {
-      width: 400px;
-      text-align: center;
-      left: calc(50% - 200px);
-      top: 25%;
-      position: absolute;
-    }
+}
 
-    td p {
-        width: 80%;
-      }
-      
-      td p em {
-        display: block;
-        padding-top: 10px;
-      }
-      
-      .importLine {
-        padding: 10px;
-        margin-bottom: 10px;
-      }
-      
-      .importLine div.code {
-        background-color: #16151cdd;
-        color: #EFEFEF;
-      }
-      
-      .importLine div.code pre {
-        color: #EFEFEF;
-        padding: 10px;
-      }
-      
-      .importLine div.code span {
-        float: left;
-        background-color: #c7c7c7;
-        border-right: #C0C0C0;
-        color: #090909;
-        height: 100%;
-        padding: 9px;
-        font-family: monospace;
-      }
+.pane.bottom .rjsf button[type=submit] {
+    display: none;
+}
+
+.SplitPane, .pane {
+    position: relative !important;
+}
+
+.react-calendar-timeline {
+    font-size: .75rem;
+}
+
+.react-calendar-timeline .rct-header-root {
+    background: #efefef !important;
+}
+
+.react-calendar-timeline .rct-dateHeader-primary {
+    background-color: #6e757c !important;
+}
+
+.Resizer {
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+}
+
+.Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+}
+
+.Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+}
+
+.Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+.Resizer.disabled {
+    cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+    border-color: transparent;
+}
+.pane #overlay {
+    width: 400px;
+    text-align: center;
+    left: calc(50% - 200px);
+    top: 50%;
+    position: absolute;
+}
+
+.pane.bottom #overlay {
+    width: 400px;
+    text-align: center;
+    left: calc(50% - 200px);
+    top: 25%;
+    position: absolute;
+}
+
+td p {
+    width: 80%;
+}
+
+td p em {
+    display: block;
+    padding-top: 10px;
+}
+
+.importLine {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.importLine div.code {
+    background-color: #16151cdd;
+    color: #EFEFEF;
+}
+
+.importLine div.code pre {
+    color: #EFEFEF;
+    padding: 10px;
+}
+
+.importLine div.code span {
+    float: left;
+    background-color: #c7c7c7;
+    border-right: #C0C0C0;
+    color: #090909;
+    height: 100%;
+    padding: 9px;
+    font-family: monospace;
+}
+
+
+/* Added/modified for Needs Forecaster */
+body, html {
+    font-family: "Source Sans 3", sans-serif;
+}
+
+button {
+    border: none;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 400;
+    line-height: 40px;
+    color: #2078A8;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.25em;
+    font-weight: 700;
+    font-style: normal;
+    line-height: 40px;
+    margin: 0;
+    color: #3F4D55;
+}
+
+.page-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 24px 32px;
+    gap: 10px;
+    background: #FFFFFF;
+}
+
+.container {
+    padding: 0;
+}
+
+label {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #576D75;
+    margin-bottom: 0;
+}
+
+.dropdown-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 6px;
+}
+
+select {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 12px 6px 16px;
+    gap: 10px;
+    border: 1px solid #576D75;
+    border-radius: 32px;
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    line-height: 16px;
+    color: #3F4D55;
+}
+
+.actions-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 10px;
+    background: #2078A8;
+    border-radius: 18px;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0.03em;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.table-headers, .table-rows {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+}
+
+.table-label {
+    border-bottom: 1px solid #C5CACC;
+    padding-bottom: 4px;
+}
