@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Container} from 'react-bootstrap';
+import {Container, Table} from 'react-bootstrap';
 import {DropdownInput} from "../lib/DropdownInput";
 import {ActionsButton} from "../lib/ActionsButton";
 
@@ -19,6 +19,30 @@ export const Policies = () => {
     ]);
     let [selectedOrganization, setSelectedOrganization] = useState(organizations[0].label);
     let [selectedPolicy, setSelectedPolicy] = useState(policies[0].label);
+    let [assetTypes, setAssetTypes] = useState([
+        "Administration",
+        "Buses (Rubber Tire Vehicles)",
+        "Capital Equipment",
+        "Ferries",
+        "Maintenance",
+        "Other Passenger Vehicles",
+        "Parking",
+        "Passenger",
+        "Rail Cars"
+    ])
+
+    let [assetSubtypes, setAssetSubtypes] = useState({
+            "Administration": {
+                "Hardware": {esl_months: 48, esl_miles: 48},
+                "Software": {esl_months: 48, esl_miles: 24},
+                "Networks": {esl_months: 144, esl_miles: 48},
+                "Custom Rule": {esl_months: 96, esl_miles: 96},
+                "Storage": {esl_months: 144, esl_miles: 48},
+                "Other IT Equipment": {esl_months: 144, esl_miles: 48}
+            }
+        }
+    )
+
     let [selectedAssetType, setSelectedAssetType] = useState("Administration");
 
     const changePolicy = (e) => {
@@ -68,31 +92,62 @@ export const Policies = () => {
                 <h2>Policy Rules</h2>
                 <div className={"policy-rules-type-selector"}>
                     <div className={"policy-rules-types"}>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Administration" ? " selected" : "")} onClick={selectAssetType}>Administration</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Buses (Rubber Tire Vehicles)" ? " selected" : "")} onClick={selectAssetType}>Buses (Rubber Tire Vehicles)</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Capital Equipment" ? " selected" : "")} onClick={selectAssetType}>Capital Equipment</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Ferries" ? " selected" : "")} onClick={selectAssetType}>Ferries</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Maintenance" ? " selected" : "")} onClick={selectAssetType}>Maintenance</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Other Passenger Vehicles" ? " selected" : "")} onClick={selectAssetType}>Other Passenger Vehicles</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Parking" ? " selected" : "")} onClick={selectAssetType}>Parking</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Passenger" ? " selected" : "")} onClick={selectAssetType}>Passenger</button>
-                        <button className={"policy-rules-type-button" + (selectedAssetType==="Rail Cars" ? " selected" : "")} onClick={selectAssetType}>Rail Cars</button>
+                        {assetTypes.map((t,i) => <button key={i} className={"policy-rules-type-button" + (selectedAssetType === t ? " selected" : "")} onClick={selectAssetType}>{t}</button>)}
                     </div>
                     <div className={"policy-rules-additional-types"}>
                         <button className={"policy-rules-ellipses"}>...</button>
                     </div>
                 </div>
                 <div className={"policy-calculation-method"}>
-                    <div className={"table-headers"}>
-                        <label className={"table-label"}>Service Life Calculation Method</label>
-                        <label className={"table-label"}>Last Updated</label>
-                        <label className={"table-label"}>Actions</label>
-                    </div>
-                    <div className={"table-rows"}>
-                        <p>Age Only</p>
-                        <p>12/05/2015 07:58 AM</p>
-                        <button>(Pencil Icon)</button>
-                    </div>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Service Life Calculation Method</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Age Only</td>
+                                <td>12/05/2015 07:58 AM</td>
+                                <td><button>(Pencil Icon)</button></td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </div>
+                <div className={"policy-asset-subtype-rules"}>
+                    <Table id={"subtype-rules-table"}>
+                        <thead>
+                            <tr>
+                                <th>Asset Subtype</th>
+                                <th>ESL (Mo)</th>
+                                <th>ESL (Mi)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {assetSubtypes[selectedAssetType] && Object.entries(assetSubtypes[selectedAssetType]).map(([k,v], i) =>
+                                <>
+                                    <tr key={i}>
+                                        <td>{k}</td>
+                                        <td>{v.esl_months}</td>
+                                        <td>{v.esl_miles}</td>
+                                        <td>
+                                            <button>(Pencil Icon)</button>
+                                            {k.includes("Custom") && (
+                                                <>
+                                                    <button>(Copy Icon)</button>
+                                                    <button>(Delete Icon)</button>
+                                                </>
+                                            )}
+                                        </td>
+                                    </tr>
+                                </>
+                            )}
+                        </tbody>
+                    </Table>
+                    <button className={"primary-button"}>(Plus Icon) Add Asset Subtype Rule</button>
                 </div>
             </div>
         </Container>
