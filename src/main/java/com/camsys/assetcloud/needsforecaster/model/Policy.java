@@ -17,5 +17,8 @@ public class Policy {
     public String name;
 
     @NotNull
+    public String description;
+
+    @NotNull
     public String ownerOrganization;
 }
