@@ -16,7 +16,7 @@ You will need to set up your own database and database credentials.  See below.
 
 ```
 mvn clean package -U
-java -jar target/AssetInventory-<version from pom>.jar
+java -jar target/NeedsForecaster-<version from pom>.jar
 ``` 
 
 3. To package just rebuilding Java and not React code (which can be slow):
