@@ -213,8 +213,8 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
 						<configuration>
-							<source>15</source>
-							<target>15</target>
+							<source>17</source>
+							<target>17</target>
 						</configuration>
 					</plugin>
 
@@ -225,7 +225,7 @@
 						<configuration>
 								<images>
 										<image>
-												<registry>212764437395.dkr.ecr.us-east-1.amazonaws.com</registry>
+												<registry>${docker.registry_id}.dkr.ecr.us-east-1.amazonaws.com</registry>
 												<name>needs_forecaster</name>
 												<build>
 														<dockerFile>${project.basedir}/Dockerfile</dockerFile>

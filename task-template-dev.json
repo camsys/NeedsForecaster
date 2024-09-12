@@ -1,12 +1,11 @@
 {
-  "executionRoleArn": "arn:aws:iam::212764437395:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::212764437395:role/ECSaccessCognito",
+  "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/asset-cloud-needs-forecaster",
+          "awslogs-group": "/ecs/needs-forecaster-dev",
           "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
@@ -16,16 +15,21 @@
           "hostPort": 8080,
           "protocol": "tcp",
           "containerPort": 8080
-        },
-        {
-          "hostPort": 3000,
-          "protocol": "tcp",
-          "containerPort": 3000
         }
       ],
       "memoryReservation": 4096,
-      "image": "072699300807.dkr.ecr.us-east-1.amazonaws.com/needs_forecaster:latest",
+      "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/needs_forecaster:${IMG_VERSION}",
       "name": "needs-forecaster",
+      "secrets": [
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:ssm:us-east-1:${ACCOUNT_ID}:parameter/needs-forecaster/dev/db_password"
+        },
+        {
+          "name": "DB_URL",
+          "valueFrom": "arn:aws:ssm:us-east-1:${ACCOUNT_ID}:parameter/needs-forecaster/dev/db_url"
+        }
+      ],
       "environment": [
                    {
                        "name": "ENV",
@@ -35,7 +39,7 @@
     }
   ],
   "memory": "4096",
-  "family": "asset-cloud-needs-forecaster-dev",
+  "family": "needs-forecaster-dev",
   "networkMode": "awsvpc",
   "cpu": "2048"
 }
