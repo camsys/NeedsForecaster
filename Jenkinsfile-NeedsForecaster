@@ -61,6 +61,9 @@ pipeline {
         }
 
         stage('Update QA Environment') {
+          when {
+            anyOf {branch 'QA'; branch 'main'}
+          }
           environment {
             IMG_VERSION = sh(script:"mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep '^[^[]'", returnStdout: true).trim()
           }
@@ -87,6 +90,9 @@ pipeline {
         }
 
         stage('Update Production Environment') {
+          when {
+            branch 'main';
+          }
           environment {
             IMG_VERSION = sh(script:"mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep '^[^[]'", returnStdout: true).trim()
           }
