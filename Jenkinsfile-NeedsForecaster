@@ -62,7 +62,7 @@ pipeline {
 
         stage('Update QA Environment') {
           when {
-            expression {env.GIT_BRANCH.split("/")[1] == 'qa'}
+            expression {env.GIT_BRANCH.split("/")[1] == 'qa' || env.GIT_BRANCH.split("/")[1] == 'main'}
           }
           environment {
             IMG_VERSION = sh(script:"mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep '^[^[]'", returnStdout: true).trim()
