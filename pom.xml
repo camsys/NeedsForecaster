@@ -6,13 +6,13 @@
 		<parent>
 			<groupId>com.camsys.assetcloud</groupId>
 			<artifactId>CSAssetCloud</artifactId>
-			<version>1.16-SNAPSHOT</version>
+			<version>1.17-RELEASE</version>
 		</parent>
 
 		<artifactId>NeedsForecaster</artifactId>
 		<name>NeedsForecaster</name>
 		<description>NeedsForecaster</description>
-		<version>0.0.0-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT</version>
 
 		<properties>
 			<java.version>17</java.version>
@@ -131,7 +131,7 @@
 			<dependency>
 				<groupId>com.camsys.assetcloud</groupId>
 				<artifactId>Core</artifactId>
-				<version>1.16-SNAPSHOT</version>
+				<version>1.17-RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
