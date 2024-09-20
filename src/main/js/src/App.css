@@ -407,6 +407,7 @@ body, html {
 
 button {
     border: none;
+    background: inherit;
 }
 
 h1 {
@@ -472,13 +473,6 @@ select {
     color: #3F4D55;
 }
 
-.actions-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .table {
     border-collapse: separate;
     border-spacing: 16px 0;
@@ -500,7 +494,14 @@ select {
     color: #3F4D55;
 }
 
+.table button {
+    color: #576D75;
+    cursor: pointer;
+}
+
 .primary-button {
+    display: flex;
+    flex-direction: row;
     padding: 10px 12px;
     gap: 10px;
     background: #2078A8;
@@ -512,4 +513,8 @@ select {
     letter-spacing: 0.03em;
     color: #FFFFFF;
     cursor: pointer;
+}
+
+button p {
+    margin: 0;
 }

@@ -10,4 +10,6 @@ public class PolicyListDTO {
     public Long getId() { return policy.id; };
 
     public String getName() { return policy.name; };
+
+    public String getDescription() { return policy.description; };
 }
