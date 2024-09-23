@@ -17,65 +17,58 @@ import java.util.stream.Collectors;
 @RestController
 public class PoliciesController {
 
-    @Autowired
     private PolicyRepository policyRepository;
 
-    private List<Policy> policies = new ArrayList<>();
+//    private List<Policy> policies = new ArrayList<>();
 
-    //temporary constructor to create mock data
-    public PoliciesController() {
-        //temporary
-        policies.clear();
-        Policy policy = new Policy();
-        policy.name = "FY 2017 Statewide Transit Policy (Current)";
-        policy.description = "Main policy";
-        policy.id = Long.parseLong("1");
-        policy.ownerOrganization = "bpt";
-        policies.add(policy);
-
-        policy = new Policy();
-        policy.name = "FY 2016 Statewide Transit Policy";
-        policy.description = "alternate policy";
-        policy.id = Long.parseLong("2");
-        policy.ownerOrganization = "bpt";
-        policies.add(policy);
-
-        policy = new Policy();
-        policy.name = "FY 2015 Statewide Transit Policy";
-        policy.description = "third policy option";
-        policy.id = Long.parseLong("3");
-        policy.ownerOrganization = "bpt";
-        policies.add(policy);
-
-        policy = new Policy();
-        policy.name = "Another Transit Policy for 2";
-        policy.description = "another policy description";
-        policy.id = Long.parseLong("4");
-        policy.ownerOrganization = "org2";
-        policies.add(policy);
-
-        policy = new Policy();
-        policy.name = "Another Transit Policy for 3";
-        policy.description = "another policy description";
-        policy.id = Long.parseLong("5");
-        policy.ownerOrganization = "org3";
-        policies.add(policy);
+    public PoliciesController(PolicyRepository policyRepository) {
+        this.policyRepository = policyRepository;
+        //optional data creation
+//        policies.clear();
+//        Policy policy = new Policy();
+//        policy.name = "FY 2017 Statewide Transit Policy (Current)";
+//        policy.description = "Main policy";
+//        policy.ownerOrganization = "bpt";
+//        policies.add(policy);
+//
+//        policy = new Policy();
+//        policy.name = "FY 2016 Statewide Transit Policy";
+//        policy.description = "alternate policy";
+//        policy.ownerOrganization = "bpt";
+//        policies.add(policy);
+//
+//        policy = new Policy();
+//        policy.name = "FY 2015 Statewide Transit Policy";
+//        policy.description = "third policy option";
+//        policy.ownerOrganization = "bpt";
+//        policies.add(policy);
+//
+//        policy = new Policy();
+//        policy.name = "Another Transit Policy for org2";
+//        policy.description = "another policy description";
+//        policy.ownerOrganization = "org2";
+//        policies.add(policy);
+//
+//        policy = new Policy();
+//        policy.name = "Another Transit Policy for org3";
+//        policy.description = "another policy description";
+//        policy.ownerOrganization = "org3";
+//        policies.add(policy);
+//
+//        policyRepository.saveAll(policies);
     }
 
     @GetMapping(value = "/api/policies/list", produces = "application/json")
     public List<PolicyListDTO> listPoliciesByOrganization(@RequestParam(required = false, value = "orgKey") String organizationKey) {
-        return policies.stream().filter(p -> organizationKey == null || p.ownerOrganization.equals(organizationKey)).map(p -> new PolicyListDTO(p)).collect(Collectors.toList());//return mocked data
-        //return policyRepository.findByOrg(organizationKey).stream().map(p -> new PolicyListDTO(p)).collect(Collectors.toList());
+        return policyRepository.findByOrg(organizationKey).stream().map(p -> new PolicyListDTO(p)).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/api/policies/{id}", produces = "application/json")
     public Optional<Policy> getPolicyById(@PathVariable(value = "id") Long policyId) {
-        return policies.stream().filter(p -> p.id == policyId).findFirst();//search mocked data
-        //return policyRepository.findById(policyId);
+        return policyRepository.findById(policyId);
     }
 
-    //commenting out as this is not yet available
-    //@PostMapping(value = "/api/policy/edit", consumes="application/json", produces="application/json")
+    @PostMapping(value = "/api/policy/edit", consumes="application/json", produces="application/json")
     public Policy editPolicy(@RequestBody Policy policy) {
         Optional<Policy> savedPolicy;
         try {
