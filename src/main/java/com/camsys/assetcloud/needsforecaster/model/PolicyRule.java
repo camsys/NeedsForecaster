@@ -1,5 +1,7 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -23,6 +25,7 @@ public class PolicyRule {
     @NotNull
     public Date updatedOn;
 
+    @JsonIgnore
     @NotNull
     @ManyToOne
     public Policy policy;

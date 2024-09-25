@@ -1,5 +1,7 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +12,7 @@ public class PolicySubRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @JsonIgnore
     @NotNull
     @ManyToOne
     public PolicyRule policyRule;

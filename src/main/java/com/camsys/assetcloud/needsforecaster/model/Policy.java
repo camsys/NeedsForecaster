@@ -1,5 +1,7 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;

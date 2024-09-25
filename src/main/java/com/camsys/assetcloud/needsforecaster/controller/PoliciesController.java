@@ -135,9 +135,12 @@ public class PoliciesController {
     public PolicySubRule deletePolicySubRule(@PathVariable(value = "id") Long policySubRuleId) {
         Optional<PolicySubRule> savedPolicySubRule;
         try {
-            //fetch saved policy
+            //fetch saved policy and check if custom
             savedPolicySubRule = policySubRuleRepository.findById(policySubRuleId);
-            savedPolicySubRule.ifPresent(policySubRuleRepository::delete);
+            if (savedPolicySubRule.isPresent() && savedPolicySubRule.get().isCustom) {
+                policySubRuleRepository.delete(savedPolicySubRule.get());
+            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
