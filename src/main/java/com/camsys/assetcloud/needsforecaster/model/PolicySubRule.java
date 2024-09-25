@@ -27,8 +27,8 @@ public class PolicySubRule {
 
     public int eslMiles;
 
-    //check to see if this new subrule has all the required fields
-    public boolean validate() {
+    //check to see if this new subrule has all the required fields (policyRule and assetSubType)
+    public boolean validateCustom() {
         if (policyRule == null) return false;
         if (policyRule.id == 0) return false;
         if (assetSubType == null) return false;

@@ -8,6 +8,7 @@ import com.camsys.assetcloud.needsforecaster.repositories.PolicyRepository;
 import com.camsys.assetcloud.needsforecaster.repositories.PolicyRuleRepository;
 import com.camsys.assetcloud.needsforecaster.repositories.PolicySubRuleRepository;
 import com.camsys.assetcloud.needsforecaster.sampledata.SamplePoliciesData;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -37,115 +38,83 @@ public class PoliciesController {
     }
 
     @GetMapping(value = "/api/policies/{id}", produces = "application/json")
-    public Optional<Policy> getPolicyById(@PathVariable(value = "id") Long policyId) {
-        return policyRepository.findById(policyId);
+    public Policy getPolicyById(@PathVariable(value = "id") Long policyId) {
+        return policyRepository.findById(policyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Policy not found"));
     }
 
     @PostMapping(value = "/api/policy/edit", consumes = "application/json", produces = "application/json")
     public Policy editPolicy(@RequestBody Policy policy) {
-        Optional<Policy> savedPolicy;
-        try {
-            //fetch saved policy
-            savedPolicy = getPolicyById(policy.id);
 
-            if (savedPolicy.isPresent()) {
-                //see if the description field has changed
-                if (policy.description != null && !savedPolicy.get().description.equals(policy.description)) {
-                    savedPolicy.get().description = policy.description;
-                    return policyRepository.save(savedPolicy.get());
-                } else return savedPolicy.get();
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-        //TODO: need error handling in response/catch
+        return policyRepository.findById(policy.id).map(toBeEditedPolicy -> {
+                    if (policy.description != null && !toBeEditedPolicy.description.equals(policy.description)) {
+                        toBeEditedPolicy.description = policy.description;
+                        return policyRepository.save(toBeEditedPolicy);
+                    }
+                    return toBeEditedPolicy;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Policy not found"));
     }
 
     @PostMapping(value = "/api/policy-rule/edit", consumes = "application/json", produces = "application/json")
     public PolicyRule editPolicyRule(@RequestBody PolicyRule policyRule) {
-        Optional<PolicyRule> savedPolicyRule;
-        try {
-            //fetch saved policy rule
-            savedPolicyRule = policyRuleRepository.findById(policyRule.id);
 
-            if (savedPolicyRule.isPresent()) {
-                //see if the service life calc method field has changed
-                if (policyRule.serviceLifeCalculationMethod != null &&
-                        !savedPolicyRule.get().serviceLifeCalculationMethod.equals(policyRule.serviceLifeCalculationMethod)) {
-                    savedPolicyRule.get().serviceLifeCalculationMethod = policyRule.serviceLifeCalculationMethod;
+        return policyRuleRepository.findById(policyRule.id).map(toBeEditedPolicyRule -> {
+                    if (policyRule.serviceLifeCalculationMethod != null &&
+                            !toBeEditedPolicyRule.serviceLifeCalculationMethod.equals(policyRule.serviceLifeCalculationMethod)) {
 
-                    savedPolicyRule.get().updatedOn = new Date();
-                    return policyRuleRepository.save(savedPolicyRule.get());
-                } else return savedPolicyRule.get();
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-        //TODO: need error handling in response/catch
+                        toBeEditedPolicyRule.serviceLifeCalculationMethod = policyRule.serviceLifeCalculationMethod;
+                        toBeEditedPolicyRule.updatedOn = new Date();
+                        return policyRuleRepository.save(toBeEditedPolicyRule);
+                    }
+                    return toBeEditedPolicyRule;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Policy Rule not found"));
     }
 
     @PostMapping(value = "/api/policy-sub-rule/edit", consumes = "application/json", produces = "application/json")
     public PolicySubRule editPolicySubRule(@RequestBody PolicySubRule policySubRule) {
-        Optional<PolicySubRule> savedPolicySubRule;
-        try {
-            //fetch saved policy rule
-            savedPolicySubRule = policySubRuleRepository.findById(policySubRule.id);
 
-            if (savedPolicySubRule.isPresent()) {
-                //see if the updatable fields have changed
-                boolean hasChanged = false;
-                if (savedPolicySubRule.get().eslMonths != policySubRule.eslMonths) {
-                    savedPolicySubRule.get().eslMonths = policySubRule.eslMonths;
-                    hasChanged = true;
-                }
-                if (savedPolicySubRule.get().eslMiles != policySubRule.eslMiles) {
-                    savedPolicySubRule.get().eslMiles = policySubRule.eslMiles;
-                    hasChanged = true;
-                }
+        return policySubRuleRepository.findById(policySubRule.id).map(toBeEditedPolicySubRule -> {
+                    boolean hasChanged = false;
+                    if (toBeEditedPolicySubRule.eslMonths != policySubRule.eslMonths) {
+                        toBeEditedPolicySubRule.eslMonths = policySubRule.eslMonths;
+                        hasChanged = true;
+                    }
+                    if (toBeEditedPolicySubRule.eslMiles != policySubRule.eslMiles) {
+                        toBeEditedPolicySubRule.eslMiles = policySubRule.eslMiles;
+                        hasChanged = true;
+                    }
 
-                if (hasChanged) {
-                    savedPolicySubRule.get().policyRule.updatedOn = new Date();
-                    return policySubRuleRepository.save(savedPolicySubRule.get());
-                } else return savedPolicySubRule.get();
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-        //TODO: need error handling in response/catch
+                    if (hasChanged) {
+                        toBeEditedPolicySubRule.policyRule.updatedOn = new Date();//Do we need to update this when subrule changes?
+                        return policySubRuleRepository.save(toBeEditedPolicySubRule);
+                    }
+                    return toBeEditedPolicySubRule;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Policy SubRule not found"));
+
     }
 
     @PutMapping(value = "/api/policy-sub-rule/", consumes = "application/json", produces = "application/json")
     public PolicySubRule createPolicySubRule(@RequestBody PolicySubRule policySubRule) {
-        try {
-            if (policySubRule.validate()) {
-                policySubRule.isCustom = true;//make sure this is marked as a custom subrule
-                return policySubRuleRepository.save(policySubRule);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if (policySubRule.validateCustom()) {
+            policySubRule.isCustom = true;//make sure this is marked as a custom subrule
+            return policySubRuleRepository.save(policySubRule);
         }
-        return null;
-        //TODO: need error handling in response/catch
+        else throw new IllegalArgumentException("Policy SubRule not valid for creation");
     }
 
     @DeleteMapping(value = "/api/policy-sub-rule/{id}", consumes = "application/json", produces = "application/json")
-    public PolicySubRule deletePolicySubRule(@PathVariable(value = "id") Long policySubRuleId) {
-        Optional<PolicySubRule> savedPolicySubRule;
-        try {
-            //fetch saved policy and check if custom
-            savedPolicySubRule = policySubRuleRepository.findById(policySubRuleId);
-            if (savedPolicySubRule.isPresent() && savedPolicySubRule.get().isCustom) {
-                policySubRuleRepository.delete(savedPolicySubRule.get());
-            }
+    public void deletePolicySubRule(@PathVariable(value = "id") Long policySubRuleId) {
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        PolicySubRule toBeDeletedPolicySubRule = policySubRuleRepository.findById(policySubRuleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Policy SubRule not found"));
+
+        if (toBeDeletedPolicySubRule.isCustom) {
+            policySubRuleRepository.delete(toBeDeletedPolicySubRule);
         }
-        return null;
-        //TODO: need error handling in response/catch
+        else throw new IllegalArgumentException("Policy SubRule not valid for deletion");
     }
 
 
