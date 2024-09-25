@@ -34,4 +34,8 @@ public class PolicySubRule {
         if (assetSubType == null) return false;
         return !assetSubType.isEmpty();
     }
+
+    public String toExceptionString() {
+        return "assetSubType: " + assetSubType + ", isCustom:" + isCustom + ", hasRule: " + (policyRule != null ? "yes" : "no");
+    }
 }
