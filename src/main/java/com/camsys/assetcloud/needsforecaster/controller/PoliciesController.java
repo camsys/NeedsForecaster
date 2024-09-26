@@ -1,7 +1,6 @@
 package com.camsys.assetcloud.needsforecaster.controller;
 
 import com.camsys.assetcloud.needsforecaster.controller.exceptions.EntityNotFoundException;
-import com.camsys.assetcloud.needsforecaster.controller.exceptions.PolicySubRuleException;
 import com.camsys.assetcloud.needsforecaster.model.Policy;
 import com.camsys.assetcloud.needsforecaster.model.PolicyListDTO;
 import com.camsys.assetcloud.needsforecaster.model.PolicyRule;
@@ -71,9 +70,9 @@ public class PoliciesController {
                 .orElseThrow(() -> new EntityNotFoundException("PolicyRule", policyRuleId));
     }
 
-    @PostMapping(value = "/api/policy-sub-rules", consumes = "application/json", produces = "application/json")
-    public PolicySubRule editOrCreatePolicySubRule(@RequestBody PolicySubRule policySubRule) {
-        return policySubRuleRepository.findById(policySubRule.id).map(toBeEditedPolicySubRule -> {
+    @PutMapping(value = "/api/policy-sub-rules/{id}", consumes = "application/json", produces = "application/json")
+    public PolicySubRule editPolicySubRule(@PathVariable(value = "id") Long policySubRuleId, @RequestBody PolicySubRule policySubRule) {
+        return policySubRuleRepository.findById(policySubRuleId).map(toBeEditedPolicySubRule -> {
                     boolean hasChanged = false;
                     if (toBeEditedPolicySubRule.eslMonths != policySubRule.eslMonths) {
                         toBeEditedPolicySubRule.eslMonths = policySubRule.eslMonths;
@@ -90,43 +89,6 @@ public class PoliciesController {
                     }
                     return toBeEditedPolicySubRule;
                 })
-                .orElseGet(() -> createPolicySubRule(policySubRule));
-    }
-
-    private PolicySubRule createPolicySubRule(PolicySubRule policySubRule) {
-        //make sure id is not specified since we don't want to accidentally overwrite an existing subrule in this method
-        if ((policySubRule.id == null || policySubRule.id == 0L) && policySubRule.validateCustom()) {
-            policySubRule.isCustom = true;//make sure this is marked as a custom subrule
-            return policySubRuleRepository.save(policySubRule);
-        }
-        else throw new PolicySubRuleException("Policy SubRule not valid for creation", policySubRule);
-    }
-
-    @DeleteMapping(value = "/api/policy-sub-rules/{id}", consumes = "application/json", produces = "application/json")
-    public void deletePolicySubRule(@PathVariable(value = "id") Long policySubRuleId) {
-
-        PolicySubRule toBeDeletedPolicySubRule = policySubRuleRepository.findById(policySubRuleId)
                 .orElseThrow(() -> new EntityNotFoundException("PolicySubRule", policySubRuleId));
-
-        if (toBeDeletedPolicySubRule.isCustom) {
-            policySubRuleRepository.delete(toBeDeletedPolicySubRule);
-        }
-        else throw new PolicySubRuleException("Policy SubRule not valid for deletion", toBeDeletedPolicySubRule);
     }
-
-
-    //temporary!!!
-    //use to create sample data on demand
-//    @GetMapping(value = "/api/policies/sample", produces = "application/json")
-//    public void sampleData(@RequestParam(required = false, value = "orgKey") String organizationKey) {
-//        SamplePoliciesData sampleData = new SamplePoliciesData();
-
-//        sampleData.createSamplePoliciesData(policyRepository);
-
-//        Optional<Policy> one = policyRepository.findById(1L);
-//        if (one.isPresent()) {
-//            sampleData.createSamplePolicyRuleData(policyRuleRepository, one.get());
-//            sampleData.createAllPolicySubRuleData(policySubRuleRepository, one.get());
-//        }
-//    }
 }

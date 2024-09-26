@@ -14,7 +14,7 @@ public class PolicyRule {
     public Long id;
 
     @NotNull
-    public String assetTypeKey;
+    public String assetType;
 
     @NotNull
     public String serviceLifeCalculationMethod;

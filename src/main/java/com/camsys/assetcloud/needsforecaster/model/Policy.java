@@ -1,7 +1,5 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
-import org.springframework.context.annotation.Lazy;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -21,6 +19,9 @@ public class Policy {
 
     @NotNull
     public String ownerOrganization;
+
+    @ManyToOne
+    public Policy parentPolicy;//for MVP, not used
 
     @OneToMany(mappedBy = "policy")
     public List<PolicyRule> rules;

@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 public class OrgsController {
 
-    @GetMapping(value = "/api/orgs/list", produces = "application/json")
+    @GetMapping(value = "/api/orgs", produces = "application/json")
     public List<Org> listOrgs() {
         //TBD call AI API to get list of current organizations (use same model class from AssetCloud Core?)
         //WebClient client = WebClient.create(/*put asset inventory base domain here*/);//TBD
