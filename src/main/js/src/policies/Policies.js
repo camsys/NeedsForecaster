@@ -11,26 +11,15 @@ import './Policies.css'
 
 export const Policies = () => {
     let [organizations, setOrganizations] = useState([]);
+    let [assetTypes, setAssetTypes] = useState([]);
     let [policies, setPolicies] = useState([]);
     let [selectedOrganization, setSelectedOrganization] = useState({});
     let [selectedPolicy, setSelectedPolicy] = useState({});
-    let [selectedAssetType, setSelectedAssetType] = useState("Administration");
-    let [editingSubtypeRule, setEditingSubtypeRule] = useState(null);
-
-    const assetTypes = [
-        "Administration",
-        "Buses (Rubber Tire Vehicles)",
-        "Capital Equipment",
-        "Ferries",
-        "Maintenance",
-        "Other Passenger Vehicles",
-        "Parking",
-        "Passenger",
-        "Rail Cars"
-    ];
+    let [selectedAssetType, setSelectedAssetType] = useState({});
+    let [subtypeRuleFields, setSubtypeRuleFields] = useState({id: null, eslMonths: null, eslMiles: null});
 
     let [assetSubtypes, setAssetSubtypes] = useState({
-        "Administration": {
+        "admin": {
             "Hardware": {esl_months: 48, esl_miles: 48},
             "Software": {esl_months: 48, esl_miles: 24},
             "Networks": {esl_months: 144, esl_miles: 48},
@@ -69,7 +58,8 @@ export const Policies = () => {
             credentials: "include"
         };
 
-        fetch("/api/orgs/list", requestOptions)
+        const fetchOrgs = () => {
+            fetch("/api/orgs/list", requestOptions)
             .then((response) => {
                 return response
                     .json()
@@ -80,11 +70,30 @@ export const Policies = () => {
             .catch((e) => {
                 toast.error("Could not retrieve organizations.");
             });
+        }
+
+        const fetchAssetTypes = () => {
+            fetch("/api/asset-types/list", requestOptions)
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setAssetTypes(data);
+                    })
+            })
+            .catch((e) => {
+                toast.error("Could not retrieve asset types.");
+            });
+        }
+
+        fetchOrgs();
+        fetchAssetTypes();
     }, []);
 
     useEffect(() => {
         setSelectedOrganization(organizations[0]);
-    }, [organizations]);
+        setSelectedAssetType(assetTypes[0]);
+    }, [organizations, assetTypes]);
 
     useEffect(() => {
         const requestOptions = {
@@ -93,7 +102,7 @@ export const Policies = () => {
         };
 
         if (!!selectedOrganization?.orgKey) {
-            fetch(`/api/policies/list${!!selectedOrganization?.orgKey ? '?orgKey=' + selectedOrganization?.orgKey : ''}`, requestOptions)
+            fetch(`/api/policies${!!selectedOrganization?.orgKey ? '?orgKey=' + selectedOrganization?.orgKey : ''}`, requestOptions)
                 .then((response) => {
                     return response
                         .json()
@@ -120,13 +129,13 @@ export const Policies = () => {
     }
 
     const selectAssetType = (e) => {
-        setSelectedAssetType(e.target.innerText);
+        setSelectedAssetType(assetTypes.filter(t => t.key === e.target.value)[0]);
     }
 
     const saveSubtypeRule = (e) => {
-        // setAssetSubtypes({...assetSubtypes, })
-        console.log("not really updating subtype rule");
-        setEditingSubtypeRule(null);
+        let selectedSubtype = e.target.closest("tr").children[0].innerText;
+        setAssetSubtypes({...assetSubtypes, [selectedAssetType.key]: {...assetSubtypes[selectedAssetType.key], [selectedSubtype]: {esl_months: subtypeRuleFields.eslMonths, esl_miles: subtypeRuleFields.eslMiles}}});
+        setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null});
     }
 
     const cloneSubtypeRule = (e) => {
@@ -135,12 +144,13 @@ export const Policies = () => {
     }
 
     const removeSubtypeRule = (e) => {
-        // setAssetSubtypes({...assetSubtypes, })
-        console.log("not really removing subtype rule");
+        let selectedSubtype = e.target.closest("tr").children[0].innerText;
+        let {[selectedSubtype]: _, ...newSubtypes} = assetSubtypes[selectedAssetType.key];
+        setAssetSubtypes({...assetSubtypes, [selectedAssetType.key]: {...newSubtypes}});
     }
 
     const addSubtypeRule = () => {
-        console.log(`not really adding subtype rule for ${selectedAssetType} assets in the ${selectedOrganization.name} ${selectedPolicy.name} policy`);
+        console.log(`not really adding subtype rule for ${selectedAssetType.name} assets in the ${selectedOrganization.name} ${selectedPolicy.name} policy`);
     }
 
     return (
@@ -178,7 +188,7 @@ export const Policies = () => {
                 <h2>Policy Rules</h2>
                 <div className={"policy-rules-type-selector"}>
                     <div className={"policy-rules-types"}>
-                        {assetTypes.map((t,i) => <button key={i} className={"policy-rules-type-button" + (selectedAssetType === t ? " selected" : "")} onClick={selectAssetType}>{t}</button>)}
+                        {assetTypes.map((t,i) => <button key={t.key} value={t.key} className={"policy-rules-type-button" + (selectedAssetType === t ? " selected" : "")} onClick={selectAssetType}>{t.name}</button>)}
                     </div>
                     <div className={"policy-rules-additional-types"}>
                         <button className={"policy-rules-ellipses"}>...</button>
@@ -213,21 +223,21 @@ export const Policies = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {assetSubtypes[selectedAssetType] && Object.entries(assetSubtypes[selectedAssetType]).map(([k,v], i) =>
+                            {assetSubtypes[selectedAssetType?.key] && Object.entries(assetSubtypes[selectedAssetType?.key]).map(([k,v], i) =>
                                 <>
                                     <tr key={i}>
                                         <td>{k}</td>
-                                        <td>{editingSubtypeRule === i ? <input key={`esl_months_${i}`} type={"number"} value={v.esl_months}/> : v.esl_months}</td>
-                                        <td>{editingSubtypeRule === i ? <input key={`esl_miles_${i}`} type={"number"} value={v.esl_miles}/> : v.esl_miles}</td>
+                                        <td>{subtypeRuleFields.id === i ? <input key={`esl_months_${i}`} type={"number"} value={subtypeRuleFields.eslMonths} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMonths: e.target.value})}/> : v.esl_months}</td>
+                                        <td>{subtypeRuleFields.id === i ? <input key={`esl_miles_${i}`} type={"number"} value={subtypeRuleFields.eslMiles} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMiles: e.target.value})}/> : v.esl_miles}</td>
                                         <td>
-                                            {editingSubtypeRule === i ?
+                                            {subtypeRuleFields.id === i ?
                                                 <>
                                                     <button onClick={saveSubtypeRule}><FontAwesomeIcon icon={faFloppyDisk} /></button>
-                                                    <button onClick={()=>setEditingSubtypeRule(null)}><FontAwesomeIcon icon={faXmark} /></button>
+                                                    <button onClick={()=>setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})}><FontAwesomeIcon icon={faXmark} /></button>
                                                 </>
                                                 :
                                                 <>
-                                                    <button onClick={()=>setEditingSubtypeRule(i)}><FontAwesomeIcon icon={faPencil} /></button>
+                                                    <button onClick={()=>setSubtypeRuleFields({id: i, eslMonths: v.esl_months, eslMiles: v.esl_miles})}><FontAwesomeIcon icon={faPencil} /></button>
                                                     {k.includes("Custom") &&
                                                         <>
                                                             <button onClick={cloneSubtypeRule}><FontAwesomeIcon icon={faClone} /></button>
