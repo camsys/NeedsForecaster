@@ -1,0 +1,11 @@
+﻿AssetType,SLCMethod,SubTypeFileName
+Administration,Age Only,Administration.csv
+Buses (Rubber Tire Vehicles),Age and Mileage,Buses.csv
+Capital Equipment,Age Only,CapitalEquip.csv
+Ferries,Age and Mileage,Ferries.csv
+Maintenance,Age Only,Maintenance.csv
+Other Passenger Vehicles,Age and Mileage,OtherPassenger.csv
+Parking,Age Only,Parking.csv
+Passenger,Age and Mileage,Passenger.csv
+Rail Cars,Age and Mileage,RailCars.csv
+Service Vehicles,Age and Mileage,ServiceVehicles.csv

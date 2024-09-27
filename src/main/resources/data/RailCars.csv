@@ -1,0 +1,10 @@
+﻿SubType,ESLMonths,ESLMiles
+Light Rail Car,120,100000
+Heavy Rail Car,120,100000
+Commuter Rail Self Propelled (Elec),48,100000
+Commuter Rail Self Propelled (Diesel),120,100000
+Commuter Rail Car Trailer,120,100000
+Incline Railway Car,120,100000
+Cable Car,120,100000
+Commuter Locomotive Diesel,120,100000
+Commuter Locomotive Electric,48,100000

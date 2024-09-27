@@ -1,0 +1,13 @@
+﻿SubType,ESLMonths,ESLMiles
+Bus Std 40 FT,120,100000
+Bus Std 35 FT,120,100000
+Bus 30 FT,48,100000
+Bus < 30 FT,120,100000
+Bus School,120,100000
+Bus Articulated,120,100000
+Bus Commuter/Suburban,120,100000
+Bus Intercity,120,100000
+Bus Trolley Std,48,100000
+Bus Trolley Articulated,120,100000
+Bus Double Deck,120,100000
+Bus Dual Mode,48,100000
