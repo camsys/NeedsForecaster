@@ -32,7 +32,10 @@ public class PoliciesController {
 
     @GetMapping(value = "/api/policies", produces = "application/json")
     public List<PolicyListDTO> listPoliciesByOrganization(@RequestParam(required = false, value = "orgKey") String organizationKey) {
-        return policyRepository.findByOrg(organizationKey).stream().map(PolicyListDTO::new).collect(Collectors.toList());
+        if (organizationKey == null || organizationKey.isBlank())
+            return policyRepository.list().stream().map(PolicyListDTO::new).collect(Collectors.toList());
+        else
+            return policyRepository.findByOrg(organizationKey).stream().map(PolicyListDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/api/policies/{id}", produces = "application/json")
