@@ -14,14 +14,14 @@
 }
 
 .spinner-container {
-    position: absolute;
+    position: fixed;
     width: 100vw;
     height: 100vh;
     background: rgba(255, 255, 255, 0.50);
 }
 
 .spinner {
-    position: absolute;
+    position: relative;
     margin: 0;
     top: calc(50% - 60px);
     left: calc(50% - 60px);

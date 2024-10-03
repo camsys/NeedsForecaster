@@ -18,6 +18,8 @@ export const Policies = () => {
     let [selectedPolicy, setSelectedPolicy] = useState({});
     let [selectedAssetType, setSelectedAssetType] = useState({});
     let [selectedPolicyTypeRule, setSelectedPolicyTypeRule] = useState({});
+    let [policyFields, setPolicyFields] = useState({description: null});
+    let [typeRuleFields, setTypeRuleFields] = useState({serviceLifeCalculationMethod: null});
     let [subtypeRuleFields, setSubtypeRuleFields] = useState({id: null, eslMonths: null, eslMiles: null});
 
     const getPolicy = (id) => {
@@ -40,26 +42,109 @@ export const Policies = () => {
         });
     }
 
-    const modifyPolicy = () => {
-        console.log("modifying policy");
+    const editPolicy = (policy) => {
+        setLoading(true);
+        fetch(`/api/policies/${selectedPolicy.id}`, {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(policy),
+            credentials: "include"
+        })
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setPolicyFields({description: null});
+                        setSelectedPolicy(data);
+                        setLoading(false);
+                    })
+            })
+            .catch((e) => {
+                setLoading(false);
+                toast.error("Could not update policy description.");
+            });
+    }
+
+    const editPolicyRule = (policyRule) => {
+        setLoading(true);
+        fetch(`/api/policy-rules/${selectedPolicyTypeRule.id}`, {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(policyRule),
+            credentials: "include"
+        })
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setTypeRuleFields({serviceLifeCalculationMethod: null});
+                        setSelectedPolicyTypeRule(data);
+                        setLoading(false);
+                    })
+            })
+            .catch((e) => {
+                setLoading(false);
+                toast.error(`Could not update service life calculation method for ${selectedPolicyTypeRule.assetType}.`);
+            });
+    }
+
+    const editPolicySubRule = (policySubRule) => {
+        setLoading(true);
+        fetch(`/api/policy-sub-rules/${policySubRule.id}`, {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(policySubRule),
+            credentials: "include"
+        })
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null});
+                        let newSubTypeRules = selectedPolicyTypeRule.subRules.filter(sr => sr.id !== data.id);
+                        newSubTypeRules.push(data);
+                        newSubTypeRules.sort((a,b) => a.assetSubType.localeCompare(b.assetSubType));
+                        setSelectedPolicyTypeRule({...selectedPolicyTypeRule, subRules: newSubTypeRules});
+                        setLoading(false);
+                    })
+            })
+            .catch((e) => {
+                setLoading(false);
+                toast.error(`Could not update policy subtype rule.`);
+            });
     }
 
     const copyPolicy = () => {
         console.log("copying policy");
     }
 
-    const actionsMenuItems = [
+    const defaultActionsMenuItems = [
         {
             text: "Modify this policy",
             href: void(0),
             icon: faPencil,
-            handleClick: modifyPolicy
+            handleClick: ()=>setPolicyFields({description: selectedPolicy.description})
         },
         {
             text: "Make a copy",
             href: void(0),
             icon: faClone,
             handleClick: copyPolicy
+        }
+    ]
+
+    const editingActionsMenuItems = [
+        {
+            text: "Save policy changes",
+            href: void(0),
+            icon: faFloppyDisk,
+            handleClick: ()=>editPolicy(policyFields)
+        },
+        {
+            text: "Cancel policy changes",
+            href: void(0),
+            icon: faXmark,
+            handleClick: ()=>setPolicyFields({description: null})
         }
     ]
 
@@ -170,11 +255,14 @@ export const Policies = () => {
                     </div>
                     <div className={"label-and-info"}>
                         <h2>Description</h2>
-                        <p className={"info-text"}>{selectedPolicy?.description}</p>
+                        {policyFields?.description !== null
+                            ? <input key={`policy_description`} value={policyFields.description} onChange={(e) => setPolicyFields({...policyFields, description: e.target.value})}/>
+                            : <p className={"info-text"}>{selectedPolicy?.description}</p>
+                        }
                     </div>
                 </div>
                 <div className={"actions-container"}>
-                    <ActionsButton actions={actionsMenuItems}/>
+                    <ActionsButton actions={!policyFields?.description ? defaultActionsMenuItems : editingActionsMenuItems}/>
                 </div>
             </div>
             <div className={"policy-rules-container"}>
@@ -198,9 +286,25 @@ export const Policies = () => {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{selectedPolicyTypeRule?.serviceLifeCalculationMethod}</td>
+                                <td>
+                                    {!!typeRuleFields?.serviceLifeCalculationMethod
+                                        ? <DropdownInput name={"service_life_calculation_method"} options={[{key: 'Age Only', name: 'Age Only'},{key: 'Age and Mileage', name: 'Age and Mileage'}]} defaultValue={typeRuleFields.serviceLifeCalculationMethod} handleChange={(e) => setTypeRuleFields({...typeRuleFields, serviceLifeCalculationMethod: e.target.value})}/>
+                                        : selectedPolicyTypeRule?.serviceLifeCalculationMethod
+                                    }
+                                </td>
                                 <td>{selectedPolicyTypeRule?.updatedOn ? new Date(selectedPolicyTypeRule?.updatedOn)?.toLocaleString() : ''}</td>
-                                <td><button><FontAwesomeIcon icon={faPencil} /></button></td>
+                                <td>
+                                    {!!typeRuleFields?.serviceLifeCalculationMethod ?
+                                        <>
+                                            <button onClick={()=>editPolicyRule(typeRuleFields)}><FontAwesomeIcon icon={faFloppyDisk} /></button>
+                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: null})}><FontAwesomeIcon icon={faXmark} /></button>
+                                        </>
+                                        :
+                                        <>
+                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: selectedPolicyTypeRule.serviceLifeCalculationMethod})}><FontAwesomeIcon icon={faPencil} /></button>
+                                        </>
+                                    }
+                                </td>
                             </tr>
                         </tbody>
                     </Table>
@@ -216,7 +320,7 @@ export const Policies = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {selectedPolicyTypeRule?.subRules?.map(sr =>
+                            {selectedPolicyTypeRule?.subRules?.sort((a,b) => a.assetSubType.localeCompare(b.assetSubType))?.map(sr =>
                                 <>
                                     <tr key={sr.id}>
                                         <td>{sr.assetSubType}</td>
@@ -225,7 +329,7 @@ export const Policies = () => {
                                         <td>
                                             {subtypeRuleFields.id === sr.id ?
                                                 <>
-                                                    <button onClick={saveSubtypeRule}><FontAwesomeIcon icon={faFloppyDisk} /></button>
+                                                    <button onClick={()=>editPolicySubRule(subtypeRuleFields)}><FontAwesomeIcon icon={faFloppyDisk} /></button>
                                                     <button onClick={()=>setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})}><FontAwesomeIcon icon={faXmark} /></button>
                                                 </>
                                                 :
