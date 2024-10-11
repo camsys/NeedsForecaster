@@ -11,4 +11,7 @@ public interface PolicyRepository extends CrudRepository<Policy, Long> {
 
     @Query("select p from Policy p where p.ownerOrganization = :#{#orgKey}")
     List<Policy> findByOrg(@Param("orgKey") String orgKey);
+
+    @Query("select p from Policy p")
+    List<Policy> list();
 }

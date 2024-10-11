@@ -11,6 +11,9 @@
   "main": "src/index.js",
   "homepage": "./",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "apollo-boost": "^0.4.9",
     "graphql": "^15.5.0",
     "jsonpointer": "^4.1.0",

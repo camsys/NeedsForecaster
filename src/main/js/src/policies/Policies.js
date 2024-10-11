@@ -2,62 +2,237 @@ import React, { useState, useEffect } from "react";
 import {Container, Table} from 'react-bootstrap';
 import {DropdownInput} from "../lib/DropdownInput";
 import {ActionsButton} from "../lib/ActionsButton";
+import {toast} from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faClone, faPencil, faPlusCircle, faMinusCircle, faFloppyDisk, faXmark} from '@fortawesome/free-solid-svg-icons'
 
 import 'react-toastify/dist/ReactToastify.css';
 import './Policies.css'
 
 export const Policies = () => {
-    let [organizations, setOrganizations] = useState([
-        {label: "BPT-PennDOT Bureau of Public Transportation", value: "BPT-PennDOT Bureau of Public Transportation"},
-        {label: "Organization 2", value: "Organization 2"},
-        {label: "Other Organization", value: "Other Organization"}
-    ]);
-    let [policies, setPolicies] = useState([
-        {label: "FY 2017 Statewide Transit Policy (Current)", value: "FY 2017 Statewide Transit Policy (Current)"},
-        {label: "FY 2016 Statewide Transit Policy", value: "FY 2016 Statewide Transit Policy"},
-        {label: "FY 2015 Statewide Transit Policy", value: "FY 2015 Statewide Transit Policy"}
-    ]);
-    let [selectedOrganization, setSelectedOrganization] = useState(organizations[0].label);
-    let [selectedPolicy, setSelectedPolicy] = useState(policies[0].label);
-    let [assetTypes, setAssetTypes] = useState([
-        "Administration",
-        "Buses (Rubber Tire Vehicles)",
-        "Capital Equipment",
-        "Ferries",
-        "Maintenance",
-        "Other Passenger Vehicles",
-        "Parking",
-        "Passenger",
-        "Rail Cars"
-    ])
+    let [organizations, setOrganizations] = useState([]);
+    let [assetTypes, setAssetTypes] = useState([]);
+    let [policies, setPolicies] = useState([]);
+    let [selectedOrganization, setSelectedOrganization] = useState('');
+    let [loading, setLoading] = useState(false);
+    let [selectedPolicy, setSelectedPolicy] = useState({});
+    let [selectedAssetType, setSelectedAssetType] = useState({});
+    let [selectedPolicyTypeRule, setSelectedPolicyTypeRule] = useState({});
+    let [policyFields, setPolicyFields] = useState({description: null});
+    let [typeRuleFields, setTypeRuleFields] = useState({serviceLifeCalculationMethod: null});
+    let [subtypeRuleFields, setSubtypeRuleFields] = useState({id: null, eslMonths: null, eslMiles: null});
 
-    let [assetSubtypes, setAssetSubtypes] = useState({
-            "Administration": {
-                "Hardware": {esl_months: 48, esl_miles: 48},
-                "Software": {esl_months: 48, esl_miles: 24},
-                "Networks": {esl_months: 144, esl_miles: 48},
-                "Custom Rule": {esl_months: 96, esl_miles: 96},
-                "Storage": {esl_months: 144, esl_miles: 48},
-                "Other IT Equipment": {esl_months: 144, esl_miles: 48}
-            }
-        }
-    )
-
-    let [selectedAssetType, setSelectedAssetType] = useState("Administration");
-
-    const changePolicy = (e) => {
-        setSelectedPolicy(e.target.value);
+    const getPolicy = (id) => {
+        setLoading(true);
+        fetch(`/api/policies/${id}`, {
+            method: "GET",
+            credentials: "include"
+        })
+        .then((response) => {
+            return response
+                .json()
+                .then((data) => {
+                    setSelectedPolicy(data);
+                    setLoading(false);
+                })
+        })
+        .catch((e) => {
+            setLoading(false);
+            toast.error("Could not retrieve policy information.");
+        });
     }
 
-    const changeOrganization = (e) => {
-        setSelectedOrganization(e.target.value);
+    const editPolicy = (policy) => {
+        setLoading(true);
+        fetch(`/api/policies/${selectedPolicy.id}`, {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(policy),
+            credentials: "include"
+        })
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setPolicyFields({description: null});
+                        setSelectedPolicy(data);
+                        setLoading(false);
+                    })
+            })
+            .catch((e) => {
+                setLoading(false);
+                toast.error("Could not update policy description.");
+            });
+    }
+
+    const editPolicyRule = (policyRule) => {
+        setLoading(true);
+        fetch(`/api/policy-rules/${selectedPolicyTypeRule.id}`, {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(policyRule),
+            credentials: "include"
+        })
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setTypeRuleFields({serviceLifeCalculationMethod: null});
+                        setSelectedPolicyTypeRule(data);
+                        setLoading(false);
+                    })
+            })
+            .catch((e) => {
+                setLoading(false);
+                toast.error(`Could not update service life calculation method for ${selectedPolicyTypeRule.assetType}.`);
+            });
+    }
+
+    const editPolicySubRule = (policySubRule) => {
+        setLoading(true);
+        fetch(`/api/policy-sub-rules/${policySubRule.id}`, {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(policySubRule),
+            credentials: "include"
+        })
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null});
+                        let newSubTypeRules = selectedPolicyTypeRule.subRules.filter(sr => sr.id !== data.id);
+                        newSubTypeRules.push(data);
+                        newSubTypeRules.sort((a,b) => a.assetSubType.localeCompare(b.assetSubType));
+                        setSelectedPolicyTypeRule({...selectedPolicyTypeRule, subRules: newSubTypeRules});
+                        setLoading(false);
+                    })
+            })
+            .catch((e) => {
+                setLoading(false);
+                toast.error(`Could not update policy subtype rule.`);
+            });
+    }
+
+    const copyPolicy = () => {
+        console.log("copying policy");
+    }
+
+    const defaultActionsMenuItems = [
+        {
+            text: "Modify this policy",
+            href: void(0),
+            icon: faPencil,
+            handleClick: ()=>setPolicyFields({description: selectedPolicy.description})
+        },
+        {
+            text: "Make a copy",
+            href: void(0),
+            icon: faClone,
+            handleClick: copyPolicy
+        }
+    ]
+
+    const editingActionsMenuItems = [
+        {
+            text: "Save policy changes",
+            href: void(0),
+            icon: faFloppyDisk,
+            handleClick: ()=>editPolicy(policyFields)
+        },
+        {
+            text: "Cancel policy changes",
+            href: void(0),
+            icon: faXmark,
+            handleClick: ()=>setPolicyFields({description: null})
+        }
+    ]
+
+    useEffect(() => {
+        const requestOptions = {
+            method: "GET",
+            credentials: "include"
+        };
+
+        const fetchOrgs = () => {
+            fetch("/api/orgs", requestOptions)
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setOrganizations(data);
+                    })
+            })
+            .catch((e) => {
+                toast.error("Could not retrieve organizations.");
+            });
+        }
+
+        const fetchAssetTypes = () => {
+            fetch("/api/asset-types", requestOptions)
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setAssetTypes(data);
+                    })
+            })
+            .catch((e) => {
+                toast.error("Could not retrieve asset types.");
+            });
+        }
+
+        const fetchPolicies = () => {
+            fetch(`/api/policies`, requestOptions)
+            .then((response) => {
+                return response
+                    .json()
+                    .then((data) => {
+                        setPolicies(data);
+                    })
+            })
+            .catch((e) => {
+                toast.error("Could not retrieve policies.");
+            });
+        }
+
+        fetchOrgs();
+        fetchAssetTypes();
+        fetchPolicies();
+    }, []);
+
+    useEffect(() => {
+        if (policies.length > 0) {
+            getPolicy(policies[0].id);
+        }
+    }, [policies]);
+
+    useEffect(() => {
+        setSelectedOrganization(selectedPolicy?.ownerOrganization);
+        setSelectedAssetType(assetTypes[0]);
+    }, [selectedPolicy]);
+
+    useEffect(() => {
+        setSelectedPolicyTypeRule(selectedPolicy?.rules?.filter(r => r?.assetType === selectedAssetType?.key)[0]);
+    }, [selectedAssetType]);
+
+    const changePolicy = (e) => {
+        getPolicy(e.target.value);
     }
 
     const selectAssetType = (e) => {
-        setSelectedAssetType(e.target.innerText);
+        setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})
+        setSelectedAssetType(assetTypes.filter(t => t.key === e.target.value)[0]);
     }
 
-    return (
+    const saveSubtypeRule = (e) => {
+        // let selectedSubtype = e.target.closest("tr").children[0].innerText;
+        // setAssetSubtypes({...assetSubtypes, [selectedAssetType.key]: {...assetSubtypes[selectedAssetType.key], [selectedSubtype]: {esl_months: subtypeRuleFields.eslMonths, esl_miles: subtypeRuleFields.eslMiles}}});
+        // setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null});
+    }
+
+    return (<>
+        {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
         <Container id={"policies-page"}>
             <div className={"page-header"}>
                 <h1>Policies</h1>
@@ -65,8 +240,7 @@ export const Policies = () => {
             <div className={"top-filters"}>
                 <h2>Filters</h2>
                 <div className={"filters-container"}>
-                    <DropdownInput name={"organization"} label={"Organization"} options={organizations} handleChange={changeOrganization} />
-                    <DropdownInput name={"policy"} label={"Policy"} options={policies} handleChange={changePolicy}/>
+                    <DropdownInput name={"policy"} label={"Policy"} options={policies.map(p => ({key: p.id, name: p.name}))} handleChange={changePolicy}/>
                 </div>
             </div>
             <div className={"policy-info-container"}>
@@ -81,22 +255,25 @@ export const Policies = () => {
                     </div>
                     <div className={"label-and-info"}>
                         <h2>Description</h2>
-                        <p className={"info-text"}>{selectedPolicy}</p>
+                        {policyFields?.description !== null
+                            ? <input key={`policy_description`} value={policyFields.description} onChange={(e) => setPolicyFields({...policyFields, description: e.target.value})}/>
+                            : <p className={"info-text"}>{selectedPolicy?.description}</p>
+                        }
                     </div>
                 </div>
                 <div className={"actions-container"}>
-                    <ActionsButton />
+                    <ActionsButton actions={!policyFields?.description ? defaultActionsMenuItems : editingActionsMenuItems}/>
                 </div>
             </div>
             <div className={"policy-rules-container"}>
                 <h2>Policy Rules</h2>
                 <div className={"policy-rules-type-selector"}>
                     <div className={"policy-rules-types"}>
-                        {assetTypes.map((t,i) => <button key={i} className={"policy-rules-type-button" + (selectedAssetType === t ? " selected" : "")} onClick={selectAssetType}>{t}</button>)}
+                        {assetTypes.map((t,i) => <button key={t.key} value={t.key} className={"policy-rules-type-button" + (selectedAssetType === t ? " selected" : "")} onClick={selectAssetType}>{t.name}</button>)}
                     </div>
-                    <div className={"policy-rules-additional-types"}>
-                        <button className={"policy-rules-ellipses"}>...</button>
-                    </div>
+                    {/*<div className={"policy-rules-additional-types"}>*/}
+                    {/*    <button className={"policy-rules-ellipses"}>...</button>*/}
+                    {/*</div>*/}
                 </div>
                 <div className={"policy-calculation-method"}>
                     <Table>
@@ -109,9 +286,25 @@ export const Policies = () => {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Age Only</td>
-                                <td>12/05/2015 07:58 AM</td>
-                                <td><button>(Pencil Icon)</button></td>
+                                <td>
+                                    {!!typeRuleFields?.serviceLifeCalculationMethod
+                                        ? <DropdownInput name={"service_life_calculation_method"} options={[{key: 'Age Only', name: 'Age Only'},{key: 'Age and Mileage', name: 'Age and Mileage'}]} defaultValue={typeRuleFields.serviceLifeCalculationMethod} handleChange={(e) => setTypeRuleFields({...typeRuleFields, serviceLifeCalculationMethod: e.target.value})}/>
+                                        : selectedPolicyTypeRule?.serviceLifeCalculationMethod
+                                    }
+                                </td>
+                                <td>{selectedPolicyTypeRule?.updatedOn ? new Date(selectedPolicyTypeRule?.updatedOn)?.toLocaleString() : ''}</td>
+                                <td>
+                                    {!!typeRuleFields?.serviceLifeCalculationMethod ?
+                                        <>
+                                            <button onClick={()=>editPolicyRule(typeRuleFields)}><FontAwesomeIcon icon={faFloppyDisk} /></button>
+                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: null})}><FontAwesomeIcon icon={faXmark} /></button>
+                                        </>
+                                        :
+                                        <>
+                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: selectedPolicyTypeRule.serviceLifeCalculationMethod})}><FontAwesomeIcon icon={faPencil} /></button>
+                                        </>
+                                    }
+                                </td>
                             </tr>
                         </tbody>
                     </Table>
@@ -127,29 +320,31 @@ export const Policies = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {assetSubtypes[selectedAssetType] && Object.entries(assetSubtypes[selectedAssetType]).map(([k,v], i) =>
+                            {selectedPolicyTypeRule?.subRules?.sort((a,b) => a.assetSubType.localeCompare(b.assetSubType))?.map(sr =>
                                 <>
-                                    <tr key={i}>
-                                        <td>{k}</td>
-                                        <td>{v.esl_months}</td>
-                                        <td>{v.esl_miles}</td>
+                                    <tr key={sr.id}>
+                                        <td>{sr.assetSubType}</td>
+                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_months_${sr.id}`} value={subtypeRuleFields.eslMonths} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMonths: e.target.value})}/> : sr.eslMonths}</td>
+                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_miles_${sr.id}`} value={subtypeRuleFields.eslMiles} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMiles: e.target.value})}/> : sr.eslMiles}</td>
                                         <td>
-                                            <button>(Pencil Icon)</button>
-                                            {k.includes("Custom") && (
+                                            {subtypeRuleFields.id === sr.id ?
                                                 <>
-                                                    <button>(Copy Icon)</button>
-                                                    <button>(Delete Icon)</button>
+                                                    <button onClick={()=>editPolicySubRule(subtypeRuleFields)}><FontAwesomeIcon icon={faFloppyDisk} /></button>
+                                                    <button onClick={()=>setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})}><FontAwesomeIcon icon={faXmark} /></button>
                                                 </>
-                                            )}
+                                                :
+                                                <>
+                                                    <button onClick={()=>setSubtypeRuleFields({id: sr.id, eslMonths: sr.eslMonths, eslMiles: sr.eslMiles})}><FontAwesomeIcon icon={faPencil} /></button>
+                                                </>
+                                            }
                                         </td>
                                     </tr>
                                 </>
                             )}
                         </tbody>
                     </Table>
-                    <button className={"primary-button"}>(Plus Icon) Add Asset Subtype Rule</button>
                 </div>
             </div>
-        </Container>
+        </Container></>
     );
 }
