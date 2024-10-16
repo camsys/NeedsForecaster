@@ -48,7 +48,7 @@ public class InitialData {
 
     private void createPolicyRules(Policy policy) throws IOException {
 
-        Reader assetTypeIn = new FileReader("./src/main/resources/data/AssetTypes.csv");
+        Reader assetTypeIn = new FileReader("./data/AssetTypes.csv");
         Iterable<CSVRecord> assetTypeRecords = CSVFormat.RFC4180.builder()
                 .setHeader("AssetType", "SLCMethod", "SubTypeFileName")
                 .setSkipHeaderRecord(true)
@@ -68,7 +68,7 @@ public class InitialData {
 
             rule.subRules = new ArrayList<>();
 
-            Reader subTypesIn = new FileReader("./src/main/resources/data/" + subTypeFileName);
+            Reader subTypesIn = new FileReader("./data/" + subTypeFileName);
             Iterable<CSVRecord> subTypeRecords = CSVFormat.RFC4180.builder()
                     .setHeader("SubType", "ESLMonths", "ESLMiles")
                     .setSkipHeaderRecord(true)
