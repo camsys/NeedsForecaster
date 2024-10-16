@@ -431,6 +431,7 @@ h2 {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     padding: 24px 32px;
     gap: 10px;
     background: #FFFFFF;
@@ -449,13 +450,30 @@ label, th {
     margin-bottom: 0;
 }
 
-.dropdown-group {
+.dropdown-group, icon-input-group {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     padding: 0px;
     gap: 6px;
+}
+
+.icon-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-input input {
+    padding: 6px 16px 6px 32px;
+    border: 1px solid #576D75;
+    border-radius: 32px;
+    background: #FFFFFF;
+    text-align: left;
+    font-size: 16px !important;
+    line-height: 16px;
 }
 
 select {
@@ -499,6 +517,51 @@ select {
     cursor: pointer;
 }
 
+.full-table {
+    width: 100%;
+}
+
+.full-table .table {
+    padding: 0px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.full-table tr {
+    max-height: 32px;
+}
+
+.full-table th {
+    padding: 6px;
+    gap: 6px;
+    background: rgba(233, 239, 242, 0.5);
+    border: 2px solid #CDD0DC;
+    color: #0E2744;
+}
+
+.full-table td {
+    padding: 6px;
+    gap: 6px;
+    background: #FFFFFF;
+    border: 2px solid #CDD0DC;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.03em;
+    color: #0E2744;
+}
+
+.icon-column {
+    width: 32px;
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.icon-column svg {
+    height: 16px;
+    color: #576D75;
+}
+
 .primary-button {
     display: flex;
     flex-direction: row;
@@ -516,5 +579,45 @@ select {
 }
 
 button p {
+    margin: 0;
+}
+
+.spinner-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.50);
+}
+
+.spinner {
+    position: relative;
+    margin: 0;
+    top: calc(50% - 60px);
+    left: calc(50% - 60px);
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.label-and-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+}
+
+.info-text {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #3F4D55;
     margin: 0;
 }

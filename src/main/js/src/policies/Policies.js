@@ -4,7 +4,6 @@ import {DropdownInput} from "../lib/DropdownInput";
 import {ActionsButton} from "../lib/ActionsButton";
 import {toast} from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faClone, faPencil, faPlusCircle, faMinusCircle, faFloppyDisk, faXmark} from '@fortawesome/free-solid-svg-icons'
 
 import 'react-toastify/dist/ReactToastify.css';
 import './Policies.css'
@@ -122,13 +121,13 @@ export const Policies = () => {
         {
             text: "Modify this policy",
             href: void(0),
-            icon: faPencil,
+            icon: "pencil",
             handleClick: ()=>setPolicyFields({description: selectedPolicy.description})
         },
         {
             text: "Make a copy",
             href: void(0),
-            icon: faClone,
+            icon: "clone",
             handleClick: copyPolicy
         }
     ]
@@ -137,13 +136,13 @@ export const Policies = () => {
         {
             text: "Save policy changes",
             href: void(0),
-            icon: faFloppyDisk,
+            icon: "floppy-disk",
             handleClick: ()=>editPolicy(policyFields)
         },
         {
             text: "Cancel policy changes",
             href: void(0),
-            icon: faXmark,
+            icon: "xmark",
             handleClick: ()=>setPolicyFields({description: null})
         }
     ]
@@ -240,7 +239,7 @@ export const Policies = () => {
             <div className={"top-filters"}>
                 <h2>Filters</h2>
                 <div className={"filters-container"}>
-                    <DropdownInput name={"policy"} label={"Policy"} options={policies.map(p => ({key: p.id, name: p.name}))} handleChange={changePolicy}/>
+                    <DropdownInput name={"policy"} label={"Policy"} options={policies.map(p => ({key: `policy_${p.id}`, value: p.id, name: p.name}))} handleChange={changePolicy}/>
                 </div>
             </div>
             <div className={"policy-info-container"}>
@@ -261,9 +260,7 @@ export const Policies = () => {
                         }
                     </div>
                 </div>
-                <div className={"actions-container"}>
-                    <ActionsButton actions={!policyFields?.description ? defaultActionsMenuItems : editingActionsMenuItems}/>
-                </div>
+                <ActionsButton actions={!policyFields?.description ? defaultActionsMenuItems : editingActionsMenuItems}/>
             </div>
             <div className={"policy-rules-container"}>
                 <h2>Policy Rules</h2>
@@ -288,7 +285,7 @@ export const Policies = () => {
                             <tr>
                                 <td>
                                     {!!typeRuleFields?.serviceLifeCalculationMethod
-                                        ? <DropdownInput name={"service_life_calculation_method"} options={[{key: 'Age Only', name: 'Age Only'},{key: 'Age and Mileage', name: 'Age and Mileage'}]} defaultValue={typeRuleFields.serviceLifeCalculationMethod} handleChange={(e) => setTypeRuleFields({...typeRuleFields, serviceLifeCalculationMethod: e.target.value})}/>
+                                        ? <DropdownInput name={"service_life_calculation_method"} options={[{key: 'age_only', value: 'Age Only', name: 'Age Only'},{key: 'age_and_mileage', value: 'Age and Mileage', name: 'Age and Mileage'}]} defaultValue={typeRuleFields.serviceLifeCalculationMethod} handleChange={(e) => setTypeRuleFields({...typeRuleFields, serviceLifeCalculationMethod: e.target.value})}/>
                                         : selectedPolicyTypeRule?.serviceLifeCalculationMethod
                                     }
                                 </td>
@@ -296,12 +293,12 @@ export const Policies = () => {
                                 <td>
                                     {!!typeRuleFields?.serviceLifeCalculationMethod ?
                                         <>
-                                            <button onClick={()=>editPolicyRule(typeRuleFields)}><FontAwesomeIcon icon={faFloppyDisk} /></button>
-                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: null})}><FontAwesomeIcon icon={faXmark} /></button>
+                                            <button onClick={()=>editPolicyRule(typeRuleFields)}><FontAwesomeIcon icon={"floppy-disk"} /></button>
+                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: null})}><FontAwesomeIcon icon={"xmark"} /></button>
                                         </>
                                         :
                                         <>
-                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: selectedPolicyTypeRule.serviceLifeCalculationMethod})}><FontAwesomeIcon icon={faPencil} /></button>
+                                            <button onClick={()=>setTypeRuleFields({serviceLifeCalculationMethod: selectedPolicyTypeRule.serviceLifeCalculationMethod})}><FontAwesomeIcon icon={"pencil"} /></button>
                                         </>
                                     }
                                 </td>
@@ -329,12 +326,12 @@ export const Policies = () => {
                                         <td>
                                             {subtypeRuleFields.id === sr.id ?
                                                 <>
-                                                    <button onClick={()=>editPolicySubRule(subtypeRuleFields)}><FontAwesomeIcon icon={faFloppyDisk} /></button>
-                                                    <button onClick={()=>setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})}><FontAwesomeIcon icon={faXmark} /></button>
+                                                    <button onClick={()=>editPolicySubRule(subtypeRuleFields)}><FontAwesomeIcon icon={"floppy-disk"} /></button>
+                                                    <button onClick={()=>setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})}><FontAwesomeIcon icon={"xmark"} /></button>
                                                 </>
                                                 :
                                                 <>
-                                                    <button onClick={()=>setSubtypeRuleFields({id: sr.id, eslMonths: sr.eslMonths, eslMiles: sr.eslMiles})}><FontAwesomeIcon icon={faPencil} /></button>
+                                                    <button onClick={()=>setSubtypeRuleFields({id: sr.id, eslMonths: sr.eslMonths, eslMiles: sr.eslMiles})}><FontAwesomeIcon icon={"pencil"} /></button>
                                                 </>
                                             }
                                         </td>
