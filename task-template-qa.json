@@ -23,11 +23,11 @@
       "secrets": [
         {
           "name": "DB_PASSWORD",
-          "valueFrom": "arn:aws:ssm:us-east-1:${ACCOUNT_ID}:parameter/needs-forecaster/dev/db_password"
+          "valueFrom": "arn:aws:ssm:us-east-1:${ACCOUNT_ID}:parameter/needs-forecaster/qa/db_password"
         },
         {
           "name": "DB_URL",
-          "valueFrom": "arn:aws:ssm:us-east-1:${ACCOUNT_ID}:parameter/needs-forecaster/dev/db_url"
+          "valueFrom": "arn:aws:ssm:us-east-1:${ACCOUNT_ID}:parameter/needs-forecaster/qa/db_url"
         }
       ],
       "environment": [
