@@ -459,6 +459,18 @@ label, th {
     gap: 6px;
 }
 
+.dropdown-without-arrow {
+    -o-appearance: none;
+    -ms-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 36px;
+    width: auto;
+    padding: 6px 12px 6px 12px;
+    text-align: center;
+}
+
 .icon-input {
     display: flex;
     flex-direction: row;
@@ -549,6 +561,35 @@ select {
     line-height: 20px;
     letter-spacing: 0.03em;
     color: #0E2744;
+}
+
+.table-pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.page-size-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+}
+
+.page-size-container .dropdown-group {
+    margin-right: 8px;
+}
+
+.page-info {
+    flex: 1;
+    text-align: center;
+    margin-bottom: 0;
+    line-height: 38px;
+}
+
+.page-selector {
+    flex: 1;
 }
 
 .icon-column {
