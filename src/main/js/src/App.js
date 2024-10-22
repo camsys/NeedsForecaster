@@ -10,12 +10,12 @@ import {Home} from "./Home";
 import {Policies} from "./policies/Policies";
 import {Projects} from "./projects/Projects";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import {faClone, faPencil, faChevronDown, faPlusCircle, faMinusCircle, faFloppyDisk, faXmark, faMagnifyingGlass, faSquare, faSquareCheck, faCircleCheck, faFileArrowDown, faTableColumns} from '@fortawesome/free-solid-svg-icons'
+import {faClone, faPencil, faChevronDown, faPlusCircle, faMinusCircle, faFloppyDisk, faXmark, faMagnifyingGlass, faSquare, faSquareCheck, faCircleCheck, faFileArrowDown, faTableColumns, faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons'
 import {faCheckSquare as farSquareCheck, faSquare as farSquare} from '@fortawesome/free-regular-svg-icons'
 
 export default function App() {
 
-	library.add(faClone, faPencil, faChevronDown, faPlusCircle, faMinusCircle, faFloppyDisk, faXmark, faMagnifyingGlass, faSquare, farSquare, farSquareCheck, faCircleCheck, faFileArrowDown, faTableColumns);
+	library.add(faClone, faPencil, faChevronDown, faPlusCircle, faMinusCircle, faFloppyDisk, faXmark, faMagnifyingGlass, faSquare, farSquare, farSquareCheck, faCircleCheck, faFileArrowDown, faTableColumns, faAngleLeft, faAngleRight);
 	return (
 		<>
 			<HashRouter>
