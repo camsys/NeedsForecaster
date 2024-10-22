@@ -191,7 +191,7 @@ export const Projects = () => {
                 <h2>Filters</h2>
                 <div className={"filters-container"}>
                     <DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("ownerOrganization", e.target.value)}/>
-                    <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(o => ({key: `fy_${o.toString()}`, value: o, name: o.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", e.target.value)}/>
+                    <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(o => ({key: `fy_${o.toString()}`, value: o, name: o.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>
                     <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
                     <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t.key, value: t.key, name: t.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
                 </div>
