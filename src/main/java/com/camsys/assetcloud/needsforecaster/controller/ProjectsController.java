@@ -25,15 +25,15 @@ public class ProjectsController {
 
     //get relevant fiscal years for a project filter
     @GetMapping(value = "/api/projects/fiscal-years", produces = "application/json")
-    public List<String> getFiscalYears() {
+    public List<Integer> getFiscalYears() {
         //TODO - need to figure out which years should be offered.  Maybe just the ones which projects already?
-        List<String> fiscalYears = new ArrayList<>();
-        fiscalYears.add("FY2023");
-        fiscalYears.add("FY2024");
-        fiscalYears.add("FY2025");
-        fiscalYears.add("FY2026");
-        fiscalYears.add("FY2027");
-        fiscalYears.add("FY2028");
+        List<Integer> fiscalYears = new ArrayList<>();
+        fiscalYears.add(2023);
+        fiscalYears.add(2024);
+        fiscalYears.add(2025);
+        fiscalYears.add(2026);
+        fiscalYears.add(2027);
+        fiscalYears.add(2028);
         return fiscalYears;//temporary list for UI use
     }
 

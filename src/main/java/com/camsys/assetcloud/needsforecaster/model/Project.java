@@ -23,7 +23,7 @@ public class Project {
     public String ownerOrganization;
 
     @NotNull
-    public String fiscalYear;
+    public Integer fiscalYear;
 
     @NotNull
     public String projectType;
