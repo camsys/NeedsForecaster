@@ -570,6 +570,36 @@ select {
     width: 100%;
 }
 
+.page-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+    font-size: 16px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.page-selector a {
+    padding: 0px 0px 2px;
+    gap: 10px;
+    width: 28px;
+    height: 28px;
+}
+
+.page-selector .current-page {
+    background: #576D75;
+    border-radius: 16px;
+    font-weight: 700;
+    color: #FFFFFF !important;
+}
+
+.page-selector a:not(.current-page){
+    font-weight: 300;
+    color: #576D75 !important;
+}
+
 .page-size-container {
     display: flex;
     flex-direction: row;
@@ -589,7 +619,10 @@ select {
 }
 
 .page-selector {
+    display: flex;
+    justify-content: flex-end;
     flex: 1;
+
 }
 
 .icon-column {

@@ -110,19 +110,42 @@ export const Projects = () => {
     const changePage = (pageNum) => {
         // TODO: Pagination will be frontend
         setPage(pageNum);
-        setVisibleProjects(projects.slice(pageSize * (page - 1), pageSize * page));
-        // refreshSelectablePages();
+        setVisibleProjects(projects.slice(pageSize * (pageNum - 1), pageSize * pageNum));
+        refreshSelectablePages();
     }
 
-    // const refreshSelectablePages = () => {
-    //     let numPages = (projects.length - 1) / pageSize + 1;
-    //     if (numPages <= 5) {
-    //         setSelectablePages([...Array(numPages).keys()]);
-    //     }
-    //     else if (page <= 3) {
-    //         setSelectablePages([...Array(5).keys()]);
-    //     }
-    // }
+    const refreshSelectablePages = () => {
+        let numPages = Math.floor((projects.length - 1) / pageSize) + 1;
+        if (numPages <= 0) {
+            setSelectablePages([]);
+        }
+        else if (numPages <= 6) {
+            setSelectablePages([...Array(numPages).keys()].map(p=>p+1));
+        }
+        else if (page <= 3) {
+            let pagesList = [...Array(5).keys()].map(p=>p+1);
+            pagesList.push(numPages);
+            setSelectablePages(pagesList);
+        } else {
+            let pagesList = [1];
+            if (page >= numPages -2) {
+                for (let i = numPages - 4; i < numPages + 1; i++) {
+                    if (i <= numPages) {
+                        pagesList.push(i);
+                    }
+                }
+            }
+            else {
+                for (let i = page - 2; i < page + 3; i++) {
+                    pagesList.push(i);
+                }
+                if (pagesList[pagesList.length - 1] != numPages) {
+                    pagesList.push(numPages);
+                }
+            }
+            setSelectablePages(pagesList);
+        }
+    }
 
     const addProject = () => {
         console.log("Not really adding new project.");
@@ -173,12 +196,17 @@ export const Projects = () => {
 
     useEffect(() => {
         fetchProjectsWithFilters(filters);
-        changePage(1);
+        setPage(1);
     }, [filters]);
 
     useEffect(() => {
-        setVisibleProjects(projects.slice(0, pageSize));
-    }, [projects, pageSize]);
+        setVisibleProjects(projects.slice(pageSize * (page - 1), pageSize * page))
+        refreshSelectablePages();
+    }, [projects, page, pageSize]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [pageSize])
 
     return (<>
         {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
@@ -232,7 +260,14 @@ export const Projects = () => {
                     <p className={"page-info"}>Showing <b>{pageSize * (page - 1) + 1} to {pageSize * page < projects.length ? pageSize * page : projects.length}</b> of {projects.length} rows</p>
                     <div className={"page-selector"}>
                         {page > 1 && <FontAwesomeIcon icon={"fa-angle-left"} onClick={()=>setPage(page - 1)}/>}
-                        {page <= (projects.length - 1) / pageSize && <FontAwesomeIcon icon={"fa-angle-right"} onClick={()=>setPage(page + 1)}/>}
+                        {selectablePages.map((p) => (
+                            <>
+                                {p === selectablePages[1] && page > 4 && <p>...</p>}
+                                <a className={p === page ? "current-page" : ""} href={void(0)} onClick={()=>setPage(p)}>{p}</a>
+                                {p === selectablePages[selectablePages.length-2] && p < Math.floor((projects.length - 1) / pageSize) && <p>...</p>}
+                            </>
+                        ))}
+                        {page <= Math.floor((projects.length - 1) / pageSize) && <FontAwesomeIcon icon={"fa-angle-right"} onClick={()=>setPage(page + 1)}/>}
                     </div>
                 </div>
             </div>
