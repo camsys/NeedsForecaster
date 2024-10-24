@@ -695,3 +695,7 @@ button p {
     color: #3F4D55;
     margin: 0;
 }
+
+.bottom-align {
+    text-align: bottom;
+}
