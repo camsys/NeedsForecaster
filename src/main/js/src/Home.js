@@ -15,6 +15,7 @@ export const Home = () => {
 					<Nav.Link href="#/">Home</Nav.Link>
 					<Nav.Link href="#/policies">Policies</Nav.Link>
 					<Nav.Link href="#/projects">Projects</Nav.Link>
+					<Nav.Link href="#/sogr-builder">SOGR Project Builder</Nav.Link>
 				</Nav>
 			</Navbar>
 			<h1>Welcome to Needs Forecaster!</h1>
