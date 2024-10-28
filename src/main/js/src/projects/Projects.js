@@ -262,9 +262,9 @@ export const Projects = () => {
                         {page > 1 && <FontAwesomeIcon icon={"fa-angle-left"} onClick={()=>setPage(page - 1)}/>}
                         {selectablePages.map((p) => (
                             <>
-                                {p === selectablePages[1] && page > 4 && <p>...</p>}
+                                {p === selectablePages[1] && page > 4 && <div className={"bottom-align"}>...</div>}
                                 <a className={p === page ? "current-page" : ""} href={void(0)} onClick={()=>setPage(p)}>{p}</a>
-                                {p === selectablePages[selectablePages.length-2] && p < Math.floor((projects.length - 1) / pageSize) && <p>...</p>}
+                                {p === selectablePages[selectablePages.length-2] && p < Math.floor((projects.length - 1) / pageSize) && <div className={"bottom-align"}>...</div>}
                             </>
                         ))}
                         {page <= Math.floor((projects.length - 1) / pageSize) && <FontAwesomeIcon icon={"fa-angle-right"} onClick={()=>setPage(page + 1)}/>}
