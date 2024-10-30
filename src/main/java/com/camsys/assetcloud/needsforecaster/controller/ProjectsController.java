@@ -75,10 +75,6 @@ public class ProjectsController {
     public Project editProject(@PathVariable(value="id") Long projectId, @RequestBody Project project) {
 
         return projectRepository.findById(projectId).map(toBeEditedProject -> {
-                    //can only edit manual projects
-                    if (!toBeEditedProject.manual) {
-                        throw new IllegalArgumentException("Project must be manual to edit with this API call");
-                    }
 
                     //check what data has changed
                     boolean hasChanged = false;
@@ -90,13 +86,17 @@ public class ProjectsController {
                         toBeEditedProject.description = project.description;
                         hasChanged = true;
                     }
-                    if (project.fiscalYear != null && !toBeEditedProject.fiscalYear.equals(project.fiscalYear)) {
-                        toBeEditedProject.fiscalYear = project.fiscalYear;
-                        hasChanged = true;
-                    }
-                    if (project.projectType != null && !toBeEditedProject.projectType.equals(project.projectType)) {
-                        toBeEditedProject.projectType = project.projectType;
-                        hasChanged = true;
+
+                    //type and fiscal year can only be edited for manual projects
+                    if (toBeEditedProject.manual) {
+                        if (project.fiscalYear != null && !toBeEditedProject.fiscalYear.equals(project.fiscalYear)) {
+                            toBeEditedProject.fiscalYear = project.fiscalYear;
+                            hasChanged = true;
+                        }
+                        if (project.projectType != null && !toBeEditedProject.projectType.equals(project.projectType)) {
+                            toBeEditedProject.projectType = project.projectType;
+                            hasChanged = true;
+                        }
                     }
 
 
