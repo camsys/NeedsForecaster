@@ -479,13 +479,23 @@ label, th {
 }
 
 .icon-input input {
-    padding: 6px 16px 6px 32px;
+    text-align: left;
+    font-size: 16px !important;
+    line-height: 16px;
+    border: none;
+    margin-left: 8px;
+}
+
+.input-button {
     border: 1px solid #576D75;
     border-radius: 32px;
     background: #FFFFFF;
     text-align: left;
     font-size: 16px !important;
     line-height: 16px;
+    align-items: center;
+    padding: 6px 12px 6px 12px;
+    gap: 10px;
 }
 
 select {
