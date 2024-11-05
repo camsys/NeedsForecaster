@@ -14,7 +14,7 @@ export const SogrBuilder = () => {
     let [loading, setLoading] = useState(false);
     let [showInfo, setShowInfo] = useState(true);
     let [formData, setFormData] = useState({});
-    let [builderRunning, setBuilderRunning] = useState(false);
+    let [builderRunning, setBuilderRunning] = useState(null);
 
     const toggleAssetType = (assetType) => {
         let currentAssetTypes = formData["assetTypes"] || [];
@@ -121,16 +121,16 @@ export const SogrBuilder = () => {
                     <FontAwesomeIcon icon={"circle-xmark"} onClick={()=>setShowInfo(false)}/>
                 </div>
             </div>
-            <div className={"sogr-builder-form"}>
+            <div className={`sogr-builder-form${builderRunning ? " disabled" : ""}`}>
                 <div className={"sogr-builder-dropdowns"}>
-                    <DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, organization: e.target.value})}/>
-                    <DropdownInput name={"starting-fy"} label={"Starting Fiscal Year"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, startingFy: e.target.value})}/>
-                    <DropdownInput name={"range-of-years"} label={"Range of Years"} options = {[...Array(10).keys()].map(n => ({key: `${n+1}_years`, value: n+1, name: `${n+1} ${n > 0 ? 'years' : 'year'}`}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, rangeOfYears: e.target.value})}/>
+                    <DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, organization: e.target.value})} disabled={builderRunning}/>
+                    <DropdownInput name={"starting-fy"} label={"Starting Fiscal Year"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, startingFy: e.target.value})} disabled={builderRunning}/>
+                    <DropdownInput name={"range-of-years"} label={"Range of Years"} options = {[...Array(10).keys()].map(n => ({key: `${n+1}_years`, value: n+1, name: `${n+1} ${n > 0 ? 'years' : 'year'}`}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, rangeOfYears: e.target.value})} disabled={builderRunning}/>
 
                 </div>
                 <div className={"sogr-builder-asset-types"}>
                     {assetTypes.map(t=>(
-                        <div className={"asset-type-group"} onClick={(e)=>toggleAssetType(t.key)}>
+                        <div className={"asset-type-group"} onClick={(builderRunning ? void(0) : (e)=>toggleAssetType(t.key))}>
                             <FontAwesomeIcon icon={formData["assetTypes"]?.includes(t.key) ? 'fa-solid fa-square-check' : 'fa-regular fa-square'}/>
                             <p className={formData["assetTypes"]?.includes(t.key) ? "selected" : ""}>{t.name}</p>
                         </div>))
@@ -139,6 +139,31 @@ export const SogrBuilder = () => {
                 <div className={"run-sogr-builder-container"}>
                     <button className={"primary-button"} disabled={!["organization","startingFy","rangeOfYears","assetTypes"].every(field=>(Array.isArray(formData[field]) ? formData[field].length > 0 : !!formData[field])) || builderRunning} onClick={runSogr}><FontAwesomeIcon icon="circle-play" /><p>Run SOGR Builder</p></button>
                 </div>
+            </div>
+            <div className={"sogr-builder-status-container"}>
+                {builderRunning !== null && (<>
+                    <p className={"sogr-builder-status"}><FontAwesomeIcon icon={builderRunning ? "fa-regular fa-hourglass-half" : "circle-check"}/>{builderRunning ? "SOGR Builder Running" : "SOGR Builder Completed"}</p>
+                    {builderRunning ?
+                        <Table className={"sogr-builder-params"}>
+                            <thead>
+                                <tr>
+                                    <th>Organization</th>
+                                    <th>Starting FY</th>
+                                    <th>Range of Years</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{organizations.find(o => o.orgKey === formData["organization"]).name}</td>
+                                    <td>{formData["startingFy"]}</td>
+                                    <td>{`${formData["rangeOfYears"]} years`}</td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    :
+                        <p className={"sogr-builder-finished-message"}><b>{formData["rangeOfYears"]} SOGR capital projects</b> added to <b>{organizations.find(o => o.orgKey === formData["organization"]).name}</b></p>
+                    }
+                </>)}
             </div>
         </Container></>
     );
