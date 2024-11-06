@@ -33,6 +33,17 @@ public class ProjectsController {
         return fiscalYears;//temporary list for UI use
     }
 
+    //get relevant project types for a project filter
+    @GetMapping(value = "/api/projects/types", produces = "application/json")
+    public List<String> getProjectTypes() {
+        List<String> projTypes = new ArrayList<>();
+        projTypes.add("Replacement");
+        projTypes.add("Expansion");
+        projTypes.add("Improvement");
+        projTypes.add("Demonstration");
+        return projTypes;//temporary list for UI use
+    }
+
     @PostMapping(value = "/api/projects", consumes = "application/json", produces = "application/json")
     public List<Project> getProjects(@RequestBody(required = false) ProjectFilter filter) {
         if (filter == null)//no filter provided so return full list
