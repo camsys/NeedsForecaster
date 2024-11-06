@@ -8,5 +8,4 @@ public class ProjectFilter {
     public Integer fiscalYear;
     public Boolean sogr;
     public String projectType;
-    public Boolean manual;
 }

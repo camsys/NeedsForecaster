@@ -30,8 +30,6 @@ public class Project {
 
     public boolean sogr;
 
-    public boolean manual;
-
     public boolean isValid() {
         if (name == null || name.isEmpty()) {return false;}
         if (description == null || description.isEmpty()) {return false;}

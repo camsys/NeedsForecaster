@@ -16,8 +16,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
             "where ((cast(:#{#filter.ownerOrganization} as string) is null) or p.ownerOrganization = :#{#filter.ownerOrganization}) " +
             "and (:#{#filter.fiscalYear} is null or p.fiscalYear = :#{#filter.fiscalYear}) " +
             "and ((cast(:#{#filter.projectType} as string) is null) or p.projectType = :#{#filter.projectType}) " +
-            "and (:#{#filter.sogr} is null or p.sogr = :#{#filter.sogr}) " +
-            "and (:#{#filter.manual} is null or p.manual = :#{#filter.manual}) "
+            "and (:#{#filter.sogr} is null or p.sogr = :#{#filter.sogr}) "
     )
     List<Project> findByFilter(@Param("filter") ProjectFilter filter);
 

@@ -44,7 +44,7 @@ public class ProjectsController {
 
     @PostMapping(value = "/api/projects/new", consumes = "application/json", produces = "application/json")
     public Project addProject(@RequestBody Project project) {
-        if (!project.manual) {
+        if (project.sogr) {
             throw new IllegalArgumentException("Project must be manual to add with this API call");
         }
 
@@ -61,7 +61,7 @@ public class ProjectsController {
     public void deleteProject(@PathVariable(name="id") Long projectId) {
         projectRepository.findById(projectId).map(toBeDeletedProject -> {
             //can only delete manual projects
-            if (!toBeDeletedProject.manual) {
+            if (toBeDeletedProject.sogr) {
                 throw new IllegalArgumentException("Project must be manual to edit with this API call");
             }
             return toBeDeletedProject;
@@ -88,7 +88,7 @@ public class ProjectsController {
                     }
 
                     //type and fiscal year can only be edited for manual projects
-                    if (toBeEditedProject.manual) {
+                    if (!toBeEditedProject.sogr) {
                         if (project.fiscalYear != null && !toBeEditedProject.fiscalYear.equals(project.fiscalYear)) {
                             toBeEditedProject.fiscalYear = project.fiscalYear;
                             hasChanged = true;
