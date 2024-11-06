@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-toastify/dist/ReactToastify.css';
 import './Projects.css'
 import {IconInput} from "../lib/IconInput";
+import {Link} from "react-router-dom";
 
 export const Projects = () => {
     // TODO: Add/edit projects in separate page
@@ -151,11 +152,9 @@ export const Projects = () => {
 
     const executeSearch = (query) => {
         setSearchQuery(query);
-        if(query.length > 2) {
-            setQueriedProjects(projects.filter(p => (p.name.includes(query) || p.description.includes(query))));
-        } else {
-            setQueriedProjects(projects);
-        }
+        setTimeout(()=>{
+            setQueriedProjects(projects.filter(p => (p.name.toLowerCase().includes(query.toLowerCase()) || p.description.toLowerCase().includes(query.toLowerCase()))));
+        }, 500);
     }
 
     useEffect(() => {
@@ -220,7 +219,7 @@ export const Projects = () => {
         <Container id={"projects-page"}>
             <div className={"page-header"}>
                 <h1>Projects</h1>
-                <button className={"primary-button"} onClick={addProject}><FontAwesomeIcon icon="plus-circle" /><p>Add Project</p></button>
+                <Link to={"/projects/new"}><button className={"primary-button"}><FontAwesomeIcon icon="plus-circle" /><p>Add Project</p></button></Link>
             </div>
             <div className={"top-filters"}>
                 <h2>Filters</h2>
@@ -229,12 +228,12 @@ export const Projects = () => {
                     <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>
                     <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
                     <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t.key, value: t.name, name: t.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
-                    <IconInput icon={'magnifying-glass'} name={"search_bar"} type={"text"} placeholder={"Search Table..."} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
+                    <IconInput icon={'magnifying-glass'} name={"search_bar"} label={"Search project title/description"} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
                 </div>
             </div>
             <div className={"projects-table-container"}>
                 <div className={"table-actions"}>
-                    <ActionsButton actions={exportActionsMenuItems} icon={"file-arrow-down"} label={"Export"}/>
+                    {/*<ActionsButton actions={exportActionsMenuItems} icon={"file-arrow-down"} label={"Export"}/>*/}
                     <ActionsButton actions={Object.keys(columnNameLabels).map(c => ({
                         text: columnNameLabels[c],
                         href: void(0),
@@ -246,15 +245,17 @@ export const Projects = () => {
                     <Table>
                         <thead>
                             <tr>
-                                <th className={"icon-column"} onClick={()=>setSelectedProjects(visibleProjects.every(p => selectedProjects.includes(p)) ? [] : visibleProjects)}><FontAwesomeIcon icon={visibleProjects.every(p => selectedProjects.includes(p)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>
+                                {/*<th className={"icon-column"} onClick={()=>setSelectedProjects(visibleProjects.every(p => selectedProjects.includes(p)) ? [] : visibleProjects)}><FontAwesomeIcon icon={visibleProjects.every(p => selectedProjects.includes(p)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>*/}
                                 {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <th className={`${col.toLowerCase()}-column`}>{columnNameLabels[col]}</th>)}
+                                <th className={"actions-column"}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {visibleProjects.map(p => <>
                                 <tr>
-                                    <td className={"icon-column"} onClick={()=>selectProject(p)}><FontAwesomeIcon icon={selectedProjects.includes(p) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>
+                                    {/*<td className={"icon-column"} onClick={()=>selectProject(p)}><FontAwesomeIcon icon={selectedProjects.includes(p) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>*/}
                                     {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td className={col === "sogr" ? "icon-column" : ""}>{formatTableData(col, p[col])}</td>)}
+                                    <td className={"actions-cell"}><Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit ProjectForm"}/></Link><Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View ProjectForm"}/></Link></td>
                                 </tr>
                             </>)}
                         </tbody>

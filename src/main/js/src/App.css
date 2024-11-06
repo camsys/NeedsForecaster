@@ -211,6 +211,21 @@ div.field div.rbt div {
     vertical-align: middle !important;
 }
 
+.actions-cell {
+    text-align: center;
+    padding: 8px !important;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), #E9EFF2 !important;
+    width: 66px;
+}
+
+.actions-cell svg {
+    padding: 0px 4px;
+    width: 16px;
+    height: 16px;
+    color: #2078A8;
+    cursor: pointer;
+}
+
 .add-user-button {
     margin-bottom: 20px;
     cursor: pointer;
@@ -450,7 +465,7 @@ label, th {
     margin-bottom: 0;
 }
 
-.dropdown-group, icon-input-group {
+.dropdown-group, .icon-input-group {
     display: flex;
     flex-direction: column;
     justify-content: center;
