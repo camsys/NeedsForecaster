@@ -97,6 +97,8 @@ export const Projects = () => {
         switch (column) {
             case 'sogr':
                 return data && <FontAwesomeIcon icon={'circle-check'} />;
+            case 'ownerOrganization':
+                return organizations.filter(o=>(o.orgKey === data))[0].name;
             default:
                 return data;
         }
