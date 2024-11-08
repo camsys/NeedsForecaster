@@ -1,6 +1,7 @@
 package com.camsys.assetcloud.needsforecaster.controller;
 
 import com.camsys.assetcloud.needsforecaster.controller.exceptions.EntityNotFoundException;
+import com.camsys.assetcloud.needsforecaster.model.Policy;
 import com.camsys.assetcloud.needsforecaster.model.Project;
 import com.camsys.assetcloud.needsforecaster.model.ProjectFilter;
 import com.camsys.assetcloud.needsforecaster.repositories.ProjectRepository;
@@ -42,6 +43,12 @@ public class ProjectsController {
         projTypes.add("Improvement");
         projTypes.add("Demonstration");
         return projTypes;//temporary list for UI use
+    }
+
+    @GetMapping(value = "/api/projects/{id}", produces = "application/json")
+    public Project getPolicyById(@PathVariable(value = "id") Long projectId) {
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project", projectId));
     }
 
     @PostMapping(value = "/api/projects", consumes = "application/json", produces = "application/json")
