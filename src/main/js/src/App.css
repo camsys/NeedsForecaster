@@ -597,6 +597,15 @@ select, .input-group input, .input-group textarea {
     color: #0E2744;
 }
 
+.table-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
 .table-pagination {
     display: flex;
     flex-direction: row;
