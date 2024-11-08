@@ -4,6 +4,7 @@ body,
 html {
     overscroll-behavior-x: none;
     /*font-family: sans-serif;*/
+    background: #F4F7F9;
 }
 
 form,
@@ -452,6 +453,13 @@ h2 {
     background: #FFFFFF;
 }
 
+.header-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
 .container {
     padding: 0;
 }
@@ -465,7 +473,7 @@ label, th {
     margin-bottom: 0;
 }
 
-.dropdown-group, .icon-input-group {
+.dropdown-group, .input-group, .icon-input-group {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -513,7 +521,7 @@ label, th {
     gap: 10px;
 }
 
-select {
+select, .input-group input, .input-group textarea {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -521,11 +529,12 @@ select {
     gap: 10px;
     border: 1px solid #576D75;
     border-radius: 32px;
-    font-size: 16px;
+    font-size: 16px !important;
     font-weight: 600;
     font-style: normal;
     line-height: 16px;
     color: #3F4D55;
+    resize: none;
 }
 
 .table {
@@ -678,7 +687,7 @@ select {
 }
 
 .cancel-button {
-
+    background: #576D75;
 }
 
 button:disabled {

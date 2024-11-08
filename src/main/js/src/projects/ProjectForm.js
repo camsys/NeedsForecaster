@@ -5,6 +5,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Container} from "react-bootstrap";
 import {DropdownInput} from "../lib/DropdownInput";
 
+import './ProjectForm.css'
+
 export const ProjectForm = ({mode}) => {
     const navigate = useNavigate();
     const projectId = useParams().projectId;
@@ -115,22 +117,31 @@ export const ProjectForm = ({mode}) => {
     }, [])
 
     return (
-        <Container id={"project-details-page"}>
+        <Container id={"project-form-page"}>
             <div className={"page-header"}>
                 <h1>{mode === "edit" ? <><b>Editing:</b> {project.name}</> : <>Add Manual Project</>}</h1>
-                <Link to={mode === "edit" ? `/projects/${projectId}` : "/projects"}><button className={"primary-button cancel-button"}><FontAwesomeIcon icon="xmark" /><p>Cancel</p></button></Link>
-                <button className={"primary-button"} disabled={!["name","ownerOrganization","fiscalYear","projectType","description"].every(field=>(!!formData[field]))} onClick={saveProject}><FontAwesomeIcon icon="floppy-disk" /><p>Save</p></button>
+                <div className={"header-buttons"}>
+                    <Link to={mode === "edit" ? `/projects/${projectId}` : "/projects"}><button className={"primary-button cancel-button"}><FontAwesomeIcon icon="xmark" /><p>Cancel</p></button></Link>
+                    <button className={"primary-button"} disabled={!["name","ownerOrganization","fiscalYear","projectType","description"].every(field=>(!!formData[field]))} onClick={saveProject}><FontAwesomeIcon icon="floppy-disk" /><p>Save</p></button>
+                </div>
             </div>
             <div className={"project-form"}>
                 <div className={"project-form-left"}>
-                    <input key={"name"} value={formData.name || ''} onChange={(e) => setFormData({...formData, name: e.target.value})}/>
-                    <DropdownInput name={"ownerOrganization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, ownerOrganization: e.target.value})} defaultValue={formData.ownerOrganization || ''} disabled={mode === "edit"}/>
-                    <DropdownInput name={"fiscalYear"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, fiscalYear: e.target.value})} defaultValue={formData.fiscalYear || ''}/>
-                    <DropdownInput name={"projectType"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, projectType: e.target.value})} defaultValue={formData.projectType || ''}/>
-
+                    <div className={"input-group"}>
+                        <label>Title</label>
+                        <input key={"name"} value={formData.name || ''} onChange={(e) => setFormData({...formData, name: e.target.value})}/>
+                    </div>
+                    <div className={"project-form-dropdowns"}>
+                        <DropdownInput name={"owner-organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, ownerOrganization: e.target.value})} defaultValue={formData.ownerOrganization || ''} disabled={mode === "edit"}/>
+                        <DropdownInput name={"fiscal-year"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, fiscalYear: e.target.value})} defaultValue={formData.fiscalYear || ''}/>
+                        <DropdownInput name={"project-type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, projectType: e.target.value})} defaultValue={formData.projectType || ''}/>
+                    </div>
                 </div>
                 <div className={"project-form-right"}>
-                    <input key={"description"} value={formData.description || ''} onChange={(e) => setFormData({...formData, description: e.target.value})}/>
+                    <div className={"input-group"}>
+                        <label>Description</label>
+                        <textarea key={"description"} value={formData.description || ''} onChange={(e) => setFormData({...formData, description: e.target.value})}/>
+                    </div>
                 </div>
             </div>
         </Container>
