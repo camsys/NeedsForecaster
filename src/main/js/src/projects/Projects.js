@@ -17,7 +17,7 @@ export const Projects = () => {
 
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
-    let [projectTypes, setProjectTypes] = useState([{key:"type 1", name:"Type 1"},{key:"type 2", name:"Type 2"}]);
+    let [projectTypes, setProjectTypes] = useState([]);
     let [filters, setFilters] = useState({});
     let [searchQuery, setSearchQuery] = useState('');
     let [projects, setProjects] = useState([]);
@@ -198,8 +198,26 @@ export const Projects = () => {
                 toast.error("Could not retrieve fiscal years.");
             });
         }
+
+        const fetchProjectTypes = () => {
+            setLoading(true);
+            fetch("/api/projects/types", requestOptions)
+                .then((response) => {
+                    return response
+                        .json()
+                        .then((data) => {
+                            setProjectTypes(data);
+                            setLoading(false);
+                        })
+                })
+                .catch((e) => {
+                    setLoading(false);
+                    toast.error("Could not retrieve organizations.");
+                });
+        }
         fetchOrgs();
         fetchFiscalYears();
+        fetchProjectTypes();
     }, []);
 
     useEffect(() => {
@@ -229,7 +247,7 @@ export const Projects = () => {
                     <DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("ownerOrganization", e.target.value)}/>
                     <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>
                     <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
-                    <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t.key, value: t.name, name: t.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
+                    <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
                     <IconInput icon={'magnifying-glass'} name={"search_bar"} label={"Search project title/description"} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
                 </div>
             </div>
