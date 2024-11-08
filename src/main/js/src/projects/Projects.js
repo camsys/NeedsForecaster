@@ -255,7 +255,7 @@ export const Projects = () => {
                                 <tr>
                                     {/*<td className={"icon-column"} onClick={()=>selectProject(p)}><FontAwesomeIcon icon={selectedProjects.includes(p) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>*/}
                                     {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td className={col === "sogr" ? "icon-column" : ""}>{formatTableData(col, p[col])}</td>)}
-                                    <td className={"actions-cell"}><Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit ProjectForm"}/></Link><Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View ProjectForm"}/></Link></td>
+                                    <td className={"actions-cell"}><Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link><Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View Project"}/></Link></td>
                                 </tr>
                             </>)}
                         </tbody>
