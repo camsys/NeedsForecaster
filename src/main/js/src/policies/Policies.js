@@ -137,13 +137,15 @@ export const Policies = () => {
             text: "Save policy changes",
             href: void(0),
             icon: "floppy-disk",
-            handleClick: ()=>editPolicy(policyFields)
+            handleClick: ()=>editPolicy(policyFields),
+            closeOnAction: true
         },
         {
             text: "Cancel policy changes",
             href: void(0),
             icon: "xmark",
-            handleClick: ()=>setPolicyFields({description: null})
+            handleClick: ()=>setPolicyFields({description: null}),
+            closeOnAction: true
         }
     ]
 
