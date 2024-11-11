@@ -21,6 +21,7 @@ export const ProjectForm = ({mode}) => {
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [projectTypes, setProjectTypes] = useState([]);
+    let [loading, setLoading] = useState(false);
 
     const saveProject = () => {
         const requestOptions = {
@@ -30,6 +31,7 @@ export const ProjectForm = ({mode}) => {
             body: JSON.stringify(formData)
         };
 
+        setLoading(true);
         fetch(`/api/projects/${mode === "add" ? "new" : projectId}`, requestOptions)
             .then((response) => {
                 return response
@@ -39,6 +41,7 @@ export const ProjectForm = ({mode}) => {
                     })
             })
             .catch((e) => {
+                setLoading(false);
                 toast.error("Could not save project.");
             });
     }
@@ -51,6 +54,7 @@ export const ProjectForm = ({mode}) => {
         };
         const fetchProject = () => {
             if (projectId) {
+                setLoading(true);
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
                         return response
@@ -64,49 +68,60 @@ export const ProjectForm = ({mode}) => {
                                     projectType: data.projectType,
                                     description: data.description
                                 });
+                                setLoading(false);
                             })
                     })
                     .catch((e) => {
+                        setLoading(false);
                         toast.error("Could not retrieve project.");
                     });
             }
         }
         const fetchOrgs = () => {
+            setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
                     return response
                         .json()
                         .then((data) => {
                             setOrganizations(data);
+                            setLoading(false);
                         })
                 })
                 .catch((e) => {
+                    setLoading(false);
                     toast.error("Could not retrieve organizations.");
                 });
         }
         const fetchFiscalYears = () => {
+            setLoading(true);
             fetch("/api/projects/fiscal-years", requestOptions)
                 .then((response) => {
                     return response
                         .json()
                         .then((data) => {
                             setFiscalYears(data);
+                            setLoading(false);
                         })
                 })
                 .catch((e) => {
+                    setLoading(false);
                     toast.error("Could not retrieve fiscal years.");
                 });
         }
         const fetchProjectTypes = () => {
+            setLoading(true);
             fetch("/api/projects/types", requestOptions)
                 .then((response) => {
                     return response
                         .json()
                         .then((data) => {
                             setProjectTypes(data);
+                            setLoading(false);
                         })
                 })
                 .catch((e) => {
+                    setLoading(false);
                     toast.error("Could not retrieve project types.");
                 });
         }
@@ -116,7 +131,8 @@ export const ProjectForm = ({mode}) => {
         fetchProjectTypes();
     }, [])
 
-    return (
+    return (<>
+        {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
         <Container id={"project-form-page"}>
             <div className={"page-header"}>
                 <h1>{mode === "edit" ? <><b>Editing:</b> {project.name}</> : <>Add Manual Project</>}</h1>
@@ -145,5 +161,5 @@ export const ProjectForm = ({mode}) => {
                 </div>
             </div>
         </Container>
-    );
+    </>);
 }

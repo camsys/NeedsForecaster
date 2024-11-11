@@ -39,12 +39,6 @@ export const ProjectDetails = () => {
         }
     }
 
-    const changePage = (pageNum) => {
-        setPage(pageNum);
-        setVisibleAssets(queriedAssets.slice(pageSize * (pageNum - 1), pageSize * pageNum));
-        refreshSelectablePages();
-    }
-
     const refreshSelectablePages = () => {
         let numPages = Math.floor((queriedAssets.length - 1) / pageSize) + 1;
         if (numPages <= 0) {
@@ -91,6 +85,7 @@ export const ProjectDetails = () => {
             credentials: "include"
         };
         const fetchProject = () => {
+            setLoading(true);
             if (projectId) {
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
@@ -98,9 +93,11 @@ export const ProjectDetails = () => {
                             .json()
                             .then((data) => {
                                 setProject(data);
+                                setLoading(false);
                             })
                     })
                     .catch((e) => {
+                        setLoading(false);
                         toast.error("Could not retrieve project.");
                     });
             }
@@ -166,8 +163,10 @@ export const ProjectDetails = () => {
             //         toast.error("Could not retrieve projects.");
             //     });
         }
-        fetchAssets();
-        setPage(1);
+        if (project.sogr) {
+            fetchAssets();
+            setPage(1);
+        }
     }, [project]);
 
     useEffect(() => {
@@ -206,7 +205,7 @@ export const ProjectDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className={"assets-table-container"}>
+                {project.sogr && <div className={"assets-table-container"}>
                     <div className={"table-actions"}>
                         <IconInput icon={'magnifying-glass'} name={"search_bar"} placeholder={"Search Table..."} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
                         {/*<ActionsButton actions={exportActionsMenuItems} icon={"file-arrow-down"} label={"Export"}/>*/}
@@ -252,7 +251,7 @@ export const ProjectDetails = () => {
                             {page <= Math.floor((queriedAssets.length - 1) / pageSize) && <FontAwesomeIcon icon={"fa-angle-right"} onClick={()=>setPage(page + 1)}/>}
                         </div>
                     </div>
-                </div>
+                </div>}
             </Container></>
     );
 }

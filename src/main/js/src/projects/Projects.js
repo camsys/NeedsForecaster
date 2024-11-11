@@ -108,13 +108,6 @@ export const Projects = () => {
         selectedProjects.includes(project) ? setSelectedProjects(selectedProjects.filter(p => p != project)) : setSelectedProjects([...selectedProjects, project]);
     }
 
-    const changePage = (pageNum) => {
-        // TODO: Pagination will be frontend
-        setPage(pageNum);
-        setVisibleProjects(queriedProjects.slice(pageSize * (pageNum - 1), pageSize * pageNum));
-        refreshSelectablePages();
-    }
-
     const refreshSelectablePages = () => {
         let numPages = Math.floor((queriedProjects.length - 1) / pageSize) + 1;
         if (numPages <= 0) {
