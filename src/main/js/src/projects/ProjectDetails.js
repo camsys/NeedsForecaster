@@ -182,7 +182,10 @@ export const ProjectDetails = () => {
             {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
             <Container id={"project-details-page"}>
                 <div className={"page-header"}>
-                    <h1>{project?.name}</h1>
+                    <div className={"page-header-left"}>
+                        <span className={"breadcrumbs"}><Link to={"/projects"}>Projects</Link><FontAwesomeIcon icon={"angle-right"}/></span>
+                        <h1>{project?.name}</h1>
+                    </div>
                     <Link to={`/projects/${projectId}/edit`}><button className={"primary-button"}><FontAwesomeIcon icon="pencil" /><p>Edit</p></button></Link>
                 </div>
                 <div className={"project-info-container"}>
