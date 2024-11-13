@@ -46,7 +46,7 @@ public class ProjectsController {
     }
 
     @GetMapping(value = "/api/projects/{id}", produces = "application/json")
-    public Project getPolicyById(@PathVariable(value = "id") Long projectId) {
+    public Project getProjectById(@PathVariable(value = "id") Long projectId) {
         return projectRepository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("Project", projectId));
     }
