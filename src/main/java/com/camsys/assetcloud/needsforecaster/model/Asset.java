@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Asset {
@@ -19,6 +19,9 @@ public class Asset {
     public String uniqueKey;
 
     @NotNull
+    public String assetId;//user understood id for asset
+
+    @NotNull
     public String orgKey;
 
     @NotNull
@@ -28,11 +31,11 @@ public class Asset {
     public String assetSubTypeKey;
 
     @NotNull
-    public Date inServiceDate;
+    public LocalDate inServiceDate;
 
     public String condition;
 
-    public Integer odometerValue;
+    public Integer odometer;
 
     public String vin;
 
