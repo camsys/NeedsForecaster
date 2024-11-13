@@ -1,7 +1,6 @@
 package com.camsys.assetcloud.needsforecaster.controller;
 
 import com.camsys.assetcloud.controller.BasePage;
-import com.camsys.assetcloud.auth.AssetCloudOidcUserPrincipal;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
