@@ -1,15 +1,14 @@
 package com.camsys.assetcloud.needsforecaster.controller;
 
 import com.camsys.assetcloud.needsforecaster.controller.exceptions.EntityNotFoundException;
-import com.camsys.assetcloud.needsforecaster.model.Policy;
-import com.camsys.assetcloud.needsforecaster.model.Project;
-import com.camsys.assetcloud.needsforecaster.model.ProjectFilter;
+import com.camsys.assetcloud.needsforecaster.model.*;
 import com.camsys.assetcloud.needsforecaster.repositories.ProjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ProjectsController {
@@ -52,11 +51,11 @@ public class ProjectsController {
     }
 
     @PostMapping(value = "/api/projects", consumes = "application/json", produces = "application/json")
-    public List<Project> getProjects(@RequestBody(required = false) ProjectFilter filter) {
+    public List<ProjectListDTO> getProjects(@RequestBody(required = false) ProjectFilter filter) {
         if (filter == null)//no filter provided so return full list
-            return projectRepository.list();
+            return projectRepository.list().stream().map(ProjectListDTO::new).collect(Collectors.toList());
         else {
-            return projectRepository.findByFilter(filter);
+            return projectRepository.findByFilter(filter).stream().map(ProjectListDTO::new).collect(Collectors.toList());
         }
     }
 
