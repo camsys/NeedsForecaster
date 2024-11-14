@@ -37,11 +37,21 @@ public class ProjectBuilderRun {
     @NotNull
     public Date createdOn;
 
-    @NotNull
     public Date completeOn;
 
     @JsonIgnore
     @ManyToMany
     public List<Project> projects;
 
+    public boolean isValidRunCreate() {
+        return assetTypeKeys != null && assetTypeKeys.size() > 0 &&
+                yearRange != null && yearRange.intValue() > 0 &&
+                ownerOrganization != null && ownerOrganization.length() > 0 &&
+                fiscalYear != null && fiscalYear.intValue() > 0;
+    }
+
+    static public String generateSogrRunKey() {
+        Date now = new Date();
+        return String.valueOf(now.getTime());//just use current time for now
+    }
 }

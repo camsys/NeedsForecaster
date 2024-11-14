@@ -43,5 +43,14 @@ public class Asset {
 
     public String name;
 
+    public Integer policyReplacementYear;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Asset asset = (Asset) o;
+        return uniqueKey.equals(asset.uniqueKey);
+    }
 
 }

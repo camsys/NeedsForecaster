@@ -1,3 +1,4 @@
 UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer,Vin,Description,Name
 1,B1234,bpt,Buses,Bus Std 40 FT,2020/05/06,3,4500,SAMPLEVIN12345678,,
 2,A556,bpt,Administration,Administration Building,2010/03/31,4,,,,Main Office
+33,B1235,bpt,Buses,Bus Std 40 FT,2021/05/06,3,3900,SAMPLEXXX12345678,,

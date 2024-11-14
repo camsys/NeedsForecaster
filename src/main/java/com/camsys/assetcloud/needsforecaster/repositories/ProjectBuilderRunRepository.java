@@ -10,4 +10,13 @@ public interface ProjectBuilderRunRepository extends CrudRepository<ProjectBuild
 
     @Query("select r from ProjectBuilderRun r")
     List<ProjectBuilderRun> list();
+
+    @Query("select r from ProjectBuilderRun r " +
+            "where r.status = com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunStatus.WAITING " +
+            "order by r.createdOn asc")
+    List<ProjectBuilderRun> listWaiting();
+
+    @Query("select r from ProjectBuilderRun r " +
+            "where r.status = com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunStatus.PROCESSING")
+    List<ProjectBuilderRun> listProcessing();
 }

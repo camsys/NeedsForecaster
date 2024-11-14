@@ -32,6 +32,11 @@ public class Project {
     @ManyToMany
     public List<Asset> assets;
 
+    public String assetTypeKey() {
+        if (assets == null || assets.size() == 0) return null;
+        else return assets.get(0).assetTypeKey;
+    }
+
     public boolean isValid() {
         if (name == null || name.isEmpty()) {return false;}
         if (description == null || description.isEmpty()) {return false;}
