@@ -12,9 +12,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 // disable legacy JPA auto config
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@EnableAsync
 @EntityScan(basePackages = {"com.camsys.assetcloud.needsforecaster"})
 public class NeedsForecasterApplication {
 

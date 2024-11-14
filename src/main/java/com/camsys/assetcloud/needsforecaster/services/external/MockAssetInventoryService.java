@@ -1,4 +1,4 @@
-package com.camsys.assetcloud.needsforecaster.services;
+package com.camsys.assetcloud.needsforecaster.services.external;
 
 import com.camsys.assetcloud.needsforecaster.dataimport.MockAssets;
 import com.camsys.assetcloud.needsforecaster.model.Asset;
@@ -43,12 +43,17 @@ public class MockAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
-    public List<Asset> getActiveAssets(String orgKey, String assetTypeKey) {
+    public List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) {
         try {
             List<Asset> allAssets = mockAssets.load();
-            return allAssets.stream().filter(a -> a.orgKey.equals(orgKey) && a.assetTypeKey.equals(assetTypeKey)).collect(Collectors.toList());
+            return allAssets.stream().filter(a -> a.orgKey.equals(orgKey) && assetTypeKeys.contains(a.assetTypeKey)).toList();
         }
         catch (IOException e) {}
         return null;
+    }
+
+    @Override
+    public void broadcastAssetUpdates(List<Asset> assets) {
+        System.out.println("Broadcast asset updates");
     }
 }
