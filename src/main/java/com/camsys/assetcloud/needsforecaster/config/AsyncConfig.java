@@ -13,8 +13,8 @@ public class AsyncConfig {
     public Executor taskExecutor() {
         // standard thread pool
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(10);
+        executor.setCorePoolSize(1);//set pool size to 1 to force just one task running at a time
+        executor.setMaxPoolSize(1);//set max pool size to 1 to force just one task running at a time
         executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("AsyncThread-");
         executor.initialize();

@@ -8,19 +8,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AsyncSogrRunner implements SogrRunner {
+    private RunnerCallback callbacks;
+
+    @Override
+    public void initialize(RunnerCallback callbacks) {
+        this.callbacks = callbacks;
+    }
 
     @Async("taskExecutor")
     @Transactional
     @Override
-    public void run(ProjectBuilderRun run, SogrBuilder builder, RunnerCompletionCallback completionCallback, RunnerErrorCallback errorCallback) {
+    public void run(ProjectBuilderRun run, SogrBuilder builder) {
         System.out.println("Execute method - " + Thread.currentThread().getName());
 
         try {
+            if (callbacks != null) callbacks.callbackBegin(run.id);
             builder.build(run);
-            if (completionCallback != null) completionCallback.callback(run.id);
+            if (callbacks != null) callbacks.callbackComplete(run.id);
         }
         catch (Exception e) {
-            if (errorCallback != null) errorCallback.callback(run.id);
+            if (callbacks != null) callbacks.callbackError(run.id);
             e.printStackTrace();
         }
 

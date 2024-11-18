@@ -4,6 +4,7 @@ import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunStatus;
 import com.camsys.assetcloud.needsforecaster.repositories.ProjectBuilderRunRepository;
 import com.camsys.assetcloud.needsforecaster.services.sogr.builder.SogrBuilder;
+import com.camsys.assetcloud.needsforecaster.services.sogr.runner.RunnerCallback;
 import com.camsys.assetcloud.needsforecaster.services.sogr.runner.SogrRunner;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,30 @@ public class SogrProjectManager {
                               SogrRunner runner) {
         this.projectBuilderRunRepository = projectBuilderRunRepository;
         this.builder = builder;
+
+        //initialize runner with callbacks
         this.runner = runner;
+        this.runner.initialize(new RunnerCallback() {
+            @Override
+            public void callbackBegin(Long runId) {
+                //nothing to do at beginning of run
+            }
+
+            @Override
+            public void callbackComplete(Long runId) {
+                ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
+                run.status = ProjectBuilderRunStatus.COMPLETE;
+                run.completeOn = new Date();
+                projectBuilderRunRepository.save(run);
+            }
+
+            @Override
+            public void callbackError(Long runId) {
+                ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
+                run.status = ProjectBuilderRunStatus.ERROR;
+                projectBuilderRunRepository.save(run);
+            }
+        });
     }
 
     public ProjectBuilderRun create(ProjectBuilderRun newRun) {
@@ -32,47 +56,10 @@ public class SogrProjectManager {
         newRun.status = ProjectBuilderRunStatus.WAITING;
         newRun = projectBuilderRunRepository.save(newRun);
 
-        activateRunProcessing();
+        //add new run to the task queue
+        runner.run(newRun, builder);
 
         return newRun;
-    }
-
-    //process waiting runs
-    protected void activateRunProcessing() {
-        List<ProjectBuilderRun> processingRuns = projectBuilderRunRepository.listProcessing();
-        if (processingRuns.size() == 0) {
-            //if no runs are currently processing, process waiting runs
-            List<ProjectBuilderRun> waitingRuns = projectBuilderRunRepository.listWaiting();
-
-            if (waitingRuns.size() > 0) {//at least one job waiting
-                ProjectBuilderRun readyRun = waitingRuns.get(0);
-                readyRun.status = ProjectBuilderRunStatus.PROCESSING;
-                readyRun = projectBuilderRunRepository.save(readyRun);
-
-                runner.run(readyRun, builder, (runId) -> processingComplete(runId), (runId) -> processingErrorHandler(runId));
-            }
-        }
-    }
-
-    protected void processingComplete(Long runId) {
-        //finalize run status
-        ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
-        run.status = ProjectBuilderRunStatus.COMPLETE;
-        run.completeOn = new Date();
-        projectBuilderRunRepository.save(run);
-
-        //look for more waiting runs
-        activateRunProcessing();
-    }
-
-    protected void processingErrorHandler(Long runId) {
-        //update run status to error since something went wrong
-        ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
-        run.status = ProjectBuilderRunStatus.ERROR;
-        projectBuilderRunRepository.save(run);
-
-        //look for more waiting runs
-        activateRunProcessing();
     }
 
 
