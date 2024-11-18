@@ -45,6 +45,10 @@ public class AssetTypesController {
         type.name = "Parking";
         types.add(type);
         type = new AssetType();
+        type.key = "Passenger";
+        type.name = "Passenger";
+        types.add(type);
+        type = new AssetType();
         type.key = "Rail Cars";
         type.name = "Rail Cars";
         types.add(type);
