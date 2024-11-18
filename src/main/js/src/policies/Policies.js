@@ -226,12 +226,12 @@ export const Policies = () => {
         setSelectedAssetType(assetTypes.filter(t => t.key === e.target.value)[0]);
     }
 
-    const saveSubtypeRule = (e) => {
-        // let selectedSubtype = e.target.closest("tr").children[0].innerText;
-        // setAssetSubtypes({...assetSubtypes, [selectedAssetType.key]: {...assetSubtypes[selectedAssetType.key], [selectedSubtype]: {esl_months: subtypeRuleFields.eslMonths, esl_miles: subtypeRuleFields.eslMiles}}});
-        // setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null});
+    const updateSubtypeRuleFields = (e, field) => {
+        if (/\D/g.test(e.target.value) && e.target.value !== "") {
+            return;
+        }
+        setSubtypeRuleFields({...subtypeRuleFields, [field]: e.target.value});
     }
-
     return (<>
         {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
         <Container id={"policies-page"}>
@@ -323,8 +323,8 @@ export const Policies = () => {
                                 <>
                                     <tr key={sr.id}>
                                         <td>{sr.assetSubType}</td>
-                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_months_${sr.id}`} value={subtypeRuleFields.eslMonths} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMonths: e.target.value})}/> : sr.eslMonths}</td>
-                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_miles_${sr.id}`} value={subtypeRuleFields.eslMiles} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMiles: e.target.value})}/> : sr.eslMiles}</td>
+                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_months_${sr.id}`} value={subtypeRuleFields.eslMonths} onChange={(e) => updateSubtypeRuleFields(e, "eslMonths")}/> : sr.eslMonths}</td>
+                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_miles_${sr.id}`} value={subtypeRuleFields.eslMiles} onChange={(e) => updateSubtypeRuleFields(e, "eslMiles")}/> : sr.eslMiles}</td>
                                         <td>
                                             {subtypeRuleFields.id === sr.id ?
                                                 <>
