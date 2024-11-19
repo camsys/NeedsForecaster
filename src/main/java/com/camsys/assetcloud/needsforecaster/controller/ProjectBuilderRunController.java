@@ -59,7 +59,7 @@ public class ProjectBuilderRunController {
         return runRepository.list();
     }
 
-    @GetMapping(value = "/api/runs/test", produces = "application/json")
+//    @GetMapping(value = "/api/runs/test", produces = "application/json")
 //    public ProjectBuilderRun testing() throws IOException {
 ////        MockAssetInventoryService mockAssetInventoryService = new MockAssetInventoryService(new MockAssets());
 ////        return mockAssetInventoryService.getActiveAssets("bpt","Administration");
