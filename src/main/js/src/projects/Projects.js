@@ -67,8 +67,6 @@ export const Projects = () => {
     }
 
     const fetchProjectsWithFilters = (filters) => {
-        // TODO: Pagination will be frontend
-        // TODO: Filters will be handled by backend as a request body
         const requestOptions = {
             method: "POST",
             credentials: "include",
@@ -139,10 +137,6 @@ export const Projects = () => {
             }
             setSelectablePages(pagesList);
         }
-    }
-
-    const addProject = () => {
-        console.log("Not really adding new project.");
     }
 
     const executeSearch = (query) => {
