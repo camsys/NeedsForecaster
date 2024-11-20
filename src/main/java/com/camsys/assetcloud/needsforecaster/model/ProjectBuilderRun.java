@@ -39,10 +39,6 @@ public class ProjectBuilderRun {
 
     public Date completeOn;
 
-    @JsonIgnore
-    @ManyToMany
-    public List<Project> projects;
-
     public boolean isValidRunCreate() {
         return assetTypeKeys != null && assetTypeKeys.size() > 0 &&
                 yearRange != null && yearRange.intValue() > 0 &&
