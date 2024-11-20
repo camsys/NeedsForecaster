@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ProjectBuilderRunRepository extends CrudRepository<ProjectBuilderRun, Long> {
 
-    @Query("select r from ProjectBuilderRun r")
+    @Query("select r from ProjectBuilderRun r order by r.createdOn desc")
     List<ProjectBuilderRun> list();
 }
