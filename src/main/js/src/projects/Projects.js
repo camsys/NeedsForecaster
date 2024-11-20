@@ -11,10 +11,6 @@ import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
 
 export const Projects = () => {
-    // TODO: Add/edit projects in separate page
-    // TODO: Fiscal year formatted as YYYY when fiscal year is included in the label context, add FY to beginning when not
-    // TODO: Move search bar to filters section and have it search on project name and description
-
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [projectTypes, setProjectTypes] = useState([]);
@@ -23,7 +19,8 @@ export const Projects = () => {
     let [projects, setProjects] = useState([]);
     let [queriedProjects, setQueriedProjects] = useState([]);
     let [visibleProjects, setVisibleProjects] = useState([]);
-    let [selectedProjects, setSelectedProjects] = useState([]);
+    let [selectedProject, setSelectedProject] = useState(null);
+    // let [selectedProjects, setSelectedProjects] = useState([]);
     let [columns, setColumns] = useState({
         "ownerOrganization": true,
         "fiscalYear": true,
@@ -36,6 +33,7 @@ export const Projects = () => {
     let [pageSize, setPageSize] = useState(10);
     let [selectablePages, setSelectablePages] = useState([]);
     let [loading, setLoading] = useState(false);
+    let [showModal, setShowModal] = useState(false);
 
     const exportActionsMenuItems = [
         {
@@ -96,14 +94,41 @@ export const Projects = () => {
             case 'sogr':
                 return data && <FontAwesomeIcon icon={'circle-check'} />;
             case 'ownerOrganization':
-                return organizations.filter(o=>(o.orgKey === data))[0].name;
+                return organizations.filter(o=>(o.orgKey === data))[0]?.name;
             default:
                 return data;
         }
     }
 
-    const selectProject = (project) => {
-        selectedProjects.includes(project) ? setSelectedProjects(selectedProjects.filter(p => p != project)) : setSelectedProjects([...selectedProjects, project]);
+    // const selectProject = (project) => {
+    //     selectedProjects.includes(project) ? setSelectedProjects(selectedProjects.filter(p => p != project)) : setSelectedProjects([...selectedProjects, project]);
+    // }
+
+    const confirmDelete = (projectId) => {
+        setSelectedProject(projectId);
+        setShowModal(true);
+    }
+
+    const deleteProject = (projectId) => {
+        const requestOptions = {
+            method: "DELETE",
+            credentials: "include"
+        };
+        setLoading(true);
+        fetch(`/api/projects/${projectId}`, requestOptions)
+        .then((response) => {
+
+            let updatedProjectsList = projects.filter(p=>(p.id !== projectId));
+            setProjects(updatedProjectsList);
+            setQueriedProjects(updatedProjectsList.filter(p => !!searchQuery ? (p.name.includes(searchQuery) || p.description.includes(searchQuery)) : p));
+            setSelectedProject(null);
+            setShowModal(false);
+            setLoading(false);
+        })
+        .catch((e) => {
+            setLoading(false);
+            toast.error("Could not delete project.");
+        });
     }
 
     const refreshSelectablePages = () => {
@@ -219,10 +244,19 @@ export const Projects = () => {
 
     useEffect(() => {
         setPage(1);
-    }, [pageSize])
+    }, [pageSize]);
 
     return (<>
         {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
+        {showModal && <div className={"modal-container"}>
+            <div className={"modal-frame"}>
+                <div className={"modal"}>
+                    <h2 className={"modal-header"}>Delete Project</h2>
+                    <p>Are you sure you want to delete this project?</p>
+                    <div className={"modal-buttons"}><button className={"primary-button"} onClick={()=>setShowModal(false)}>Cancel</button><button className={"primary-button danger-button"} onClick={()=>deleteProject(selectedProject)}>Delete</button></div>
+                </div>
+            </div>
+        </div>}
         <Container id={"projects-page"}>
             <div className={"page-header"}>
                 <h1>Projects</h1>
@@ -236,6 +270,8 @@ export const Projects = () => {
                     <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
                     <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
                     <IconInput icon={'magnifying-glass'} name={"search_bar"} label={"Search project title/description"} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
+
+                {/*    TODO: if query param for project builder run, show explanation text and include button to return to full project list (reload with base projects url)*/}
                 </div>
             </div>
             <div className={"projects-table-container"}>
@@ -262,7 +298,13 @@ export const Projects = () => {
                                 <tr>
                                     {/*<td className={"icon-column"} onClick={()=>selectProject(p)}><FontAwesomeIcon icon={selectedProjects.includes(p) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>*/}
                                     {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td className={col === "sogr" ? "icon-column" : ""}>{formatTableData(col, p[col])}</td>)}
-                                    <td className={"actions-cell"}><Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link><Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View Project"}/></Link></td>
+                                    <td className={"actions-cell"}>
+                                        <div className={"column-actions-container"}>
+                                            <Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link>
+                                            <Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View Project"}/></Link>
+                                            <FontAwesomeIcon icon={"fa-trash-can"} title={"Delete Project"} onClick={()=>confirmDelete(p.id)}/>
+                                        </div>
+                                    </td>
                                 </tr>
                             </>)}
                         </tbody>
