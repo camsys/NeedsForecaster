@@ -1,6 +1,5 @@
 package com.camsys.assetcloud.needsforecaster.repositories;
 
-import com.camsys.assetcloud.needsforecaster.model.Policy;
 import com.camsys.assetcloud.needsforecaster.model.Project;
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 import com.camsys.assetcloud.needsforecaster.model.ProjectFilter;

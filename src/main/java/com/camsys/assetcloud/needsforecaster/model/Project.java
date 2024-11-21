@@ -44,7 +44,7 @@ public class Project {
 
     //works under the assumption that all assets for a project have the same asset type
     public String assetTypeKey() {
-        if (_assets == null || _assets.size() == 0) return null;
+        if (_assets == null || _assets.isEmpty()) return null;
         else return _assets.get(0).assetTypeKey;
     }
 
@@ -74,8 +74,7 @@ public class Project {
         if (description == null || description.isEmpty()) {return false;}
         if (ownerOrganization == null || ownerOrganization.isEmpty()) {return false;}
         if (projectType == null) {return false;}
-        if (fiscalYear == null || fiscalYear < 2000) {return false;}
-        return true;
+        return fiscalYear != null && fiscalYear >= 2000;
     }
 
     @Override

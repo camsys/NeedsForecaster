@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,20 +52,6 @@ public class ProjectBuilderRunController {
     public List<ProjectBuilderRun> getRuns() {
         return runRepository.list();
     }
-
-//    @GetMapping(value = "/api/runs/test", produces = "application/json")
-//    public ProjectBuilderRun testing() throws IOException {
-////        MockAssetInventoryService mockAssetInventoryService = new MockAssetInventoryService(new MockAssets());
-////        return mockAssetInventoryService.getActiveAssets("bpt","Administration");
-//        ProjectBuilderRun testRun = new ProjectBuilderRun();
-//        testRun.fiscalYear = 2027;
-//        testRun.yearRange = 50;
-//        testRun.assetTypeKeys = new ArrayList<>();
-//        testRun.assetTypeKeys.add("Buses (Rubber Tire Vehicles)");
-//        testRun.assetTypeKeys.add("Administration");
-//        testRun.ownerOrganization = "bpt";
-//        return sogrProjectManager.create(testRun);
-//    }
 
     @PostMapping(value = "/api/runs/new", consumes = "application/json", produces = "application/json")
     public ProjectBuilderRun createRun(@RequestBody(required = true) ProjectBuilderRun params) {

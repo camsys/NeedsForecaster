@@ -7,13 +7,11 @@ import com.camsys.assetcloud.needsforecaster.model.PolicySubRule;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.lang.model.element.UnknownElementException;
 import java.util.NoSuchElementException;
 
 @Service
 public class ReplacementYearPolicyApplication implements PolicyApplication {
     private final ApplicationContext applicationContext;
-    private ServiceLifeCalculator serviceLifeCalculator;
 
     public ReplacementYearPolicyApplication(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -26,7 +24,7 @@ public class ReplacementYearPolicyApplication implements PolicyApplication {
         PolicyRule policyRule = policy.rules.stream().filter(rule -> rule.assetType.equals(asset.assetTypeKey)).findFirst().orElseThrow();
 
         //set service life calculator to correct type
-        serviceLifeCalculator = getServiceLifeCalculator(policyRule.serviceLifeCalculationMethod);
+        ServiceLifeCalculator serviceLifeCalculator = getServiceLifeCalculator(policyRule.serviceLifeCalculationMethod);
 
         PolicySubRule policySubRule = policyRule.subRules.stream().filter(subrule -> subrule.assetSubType.equals(asset.assetSubTypeKey)).findFirst().orElseThrow();
         serviceLifeCalculator.calculate(asset, policySubRule);

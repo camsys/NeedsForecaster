@@ -22,7 +22,6 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
 
 
     public ReplacementOnlySogrBuilder(@Qualifier("mockAIService") AssetInventoryService aiService,
-                                      ProjectBuilderRunRepository projectBuilderRunRepository,
                                       ProjectRepository projectRepository,
                                       ReplacementYearPolicyApplication replacementYearPolicyApplication,
                                       PolicyRepository policyRepository,
@@ -57,7 +56,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
             replacementYearPolicyApplication.apply(policy, asset);
 
             //calc min allowed year
-            int minAllowedYear = Math.max(Utility.getCurrentFiscalYear() + 1, asset.policyReplacementYear.intValue());
+            int minAllowedYear = Math.max(Utility.getCurrentFiscalYear() + 1, asset.policyReplacementYear);
 
             //place project if in range
             if (minAllowedYear >= startYear && minAllowedYear <= endYear) {

@@ -14,8 +14,4 @@ public abstract class ServiceLifeCalculatorBase  {
         calendar.add(Calendar.MONTH, months);
         return LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
-
-    protected int getCurrentYear() {
-        return LocalDate.now().getYear();
-    }
 }
