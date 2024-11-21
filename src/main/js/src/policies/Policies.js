@@ -28,6 +28,7 @@ export const Policies = () => {
             credentials: "include"
         })
         .then((response) => {
+            if (!response.ok) {throw Error}
             return response
                 .json()
                 .then((data) => {
@@ -50,6 +51,7 @@ export const Policies = () => {
             credentials: "include"
         })
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -73,6 +75,7 @@ export const Policies = () => {
             credentials: "include"
         })
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -96,6 +99,7 @@ export const Policies = () => {
             credentials: "include"
         })
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -158,6 +162,7 @@ export const Policies = () => {
         const fetchOrgs = () => {
             fetch("/api/orgs", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -172,6 +177,7 @@ export const Policies = () => {
         const fetchAssetTypes = () => {
             fetch("/api/asset-types", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -186,6 +192,7 @@ export const Policies = () => {
         const fetchPolicies = () => {
             fetch(`/api/policies`, requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {

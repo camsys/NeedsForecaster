@@ -34,6 +34,7 @@ export const ProjectForm = ({mode}) => {
         setLoading(true);
         fetch(`/api/projects/${mode === "add" ? "new" : projectId}`, requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -57,6 +58,7 @@ export const ProjectForm = ({mode}) => {
                 setLoading(true);
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
+                        if (!response.ok) {throw Error}
                         return response
                             .json()
                             .then((data) => {
@@ -81,6 +83,7 @@ export const ProjectForm = ({mode}) => {
             setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -97,6 +100,7 @@ export const ProjectForm = ({mode}) => {
             setLoading(true);
             fetch("/api/projects/fiscal-years", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -113,6 +117,7 @@ export const ProjectForm = ({mode}) => {
             setLoading(true);
             fetch("/api/projects/types", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {

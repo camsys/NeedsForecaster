@@ -89,6 +89,7 @@ export const SogrBuilder = () => {
         setLoading(true);
         fetch(`/api/runs`, requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -124,6 +125,7 @@ export const SogrBuilder = () => {
         setLoading(true);
         fetch("/api/runs/new", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -181,6 +183,7 @@ export const SogrBuilder = () => {
             setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -198,6 +201,7 @@ export const SogrBuilder = () => {
             setLoading(true);
             fetch("/api/runs/fiscal-years", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -215,6 +219,7 @@ export const SogrBuilder = () => {
             setLoading(true);
             fetch("/api/runs/range-years", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -231,6 +236,7 @@ export const SogrBuilder = () => {
         const fetchAssetTypes = () => {
             fetch("/api/asset-types", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {

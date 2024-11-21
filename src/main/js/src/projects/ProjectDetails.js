@@ -89,6 +89,7 @@ export const ProjectDetails = () => {
             if (projectId) {
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
+                        if (!response.ok) {throw Error}
                         return response
                             .json()
                             .then((data) => {
@@ -106,6 +107,7 @@ export const ProjectDetails = () => {
             setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
