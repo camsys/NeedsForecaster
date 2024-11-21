@@ -16,7 +16,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 // disable legacy JPA auto config
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
-@EnableAsync
 @EntityScan(basePackages = {"com.camsys.assetcloud.needsforecaster"})
 public class NeedsForecasterApplication {
 

@@ -67,7 +67,7 @@ public class ProjectBuilderRunController {
 //        testRun.fiscalYear = 2027;
 //        testRun.yearRange = 50;
 //        testRun.assetTypeKeys = new ArrayList<>();
-//        testRun.assetTypeKeys.add("Buses");
+//        testRun.assetTypeKeys.add("Buses (Rubber Tire Vehicles)");
 //        testRun.assetTypeKeys.add("Administration");
 //        testRun.ownerOrganization = "bpt";
 //        return sogrProjectManager.create(testRun);

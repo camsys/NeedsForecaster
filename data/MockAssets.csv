@@ -2,3 +2,6 @@ UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer
 1,B1234,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,2020/05/06,3,4500,SAMPLEVIN12345678,,
 2,A556,bpt,Administration,Administration Building,2010/03/31,4,,,,Main Office
 33,B1235,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,2021/05/06,3,3900,SAMPLEXXX12345678,,
+55,SV123,bpt,Service Vehicles,Tow Truck,2021/11/06,2,5230,SAMPLEYYY12345678,,
+56,SV124,bpt,Service Vehicles,Tow Truck,2021/11/07,2,5230,SAMPLEYYY12345679,,
+66,M123,bpt,Maintenance,Bus Maintenance Facility,2000/04/30,4,,,,South Yard

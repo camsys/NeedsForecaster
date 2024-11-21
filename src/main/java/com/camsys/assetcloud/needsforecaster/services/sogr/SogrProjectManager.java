@@ -1,8 +1,10 @@
 package com.camsys.assetcloud.needsforecaster.services.sogr;
 
+import com.camsys.assetcloud.needsforecaster.model.Project;
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunStatus;
 import com.camsys.assetcloud.needsforecaster.repositories.ProjectBuilderRunRepository;
+import com.camsys.assetcloud.needsforecaster.repositories.ProjectRepository;
 import com.camsys.assetcloud.needsforecaster.services.sogr.builder.SogrBuilder;
 import com.camsys.assetcloud.needsforecaster.services.sogr.runner.RunnerCallback;
 import com.camsys.assetcloud.needsforecaster.services.sogr.runner.SogrRunner;
@@ -13,13 +15,16 @@ import java.util.*;
 @Service
 public class SogrProjectManager {
     private final ProjectBuilderRunRepository projectBuilderRunRepository;
+    private final ProjectRepository projectRepository;
     private final SogrBuilder builder;
     private final SogrRunner runner;
 
     public SogrProjectManager(ProjectBuilderRunRepository projectBuilderRunRepository,
+                              ProjectRepository projectRepository,
                               SogrBuilder builder,
                               SogrRunner runner) {
         this.projectBuilderRunRepository = projectBuilderRunRepository;
+        this.projectRepository = projectRepository;
         this.builder = builder;
 
         //initialize runner with callbacks
@@ -62,6 +67,11 @@ public class SogrProjectManager {
         return newRun;
     }
 
+    public List<Project> getProjectsByRunId(Long runId) {
+        ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
 
+        //use database to get initial list of projects and then do a final filter by the run's asset types
+        return projectRepository.findByRun(run).stream().filter(p -> run.assetTypeKeys.contains(p.assetTypeKey())).toList();
+    }
 
 }

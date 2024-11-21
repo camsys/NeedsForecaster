@@ -1,5 +1,7 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
+import com.camsys.assetcloud.needsforecaster.model.enums.ProjectType;
+
 public class ProjectListDTO {
 
     private Project project;
@@ -17,7 +19,7 @@ public class ProjectListDTO {
 
     public Integer getFiscalYear() { return project.fiscalYear; }
 
-    public String getProjectType() { return project.projectType; };
+    public ProjectType getProjectType() { return project.projectType; };
 
     public boolean getSogr() { return project.sogr; }
 }

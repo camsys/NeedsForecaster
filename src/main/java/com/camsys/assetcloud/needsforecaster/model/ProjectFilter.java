@@ -1,6 +1,5 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
-import javax.validation.constraints.NotNull;
 
 public class ProjectFilter {
 
