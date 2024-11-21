@@ -35,7 +35,7 @@ public class Project {
 
     //will be empty for non-sogr projects
     @ManyToMany
-    protected List<Asset> assets;
+    protected List<Asset> assets = new ArrayList<>();
 
     public List<Asset> getAssets() {
         return Collections.unmodifiableList(assets);
