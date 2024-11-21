@@ -30,7 +30,7 @@ export const SogrBuilder = () => {
         "assetTypeKeys": true,
         "status": true,
         "createdOn": true,
-        "projects": true
+        "completeOn": true
     });
     let [page, setPage] = useState(1);
     let [pageSize, setPageSize] = useState(10);
@@ -44,7 +44,7 @@ export const SogrBuilder = () => {
         "assetTypeKeys": "Asset Types",
         "status": "Status",
         "createdOn": "Created On",
-        "projects": "Projects"
+        "completeOn": "Complete On"
     }
 
     const updateFilters = (filter, value) => {
@@ -70,6 +70,7 @@ export const SogrBuilder = () => {
             case 'assetTypeKeys':
                 return data.map(t => assetTypes.filter(at => at.key === t)[0]?.name).join(", ");
             case 'createdOn':
+            case 'completeOn':
                 return new Date(data).toLocaleString();
             case 'projects':
                 return data.map(p => (<Link to={`/projects/${p.id}`}>{p.name}</Link>));
@@ -312,56 +313,25 @@ export const SogrBuilder = () => {
                     <button className={"primary-button"} disabled={!["ownerOrganization","fiscalYear","yearRange","assetTypeKeys"].every(field=>(Array.isArray(formData[field]) ? formData[field].length > 0 : !!formData[field])) || loading} onClick={runSogr}><FontAwesomeIcon icon="circle-play" /><p>Run SOGR Builder</p></button>
                 </div>
             </div>
-            {/*<div className={"top-filters"}>*/}
-            {/*    <h2>Filters</h2>*/}
-            {/*    <div className={"filters-container"}>*/}
-            {/*        <DropdownInput name={"ownerOrganization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("ownerOrganization", e.target.value)}/>*/}
-            {/*        <DropdownInput name={"fiscalYear"} label={"Fiscal Year"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>*/}
-            {/*        <DropdownInput name={"status"} label={"Status"} options={*/}
-            {/*            [*/}
-            {/*                {key: "new", value: "NEW", name: "NEW"},*/}
-            {/*                {key: "waiting", value: "WAITING", name: "WAITING"},*/}
-            {/*                {key: "complete", value: "COMPLETE", name: "COMPLETE"},*/}
-            {/*                {key: "error", value: "ERROR", name: "ERROR"}*/}
-            {/*            ]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}*/}
-            {/*        />*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             <div className={"sogr-builder-runs-table-container"}>
-                {/*{loading !== null && (<>*/}
-                {/*    <p className={"sogr-builder-status"}><FontAwesomeIcon icon={loading ? "fa-regular fa-hourglass-half" : "circle-check"}/>{loading ? "SOGR Builder Running" : "SOGR Builder Completed"}</p>*/}
-                {/*    {loading ?*/}
-                {/*        <Table className={"sogr-builder-params"}>*/}
-                {/*            <thead>*/}
-                {/*                <tr>*/}
-                {/*                    <th>Organization</th>*/}
-                {/*                    <th>Starting FY</th>*/}
-                {/*                    <th>Range of Years</th>*/}
-                {/*                </tr>*/}
-                {/*            </thead>*/}
-                {/*            <tbody>*/}
-                {/*                <tr>*/}
-                {/*                    <td>{organizations.find(o => o.orgKey === formData["organization"]).name}</td>*/}
-                {/*                    <td>{formData["fiscalYear"]}</td>*/}
-                {/*                    <td>{`${formData["yearRange"]} years`}</td>*/}
-                {/*                </tr>*/}
-                {/*            </tbody>*/}
-                {/*        </Table>*/}
-                {/*    :*/}
-                {/*        <p className={"sogr-builder-finished-message"}><b>{formData["yearRange"]} SOGR capital projects</b> added to <b>{organizations.find(o => o.orgKey === formData["ownerOrganization"]).name}</b></p>*/}
-                {/*    }*/}
-                {/*</>)}*/}
+                <div className={"table-actions"}><button className={"primary-button"} onClick={fetchProjectBuilderRunsWithFilters}><FontAwesomeIcon icon={"fa-rotate"}/>Refresh builder run list</button></div>
                 <div className={"full-table"}>
                     <Table>
                         <thead>
                         <tr>
                             {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <th className={`${col.toLowerCase()}-column`}>{columnNameLabels[col]}</th>)}
+                            <th className={"actions-column"}>Projects</th>
                         </tr>
                         </thead>
                         <tbody>
                         {visibleRuns.map(r => <>
                             <tr>
                                 {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td>{formatTableData(col, r[col])}</td>)}
+                                <td className={"actions-cell"}>
+                                    <div className={"column-actions-container"}>
+                                        <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/></Link>
+                                    </div>
+                                </td>
                             </tr>
                         </>)}
                         </tbody>

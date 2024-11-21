@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-toastify/dist/ReactToastify.css';
 import './Projects.css'
 import {IconInput} from "../lib/IconInput";
-import {Link} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 
 export const Projects = () => {
     let [organizations, setOrganizations] = useState([]);
@@ -34,6 +34,8 @@ export const Projects = () => {
     let [selectablePages, setSelectablePages] = useState([]);
     let [loading, setLoading] = useState(false);
     let [showModal, setShowModal] = useState(false);
+    let [searchParams, setSearchParams] = useSearchParams();
+    const runId = searchParams.get("runId");
 
     const exportActionsMenuItems = [
         {
@@ -73,7 +75,7 @@ export const Projects = () => {
         };
 
         setLoading(true);
-        fetch(`/api/projects`, requestOptions)
+        fetch(`/api/projects${runId ? `?runId=${runId}` : ""}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -240,7 +242,7 @@ export const Projects = () => {
     useEffect(() => {
         fetchProjectsWithFilters(filters);
         setPage(1);
-    }, [filters]);
+    }, [filters, runId]);
 
     useEffect(() => {
         setVisibleProjects(queriedProjects.slice(pageSize * (page - 1), pageSize * page))
@@ -270,13 +272,17 @@ export const Projects = () => {
             <div className={"top-filters"}>
                 <h2>Filters</h2>
                 <div className={"filters-container"}>
-                    <DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("ownerOrganization", e.target.value)}/>
-                    <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>
-                    <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
-                    <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
-                    <IconInput icon={'magnifying-glass'} name={"search_bar"} label={"Search project title/description"} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
-
-                {/*    TODO: if query param for project builder run, show explanation text and include button to return to full project list (reload with base projects url)*/}
+                    {runId ?
+                        <div className={"sogr-run-filter-explanation"}><p>The project list has been automatically filtered to show only the projects associated with the selected SOGR Project Builder run.</p>
+                        <p>To return to the unfiltered list of all projects, please click the button below:</p>
+                        <Link to={"/projects"}><button className={"primary-button"}>Return to full projects list</button></Link></div>
+                        :
+                        <><DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("ownerOrganization", e.target.value)}/>
+                        <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>
+                        <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
+                        <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
+                        <IconInput icon={'magnifying-glass'} name={"search_bar"} label={"Search project title/description"} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/></>
+                    }
                 </div>
             </div>
             <div className={"projects-table-container"}>
