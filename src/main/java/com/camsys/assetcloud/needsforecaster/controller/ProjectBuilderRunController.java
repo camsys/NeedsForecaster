@@ -2,6 +2,7 @@ package com.camsys.assetcloud.needsforecaster.controller;
 
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 import com.camsys.assetcloud.needsforecaster.repositories.ProjectBuilderRunRepository;
+import com.camsys.assetcloud.needsforecaster.services.Utility;
 import com.camsys.assetcloud.needsforecaster.services.sogr.SogrProjectManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +27,9 @@ public class ProjectBuilderRunController {
     //get relevant fiscal years for a project builder
     @GetMapping(value = "/api/runs/fiscal-years", produces = "application/json")
     public List<Integer> getFiscalYears() {
-        //TODO - need to figure out which years should be offered. assume current year + 1 with 10 total years as options
+        //TODO - need to figure out which years should be offered. assume current fiscal year + 1 with 10 total years as options
         List<Integer> fiscalYears = new ArrayList<>();
-        Integer firstYear = LocalDate.now().getYear() + 1;
+        Integer firstYear = Utility.getCurrentFiscalYear() + 1;
         for (int year = firstYear; year <= firstYear + 9; year++) {
             fiscalYears.add(year);
         }

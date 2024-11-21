@@ -6,6 +6,7 @@ import com.camsys.assetcloud.needsforecaster.model.Project;
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectType;
 import com.camsys.assetcloud.needsforecaster.repositories.*;
+import com.camsys.assetcloud.needsforecaster.services.Utility;
 import com.camsys.assetcloud.needsforecaster.services.external.AssetInventoryService;
 import com.camsys.assetcloud.needsforecaster.services.sogr.calculators.ReplacementYearPolicyApplication;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +57,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
             replacementYearPolicyApplication.apply(policy, asset);
 
             //calc min allowed year
-            int minAllowedYear = Math.max(getCurrentFiscalYear(), asset.policyReplacementYear.intValue());
+            int minAllowedYear = Math.max(Utility.getCurrentFiscalYear() + 1, asset.policyReplacementYear.intValue());
 
             //place project if in range
             if (minAllowedYear >= startYear && minAllowedYear <= endYear) {
@@ -102,13 +103,6 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
     //TODO: MVP assumes one policy in system that everyone uses
     public Policy getCurrentPolicy(String orgKey) {
         return policyRepository.list().get(0);
-    }
-
-    //TODO: calculate correct current fiscal year
-    public Integer getCurrentFiscalYear() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        return year;
     }
 
 }

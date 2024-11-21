@@ -2,6 +2,7 @@ package com.camsys.assetcloud.needsforecaster.services.sogr.calculators;
 
 import com.camsys.assetcloud.needsforecaster.model.Asset;
 import com.camsys.assetcloud.needsforecaster.model.PolicySubRule;
+import com.camsys.assetcloud.needsforecaster.services.Utility;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -11,6 +12,6 @@ public class AgeOnlyServiceLifeCalculator extends ServiceLifeCalculatorBase impl
     @Override
     public void calculate(Asset asset, PolicySubRule policySubRule) {
         LocalDate replacementDate = addMonths(asset.inServiceDate, policySubRule.eslMonths);
-        asset.policyReplacementYear = replacementDate.getYear();//TODO: turn replacementDate into fiscal Year
+        asset.policyReplacementYear = Utility.getFiscalYear(replacementDate);
     }
 }
