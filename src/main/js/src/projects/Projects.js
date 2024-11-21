@@ -79,7 +79,7 @@ export const Projects = () => {
                     .json()
                     .then((data) => {
                         setProjects(data);
-                        setQueriedProjects(data.filter(p => !!searchQuery ? (p.name.includes(searchQuery) || p.description.includes(searchQuery)) : p));
+                        setQueriedProjects(data.filter(p => !!searchQuery ? (p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description.toLowerCase().includes(searchQuery.toLowerCase())) : p));
                         setLoading(false);
                     })
             })
@@ -120,7 +120,7 @@ export const Projects = () => {
 
             let updatedProjectsList = projects.filter(p=>(p.id !== projectId));
             setProjects(updatedProjectsList);
-            setQueriedProjects(updatedProjectsList.filter(p => !!searchQuery ? (p.name.includes(searchQuery) || p.description.includes(searchQuery)) : p));
+            setQueriedProjects(updatedProjectsList.filter(p => !!searchQuery ? (p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description.toLowerCase().includes(searchQuery.toLowerCase())) : p));
             setSelectedProject(null);
             setShowModal(false);
             setLoading(false);
