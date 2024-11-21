@@ -90,16 +90,8 @@ public class ProjectsController {
     @DeleteMapping(value ="/api/projects/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteProject(@PathVariable(name="id") Long projectId) {
-        projectRepository.findById(projectId).map(toBeDeletedProject -> {
-            //can only delete manual projects
-            if (toBeDeletedProject.sogr) {
-                throw new IllegalArgumentException("Project must be manual to edit with this API call");
-            }
-            return toBeDeletedProject;
-        }).orElseThrow(() -> new EntityNotFoundException("Project", projectId));
 
-        //if made it this far, then delete the project
-        projectRepository.deleteById(projectId);
+        projectRepository.deleteById(projectId);//will silently fail if project does not exist
     }
 
     @PutMapping(value = "/api/projects/{id}", consumes = "application/json", produces = "application/json")
