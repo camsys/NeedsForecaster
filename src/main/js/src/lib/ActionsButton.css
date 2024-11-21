@@ -63,6 +63,7 @@
     -o-transition: all 300ms ease-out;
     transition: all 300ms ease-out;
     overflow: hidden;
+    width: 100%;
 }
 
 .actions-button-menu.menu-open {
