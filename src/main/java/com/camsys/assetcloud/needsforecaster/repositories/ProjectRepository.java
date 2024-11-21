@@ -24,9 +24,6 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     @Query("select p from Project p")
     List<Project> list();
 
-    @Query("select p from Project p where p.sogr = true")
-    List<Project> sogrProjects();
-
     @Query("select max(p.fiscalYear) from Project p")
     Integer getMaxProjectFiscalYear();
 

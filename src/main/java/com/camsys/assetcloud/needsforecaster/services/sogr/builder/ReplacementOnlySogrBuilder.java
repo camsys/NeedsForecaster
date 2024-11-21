@@ -1,9 +1,6 @@
 package com.camsys.assetcloud.needsforecaster.services.sogr.builder;
 
-import com.camsys.assetcloud.needsforecaster.model.Asset;
-import com.camsys.assetcloud.needsforecaster.model.Policy;
-import com.camsys.assetcloud.needsforecaster.model.Project;
-import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
+import com.camsys.assetcloud.needsforecaster.model.*;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectType;
 import com.camsys.assetcloud.needsforecaster.repositories.*;
 import com.camsys.assetcloud.needsforecaster.services.Utility;
@@ -42,8 +39,11 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
         //get all relevant assets
         List<Asset> activeAssets = aiService.getActiveAssets(run.ownerOrganization, run.assetTypeKeys);
 
-        //get all current sogr projects
-        List<Project> sogrProjects = projectRepository.sogrProjects();
+        //get all current sogr projects for org requested in run
+        ProjectFilter filter = new ProjectFilter();
+        filter.ownerOrganization = run.ownerOrganization;
+        filter.sogr = true;
+        List<Project> sogrProjects = projectRepository.findByFilter(filter);
 
         List<Asset> disposedAssets = determineDisposedAssets(run.assetTypeKeys, sogrProjects, activeAssets);
 
