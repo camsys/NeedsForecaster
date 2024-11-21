@@ -88,7 +88,8 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
         //delete disposed assets from NF database
         assetRepository.deleteAll(disposedAssets);
 
-        //TODO: call Asset Inventory API to update policy replacement years on assets
+        //call Asset Inventory API to update policy replacement years on assets
+        aiService.broadcastAssetUpdates(activeAssets);
 
 
         //artificially add some time to the job

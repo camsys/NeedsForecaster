@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,18 +26,12 @@ public class ProjectBuilderRunController {
     //get relevant fiscal years for a project builder
     @GetMapping(value = "/api/runs/fiscal-years", produces = "application/json")
     public List<Integer> getFiscalYears() {
-        //TODO - need to figure out which years should be offered.
+        //TODO - need to figure out which years should be offered. assume current year + 1 with 10 total years as options
         List<Integer> fiscalYears = new ArrayList<>();
-        fiscalYears.add(2026);
-        fiscalYears.add(2027);
-        fiscalYears.add(2028);
-        fiscalYears.add(2029);
-        fiscalYears.add(2030);
-        fiscalYears.add(2031);
-        fiscalYears.add(2032);
-        fiscalYears.add(2033);
-        fiscalYears.add(2034);
-        fiscalYears.add(2035);
+        Integer firstYear = LocalDate.now().getYear() + 1;
+        for (int year = firstYear; year <= firstYear + 9; year++) {
+            fiscalYears.add(year);
+        }
         return fiscalYears;//temporary list for UI use
     }
 

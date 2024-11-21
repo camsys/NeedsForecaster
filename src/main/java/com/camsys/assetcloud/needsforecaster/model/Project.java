@@ -35,24 +35,25 @@ public class Project {
 
     //will be empty for non-sogr projects
     @ManyToMany
-    protected List<Asset> assets = new ArrayList<>();
+    protected List<Asset> _assets = new ArrayList<>();
 
+    protected void setAssets(List<Asset> assets) { this._assets = assets; }
     public List<Asset> getAssets() {
-        return Collections.unmodifiableList(assets);
+        return Collections.unmodifiableList(_assets);
     }
 
     //works under the assumption that all assets for a project have the same asset type
     public String assetTypeKey() {
-        if (assets == null || assets.size() == 0) return null;
-        else return assets.get(0).assetTypeKey;
+        if (_assets == null || _assets.size() == 0) return null;
+        else return _assets.get(0).assetTypeKey;
     }
 
     public boolean addAsset(Asset asset) {
         //only add if asset type matches existing assets or list is empty
         String assetTypeKey = assetTypeKey();
         if (assetTypeKey == null || assetTypeKey.equals(asset.assetTypeKey)) {
-            if (assets == null) assets = new ArrayList<>();
-            return assets.add(asset);
+            if (_assets == null) _assets = new ArrayList<>();
+            return _assets.add(asset);
         }
         //else do not add
         return false;
@@ -60,12 +61,12 @@ public class Project {
 
     public boolean removeAsset(Asset asset) {
         if (asset == null) return false;
-        return assets.remove(asset);
+        return _assets.remove(asset);
     }
 
     public boolean removeAssets(List<Asset> disposedAssets) {
-        if (assets == null) return false;
-        return assets.removeAll(disposedAssets);
+        if (_assets == null) return false;
+        return _assets.removeAll(disposedAssets);
     }
 
     public boolean isValid() {

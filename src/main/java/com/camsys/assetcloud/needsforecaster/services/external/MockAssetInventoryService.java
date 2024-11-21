@@ -54,6 +54,6 @@ public class MockAssetInventoryService implements AssetInventoryService {
 
     @Override
     public void broadcastAssetUpdates(List<Asset> assets) {
-        System.out.println("Broadcast asset updates");
+        System.out.println("Broadcast asset updates (size: " + assets.size() + ")");
     }
 }
