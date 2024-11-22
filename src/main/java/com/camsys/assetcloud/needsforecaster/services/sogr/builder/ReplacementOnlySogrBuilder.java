@@ -35,8 +35,18 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
 
     @Override
     public void build(ProjectBuilderRun run) {
-        //get all relevant assets
-        List<Asset> activeAssets = aiService.getActiveAssets(run.ownerOrganization, run.assetTypeKeys);
+        List<Asset> activeAssets = null;
+        try {
+            //get all relevant assets
+           activeAssets = aiService.getActiveAssets(run.ownerOrganization, run.assetTypeKeys);
+        }
+        catch (Exception ex) {
+            //can't continue since asset inventory source is unreachable/unusable
+            ex.printStackTrace();
+            return;
+        }
+
+        if (activeAssets == null) return;//something went wrong so don't assume all assets are disposed
 
         //get all current sogr projects for org requested in run
         ProjectFilter filter = new ProjectFilter();
@@ -89,8 +99,12 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
         assetRepository.deleteAll(disposedAssets);
 
         //call Asset Inventory API to update policy replacement years on assets
-        aiService.broadcastAssetUpdates(activeAssets);
-
+        try {
+            aiService.broadcastAssetUpdates(activeAssets);
+        } catch (Exception ex) {
+            //swallow any exception here since we don't want to undo the whole transaction just because we couldn't broadcast successfully
+            ex.printStackTrace();
+        }
 
         //artificially add some time to the job
         try {
@@ -100,6 +114,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
     }
 
     //TODO: MVP assumes one policy in system that everyone uses
+    @Override
     public Policy getCurrentPolicy(String orgKey) {
         return policyRepository.list().get(0);
     }

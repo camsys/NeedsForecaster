@@ -26,13 +26,26 @@ public class SogrProjectManager {
         this.projectBuilderRunRepository = projectBuilderRunRepository;
         this.projectRepository = projectRepository;
         this.builder = builder;
-
-        //initialize runner with callbacks
         this.runner = runner;
-        this.runner.initialize(new RunnerCallback() {
+    }
+
+    public ProjectBuilderRun create(ProjectBuilderRun newRun) {
+        if (newRun == null) throw new IllegalArgumentException("'run' arg cannot be null");
+
+        //create run
+        newRun.runKey = ProjectBuilderRun.generateSogrRunKey();
+        newRun.createdOn = new Date();
+        newRun.status = ProjectBuilderRunStatus.WAITING;
+        newRun = projectBuilderRunRepository.save(newRun);
+
+        //add new run to the task queue
+        runner.run(newRun, builder, new RunnerCallback() {
             @Override
             public void callbackBegin(Long runId) {
-                //nothing to do at beginning of run
+                ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
+                run.status = ProjectBuilderRunStatus.PROCESSING;
+                run.completeOn = new Date();
+                projectBuilderRunRepository.save(run);
             }
 
             @Override
@@ -50,19 +63,6 @@ public class SogrProjectManager {
                 projectBuilderRunRepository.save(run);
             }
         });
-    }
-
-    public ProjectBuilderRun create(ProjectBuilderRun newRun) {
-        if (newRun == null) throw new IllegalArgumentException("'run' arg cannot be null");
-
-        //create run
-        newRun.runKey = ProjectBuilderRun.generateSogrRunKey();
-        newRun.createdOn = new Date();
-        newRun.status = ProjectBuilderRunStatus.WAITING;
-        newRun = projectBuilderRunRepository.save(newRun);
-
-        //add new run to the task queue
-        runner.run(newRun, builder);
 
         return newRun;
     }

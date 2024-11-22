@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AssetInventoryService {
     List<Org> getOrgs();
-    List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys);
+    List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) throws Exception;
     void broadcastAssetUpdates(List<Asset> assets);
 }
