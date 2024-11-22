@@ -16,6 +16,7 @@ export const Policies = () => {
     let [loading, setLoading] = useState(false);
     let [selectedPolicy, setSelectedPolicy] = useState({});
     let [selectedAssetType, setSelectedAssetType] = useState({});
+    let [policyTypeRules, setPolicyTypeRules] = useState([]);
     let [selectedPolicyTypeRule, setSelectedPolicyTypeRule] = useState({});
     let [policyFields, setPolicyFields] = useState({description: null});
     let [typeRuleFields, setTypeRuleFields] = useState({serviceLifeCalculationMethod: null});
@@ -80,6 +81,7 @@ export const Policies = () => {
                     .json()
                     .then((data) => {
                         setTypeRuleFields({serviceLifeCalculationMethod: null});
+                        setPolicyTypeRules(policyTypeRules.map(tr => tr.id === data.id ? data : tr));
                         setSelectedPolicyTypeRule(data);
                         setLoading(false);
                     })
@@ -107,6 +109,7 @@ export const Policies = () => {
                         let newSubTypeRules = selectedPolicyTypeRule.subRules.filter(sr => sr.id !== data.id);
                         newSubTypeRules.push(data);
                         newSubTypeRules.sort((a,b) => a.assetSubType.localeCompare(b.assetSubType));
+                        setPolicyTypeRules(policyTypeRules.map(tr => tr.id === selectedPolicyTypeRule.id ? {...tr, subRules: newSubTypeRules} : tr));
                         setSelectedPolicyTypeRule({...selectedPolicyTypeRule, subRules: newSubTypeRules});
                         setLoading(false);
                     })
@@ -217,11 +220,12 @@ export const Policies = () => {
 
     useEffect(() => {
         setSelectedOrganization(selectedPolicy?.ownerOrganization);
+        setPolicyTypeRules(selectedPolicy?.rules);
         setSelectedAssetType(assetTypes[0]);
     }, [selectedPolicy]);
 
     useEffect(() => {
-        setSelectedPolicyTypeRule(selectedPolicy?.rules?.filter(r => r?.assetType === selectedAssetType?.key)[0]);
+        setSelectedPolicyTypeRule(policyTypeRules?.filter(r => r?.assetType === selectedAssetType?.key)[0]);
     }, [selectedAssetType]);
 
     const changePolicy = (e) => {
