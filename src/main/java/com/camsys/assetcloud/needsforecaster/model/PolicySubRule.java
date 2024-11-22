@@ -23,4 +23,8 @@ public class PolicySubRule {
     public int eslMonths;
 
     public int eslMiles;
+
+    public boolean isValid() {
+        return eslMiles >= 0 && eslMonths >= 0;
+    }
 }

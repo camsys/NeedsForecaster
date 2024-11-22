@@ -75,7 +75,7 @@ export const ProjectDetails = () => {
     const executeSearch = (query) => {
         setSearchQuery(query);
         setTimeout(()=>{
-            setQueriedAssets(assets.filter(p => (p.assetId.toLowerCase().includes(query.toLowerCase()))));
+            setQueriedAssets(assets.filter(a => (a.assetId.toLowerCase().includes(query.toLowerCase()))));
         }, 500);
     }
 
@@ -89,6 +89,7 @@ export const ProjectDetails = () => {
             if (projectId) {
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
+                        if (!response.ok) {throw Error}
                         return response
                             .json()
                             .then((data) => {
@@ -106,6 +107,7 @@ export const ProjectDetails = () => {
             setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -123,48 +125,9 @@ export const ProjectDetails = () => {
     }, []);
 
     useEffect(() => {
-        const fetchAssets = () => {
-            const requestOptions = {
-                method: "POST",
-                credentials: "include",
-                headers: {"Content-Type": "Application/JSON"}
-            };
-
-            setLoading(true);
-            // TODO: Figure out how assets will be retrieved
-            let assetData = [{id: 1, assetId: "An Asset"}];
-            setAssets(assetData);
-            setQueriedAssets(assetData.filter(p => !!searchQuery ? (p.assetId.includes(searchQuery)) : p));
-            setLoading(false);
-            // fetch(`/api/projects`, requestOptions)
-            //     .then((response) => {
-            //         return response
-            //             .json()
-            //             .then((data) => {
-            //                 [...Array(80).keys()].forEach(n => {
-            //                     data.push({
-            //                         "id": n+6,
-            //                         "name": `Curl Project ${n+4}`,
-            //                         "description": `Curl Project ${n+4} description`,
-            //                         "ownerOrganization": "bpt",
-            //                         "fiscalYear": 2025,
-            //                         "projectType": "Type 2",
-            //                         "sogr": true,
-            //                         "valid": true
-            //                     });
-            //                 });
-            //                 setProjects(data);
-            //                 setQueriedProjects(data.filter(p => !!searchQuery ? (p.name.includes(searchQuery) || p.description.includes(searchQuery)) : p));
-            //                 setLoading(false);
-            //             })
-            //     })
-            //     .catch((e) => {
-            //         setLoading(false);
-            //         toast.error("Could not retrieve projects.");
-            //     });
-        }
         if (project.sogr) {
-            fetchAssets();
+            setAssets(project.assets);
+            setQueriedAssets(project.assets);
             setPage(1);
         }
     }, [project]);

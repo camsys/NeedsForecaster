@@ -86,7 +86,7 @@ public class PoliciesController {
                         hasChanged = true;
                     }
 
-                    if (hasChanged) {
+                    if (hasChanged && toBeEditedPolicySubRule.isValid()) {
                         toBeEditedPolicySubRule.policyRule.updatedOn = new Date();//Do we need to update this when subrule changes?
                         return policySubRuleRepository.save(toBeEditedPolicySubRule);
                     }

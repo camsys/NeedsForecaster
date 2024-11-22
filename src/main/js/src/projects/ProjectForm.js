@@ -34,6 +34,7 @@ export const ProjectForm = ({mode}) => {
         setLoading(true);
         fetch(`/api/projects/${mode === "add" ? "new" : projectId}`, requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -57,6 +58,7 @@ export const ProjectForm = ({mode}) => {
                 setLoading(true);
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
+                        if (!response.ok) {throw Error}
                         return response
                             .json()
                             .then((data) => {
@@ -81,6 +83,7 @@ export const ProjectForm = ({mode}) => {
             setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -97,6 +100,7 @@ export const ProjectForm = ({mode}) => {
             setLoading(true);
             fetch("/api/projects/fiscal-years", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -113,6 +117,7 @@ export const ProjectForm = ({mode}) => {
             setLoading(true);
             fetch("/api/projects/types", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -149,8 +154,8 @@ export const ProjectForm = ({mode}) => {
                     </div>
                     <div className={"project-form-dropdowns"}>
                         <DropdownInput name={"owner-organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, ownerOrganization: e.target.value})} defaultValue={formData.ownerOrganization || ''} disabled={mode === "edit"}/>
-                        <DropdownInput name={"fiscal-year"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, fiscalYear: e.target.value})} defaultValue={formData.fiscalYear || ''}/>
-                        <DropdownInput name={"project-type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, projectType: e.target.value})} defaultValue={formData.projectType || ''}/>
+                        <DropdownInput name={"fiscal-year"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, fiscalYear: e.target.value})} defaultValue={formData.fiscalYear || ''} disabled={project.sogr}/>
+                        <DropdownInput name={"project-type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>setFormData({...formData, projectType: e.target.value})} defaultValue={formData.projectType || ''} disabled={project.sogr}/>
                     </div>
                 </div>
                 <div className={"project-form-right"}>

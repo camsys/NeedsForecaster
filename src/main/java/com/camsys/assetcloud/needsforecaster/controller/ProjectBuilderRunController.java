@@ -1,0 +1,62 @@
+package com.camsys.assetcloud.needsforecaster.controller;
+
+import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
+import com.camsys.assetcloud.needsforecaster.repositories.ProjectBuilderRunRepository;
+import com.camsys.assetcloud.needsforecaster.services.Utility;
+import com.camsys.assetcloud.needsforecaster.services.sogr.SogrProjectManager;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+public class ProjectBuilderRunController {
+    private final ProjectBuilderRunRepository runRepository;
+    private final SogrProjectManager sogrProjectManager;
+
+    public ProjectBuilderRunController(ProjectBuilderRunRepository runRepository, SogrProjectManager sogrProjectManager) {
+        this.runRepository = runRepository;
+        this.sogrProjectManager = sogrProjectManager;
+    }
+
+    //get relevant fiscal years for a project builder
+    @GetMapping(value = "/api/runs/fiscal-years", produces = "application/json")
+    public List<Integer> getFiscalYears() {
+        //TODO - need to figure out which years should be offered. assume current fiscal year + 1 with 10 total years as options
+        List<Integer> fiscalYears = new ArrayList<>();
+        Integer firstYear = Utility.getCurrentFiscalYear() + 1;
+        for (int year = firstYear; year <= firstYear + 9; year++) {
+            fiscalYears.add(year);
+        }
+        return fiscalYears;//temporary list for UI use
+    }
+
+    //get relevant fiscal years for a project builder
+    @GetMapping(value = "/api/runs/range-years", produces = "application/json")
+    public List<Integer> getRanges() {
+        //TODO - need to figure out which ranges should be offered.
+        List<Integer> yearRanges = new ArrayList<>();
+        yearRanges.add(5);
+        yearRanges.add(10);
+        yearRanges.add(15);
+        yearRanges.add(20);
+        yearRanges.add(25);
+        yearRanges.add(50);
+        return yearRanges;//temporary list for UI use
+    }
+
+    @GetMapping(value = "/api/runs", produces = "application/json")
+    public List<ProjectBuilderRun> getRuns() {
+        return runRepository.list();
+    }
+
+    @PostMapping(value = "/api/runs/new", consumes = "application/json", produces = "application/json")
+    public ProjectBuilderRun createRun(@RequestBody(required = true) ProjectBuilderRun params) {
+        if (params != null && params.isValidRunCreate())
+            return sogrProjectManager.create(params);
+        else throw new IllegalArgumentException("Invalid run params");
+    }
+}
