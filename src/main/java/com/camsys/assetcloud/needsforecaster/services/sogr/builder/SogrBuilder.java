@@ -3,5 +3,5 @@ package com.camsys.assetcloud.needsforecaster.services.sogr.builder;
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 
 public interface SogrBuilder {
-    void build(ProjectBuilderRun run);
+    boolean build(ProjectBuilderRun run);
 }
