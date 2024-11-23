@@ -1,14 +1,14 @@
 UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer,Vin,Description,Name
-1,B1234,bpt,BusesBECKY (Rubber Tire Vehicles),Bus Std 40 FT,5/6/20,3,4500,SAMPLEVIN12345678,,
-2,A556,bpt,AdministrationBECKY,Administration Building,3/31/10,4,,,,Main Office
-33,B1235,bpt,Buses BECKY(Rubber Tire Vehicles),Bus Std 40 FT,5/6/21,3,3900,SAMPLEXXX12345678,,
+1,B1234,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/d,3,4500,SAMPLEVIN12345678,,
+2,A556,bpt,Administration,Administration Building,3/31/10,4,,,,Main Office
+33,B1235,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/21,3,3900,SAMPLEXXX12345678,,
 55,SV123,bpt,Service Vehicles,Tow Truck,11/6/21,2,5230,SAMPLEYYY12345678,,
-56,SV124,bpt,Service Vehicles,BECKYTow Truck,11/7/21,2,5230,SAMPLEYYY12345679,,
+56,SV124,bpt,Service Vehicles,Tow Truck,11/7/21,2,5230,SAMPLEYYY12345679,,
 66,M123,bpt,Maintenance,Bus Maintenance Facility,4/30/00,4,,,,South Yard
-68,SPRINGINFO,org3,Administration,BECKYAdministration Building,1/1/17,5,,,Maintenance and Operations,Springfield Information Center
+68,SPRINGINFO,org3,Administration,Administration Building,1/1/17,5,,,Maintenance and Operations,Springfield Information Center
 70,STORAGE01,org3,Administration,Storage Yard,5/5/16,3,,,Storage Facility number 1,Storage Facility
-72,152,org2,Administration,Bus BECKYMaintenance Facility,9/13/00,2,,,,Bus Maintenance Facility
-74,04292024F,bpt,Ferries,Ferry BoatBECKY,3/1/24,5,,,Test Ferry,
+72,152,org2,Administration,Bus Maintenance Facility,9/13/00,2,,,,Bus Maintenance Facility
+74,04292024F,bpt,Ferries,Ferry Boat,3/1/24,5,,,Test Ferry,
 75,9221,bpt,Service Vehicles,Sports Utility Vehicle,5/16/13,2,,1FDRF3FT3DEB14068,,
 76,VTA16,bpt,Service Vehicles,Pickup/Utility Truck,2/15/06,3,,1GCEK19T36Z212995,,
 77,9228,bpt,Service Vehicles,Sports Utility Vehicle,6/21/16,4,,1FM5K8AR4GGB89177,,
