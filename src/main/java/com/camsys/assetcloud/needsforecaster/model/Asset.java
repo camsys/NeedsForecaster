@@ -69,4 +69,9 @@ public class Asset {
         return uniqueKey.equals(asset.uniqueKey);//if unique key's exist and are the same they are equal
     }
 
+    @Override
+    public String toString() {
+        return assetId + ":" + orgKey + ":" + assetTypeKey + ":" + assetSubTypeKey;
+    }
+
 }
