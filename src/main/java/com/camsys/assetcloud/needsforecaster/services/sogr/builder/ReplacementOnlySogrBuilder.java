@@ -46,7 +46,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
             activeAssets = aiService.getActiveAssets(run.ownerOrganization, run.assetTypeKeys);
         }
         catch (Exception ex) {
-            System.err.println(ex.getMessage());
+            ex.printStackTrace();
             return false;//something went wrong - in this case, the asset import
         }
 
