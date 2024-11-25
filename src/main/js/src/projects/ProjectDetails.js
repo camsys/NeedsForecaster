@@ -17,11 +17,20 @@ export const ProjectDetails = () => {
     let [project, setProject] = useState({});
     let [organizations, setOrganizations] = useState([]);
     let [searchQuery, setSearchQuery] = useState('');
+    let [assetTypes, setAssetTypes] = useState([]);
     let [assets, setAssets] = useState([]);
     let [queriedAssets, setQueriedAssets] = useState([]);
     let [visibleAssets, setVisibleAssets] = useState([]);
     let [columns, setColumns] = useState({
-        "assetId": true
+        "assetId": true,
+        "assetTypeKey": true,
+        "assetSubTypeKey": true,
+        "inServiceDate": true,
+        "odometer": true,
+        "condition": true,
+        "vin": true,
+        "name": true,
+        "description": true
     });
     let [page, setPage] = useState(1);
     let [pageSize, setPageSize] = useState(10);
@@ -29,11 +38,23 @@ export const ProjectDetails = () => {
     let [loading, setLoading] = useState(false);
 
     const columnNameLabels = {
-        "assetId": "Asset ID"
+        "assetId": "Asset ID",
+        "assetTypeKey": "Asset Type",
+        "assetSubTypeKey": "Asset SubType",
+        "inServiceDate": "In Service Date",
+        "odometer": "Odometer",
+        "condition": "Condition",
+        "vin": "VIN",
+        "name": "Name",
+        "description": "Description"
     }
 
     const formatTableData = (column, data) => {
         switch (column) {
+            case "assetTypeKey":
+                return assetTypes?.filter(t=>t.key===data)[0]?.name;
+            case "inServiceDate":
+                return new Date(data).toLocaleDateString();
             default:
                 return data;
         }
@@ -84,6 +105,20 @@ export const ProjectDetails = () => {
             method: "GET",
             credentials: "include"
         };
+        const fetchAssetTypes = () => {
+            fetch("/api/asset-types", requestOptions)
+                .then((response) => {
+                    if (!response.ok) {throw Error}
+                    return response
+                        .json()
+                        .then((data) => {
+                            setAssetTypes(data);
+                        })
+                })
+                .catch((e) => {
+                    toast.error("Could not retrieve asset types.");
+                });
+        }
         const fetchProject = () => {
             setLoading(true);
             if (projectId) {
@@ -120,6 +155,7 @@ export const ProjectDetails = () => {
                     toast.error("Could not retrieve organizations.");
                 });
         }
+        fetchAssetTypes();
         fetchProject();
         fetchOrgs();
     }, []);
