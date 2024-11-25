@@ -320,7 +320,7 @@ export const SogrBuilder = () => {
                                 {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td>{formatTableData(col, r[col])}</td>)}
                                 <td className={"actions-cell"}>
                                     <div className={"column-actions-container"}>
-                                        <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/></Link>
+                                        {r.status === "COMPLETE" && <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/></Link>}
                                     </div>
                                 </td>
                             </tr>
