@@ -182,7 +182,6 @@ export const Projects = () => {
         };
 
         const fetchOrgs = () => {
-            setLoading(true);
             fetch("/api/orgs", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
@@ -190,17 +189,14 @@ export const Projects = () => {
                     .json()
                     .then((data) => {
                         setOrganizations(data);
-                        setLoading(false);
                     })
             })
             .catch((e) => {
-                setLoading(false);
                 toast.error("Could not retrieve organizations.");
             });
         }
 
         const fetchFiscalYears = () => {
-            setLoading(true);
             fetch("/api/projects/fiscal-years", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
@@ -208,17 +204,14 @@ export const Projects = () => {
                     .json()
                     .then((data) => {
                         setFiscalYears(data);
-                        setLoading(false);
                     })
             })
             .catch((e) => {
-                setLoading(false);
                 toast.error("Could not retrieve fiscal years.");
             });
         }
 
         const fetchProjectTypes = () => {
-            setLoading(true);
             fetch("/api/projects/types", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
@@ -226,11 +219,9 @@ export const Projects = () => {
                         .json()
                         .then((data) => {
                             setProjectTypes(data);
-                            setLoading(false);
                         })
                 })
                 .catch((e) => {
-                    setLoading(false);
                     toast.error("Could not retrieve organizations.");
                 });
         }
