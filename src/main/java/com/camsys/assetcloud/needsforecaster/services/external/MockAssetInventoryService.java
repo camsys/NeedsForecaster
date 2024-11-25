@@ -42,13 +42,9 @@ public class MockAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
-    public List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) {
-        try {
-            List<Asset> allAssets = mockAssets.load();
-            return allAssets.stream().filter(a -> a.orgKey.equals(orgKey) && assetTypeKeys.contains(a.assetTypeKey)).toList();
-        }
-        catch (IOException e) {}
-        return null;
+    public List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) throws Exception {
+        List<Asset> allAssets = mockAssets.load();
+        return allAssets.stream().filter(a -> a.orgKey.equals(orgKey) && assetTypeKeys.contains(a.assetTypeKey)).toList();
     }
 
     @Override

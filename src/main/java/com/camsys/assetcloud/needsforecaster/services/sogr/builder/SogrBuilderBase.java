@@ -1,13 +1,24 @@
 package com.camsys.assetcloud.needsforecaster.services.sogr.builder;
 
 import com.camsys.assetcloud.needsforecaster.model.Asset;
+import com.camsys.assetcloud.needsforecaster.model.Policy;
 import com.camsys.assetcloud.needsforecaster.model.Project;
+import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectType;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SogrBuilderBase {
+public abstract class SogrBuilderBase implements SogrBuilder {
+
+    //adds the context when executed asynchronously and also make sure this build happens on its own transaction
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public abstract boolean build(ProjectBuilderRun run);
+
+    public abstract Policy getCurrentPolicy(String orgKey);
+
     protected List<Asset> determineDisposedAssets(List<String> assetTypeKeys, List<Project> sogrProjects, List<Asset> activeAssets) {
 
         List<Asset> toBeRemoved = new ArrayList<>();

@@ -96,6 +96,7 @@ export const SogrBuilder = () => {
                     .then((data) => {
                         setProjectBuilderRuns(data);
                         setQueriedRuns(data);
+                        setPage(1);
                         setLoading(false);
                     })
             })
@@ -181,7 +182,6 @@ export const SogrBuilder = () => {
         };
 
         const fetchOrgs = () => {
-            setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
@@ -189,17 +189,14 @@ export const SogrBuilder = () => {
                         .json()
                         .then((data) => {
                             setOrganizations(data);
-                            setLoading(false);
                         })
                 })
                 .catch((e) => {
-                    setLoading(false);
                     toast.error("Could not retrieve organizations.");
                 });
         }
 
         const fetchFiscalYears = () => {
-            setLoading(true);
             fetch("/api/runs/fiscal-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
@@ -207,17 +204,14 @@ export const SogrBuilder = () => {
                         .json()
                         .then((data) => {
                             setFiscalYears(data);
-                            setLoading(false);
                         })
                 })
                 .catch((e) => {
-                    setLoading(false);
                     toast.error("Could not retrieve fiscal years.");
                 });
         }
 
         const fetchRangesOfYears = () => {
-            setLoading(true);
             fetch("/api/runs/range-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
@@ -225,11 +219,9 @@ export const SogrBuilder = () => {
                         .json()
                         .then((data) => {
                             setRangesOfYears(data);
-                            setLoading(false);
                         })
                 })
                 .catch((e) => {
-                    setLoading(false);
                     toast.error("Could not retrieve ranges of years.");
                 });
         }
@@ -257,7 +249,6 @@ export const SogrBuilder = () => {
 
     useEffect(() => {
         fetchProjectBuilderRunsWithFilters();
-        setPage(1);
     }, [filters]);
 
     useEffect(() => {
@@ -329,7 +320,7 @@ export const SogrBuilder = () => {
                                 {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td>{formatTableData(col, r[col])}</td>)}
                                 <td className={"actions-cell"}>
                                     <div className={"column-actions-container"}>
-                                        <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/></Link>
+                                        {r.status === "COMPLETE" && <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/></Link>}
                                     </div>
                                 </td>
                             </tr>

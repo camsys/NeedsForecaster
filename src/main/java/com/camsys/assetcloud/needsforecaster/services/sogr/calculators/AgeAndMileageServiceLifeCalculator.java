@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class AgeAndMileageServiceLifeCalculator extends ServiceLifeCalculatorBase implements ServiceLifeCalculator {
     @Override
     public void calculate(Asset asset, PolicySubRule policySubRule) {
-        boolean mileageThresholdReached = asset.odometer >= policySubRule.eslMiles;
+        boolean mileageThresholdReached = asset.odometer != null ? asset.odometer >= policySubRule.eslMiles : false;//if no mileage provided, no mileage threshold reached
         LocalDate replacementDateByAge = addMonths(asset.inServiceDate, policySubRule.eslMonths);
         int replacementYearByAge = Utility.getFiscalYear(replacementDateByAge);
 
