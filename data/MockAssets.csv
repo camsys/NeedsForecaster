@@ -1,5 +1,5 @@
 UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer,Vin,Description,Name
-1,B1234,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/d,3,4500,SAMPLEVIN12345678,,
+1,B1234,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/20,3,4500,SAMPLEVIN12345678,,
 2,A556,bpt,Administration,Administration Building,3/31/10,4,,,,Main Office
 33,B1235,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/21,3,3900,SAMPLEXXX12345678,,
 55,SV123,bpt,Service Vehicles,Tow Truck,11/6/21,2,5230,SAMPLEYYY12345678,,
