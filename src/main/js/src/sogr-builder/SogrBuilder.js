@@ -131,7 +131,6 @@ export const SogrBuilder = () => {
                 return response
                     .json()
                     .then((data) => {
-                        setFormData({});
                         setLoading(false);
                         setFilters({});
                     })
