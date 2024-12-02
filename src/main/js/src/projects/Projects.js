@@ -302,8 +302,8 @@ export const Projects = () => {
                                     {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td className={col === "sogr" ? "icon-column" : ""}>{formatTableData(col, p[col])}</td>)}
                                     <td className={"actions-cell"}>
                                         <div className={"column-actions-container"}>
-                                            <Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link>
                                             <Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View Project"}/></Link>
+                                            <Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link>
                                             <FontAwesomeIcon icon={"fa-trash-can"} title={"Delete Project"} onClick={()=>confirmDelete(p.id)}/>
                                         </div>
                                     </td>
