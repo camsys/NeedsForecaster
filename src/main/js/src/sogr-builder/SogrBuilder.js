@@ -272,7 +272,7 @@ export const SogrBuilder = () => {
             <div className={"sogr-builder-info-container"} hidden={!showInfo}>
                 <div className={"sogr-builder-info"}>
                     <p>The SOGR Capital Projects Analyzer analyzes the capital inventory for your organization and generates a set of replacement and rehabilitation capital projects which are added to the capital needs list.</p>
-                    <p>This analyzer uses your current Policy to determine when assets will be replaced and/or rehabiltated.</p>
+                    <p>This analyzer uses your current Policy to determine when assets will be replaced and/or rehabilitated.</p>
                 </div>
                 <div className={"sogr-builder-info"}>
                     <p>Once the builder has completed, you will need to review each capital project and update:</p>
