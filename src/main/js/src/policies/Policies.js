@@ -323,7 +323,7 @@ export const Policies = () => {
                     <Table id={"subtype-rules-table"}>
                         <thead>
                             <tr>
-                                <th>Asset Subtype</th>
+                                <th>Subtype</th>
                                 <th>ESL (Mo)</th>
                                 <th>ESL (Mi)</th>
                                 <th>Actions</th>

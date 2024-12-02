@@ -39,8 +39,8 @@ export const ProjectDetails = () => {
 
     const columnNameLabels = {
         "assetId": "Asset ID",
-        "assetTypeKey": "Asset Type",
-        "assetSubTypeKey": "Asset SubType",
+        "assetTypeKey": "Type",
+        "assetSubTypeKey": "Subtype",
         "inServiceDate": "In Service Date",
         "odometer": "Odometer",
         "condition": "Condition",
