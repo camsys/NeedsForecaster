@@ -19,7 +19,7 @@ public class MockAssets {
     public List<Asset> load() throws IOException {
         List<Asset> assets = new ArrayList<>();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
 
         Reader assetIn = new FileReader("./data/MockAssets.csv");
         Iterable<CSVRecord> assetRecords = CSVFormat.RFC4180.builder()

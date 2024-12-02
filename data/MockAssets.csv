@@ -1,3 +1,51 @@
 UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer,Vin,Description,Name
-1,B1234,bpt,Buses,Bus Std 40 FT,2020/05/06,3,4500,SAMPLEVIN12345678,,
-2,A556,bpt,Administration,Administration Building,2010/03/31,4,,,,Main Office
+1,B1234,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/20,3,4500,SAMPLEVIN12345678,,
+2,A556,bpt,Administration,Administration Building,3/31/10,4,,,,Main Office
+33,B1235,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,5/6/21,3,3900,SAMPLEXXX12345678,,
+55,SV123,bpt,Service Vehicles,Tow Truck,11/6/21,2,5230,SAMPLEYYY12345678,,
+56,SV124,bpt,Service Vehicles,Tow Truck,11/7/21,2,5230,SAMPLEYYY12345679,,
+66,M123,bpt,Maintenance,Bus Maintenance Facility,4/30/00,4,,,,South Yard
+68,SPRINGINFO,org3,Administration,Administration Building,1/1/17,5,,,Maintenance and Operations,Springfield Information Center
+70,STORAGE01,org3,Administration,Storage Yard,5/5/16,3,,,Storage Facility number 1,Storage Facility
+72,152,org2,Administration,Bus Maintenance Facility,9/13/00,2,,,,Bus Maintenance Facility
+74,04292024F,bpt,Ferries,Ferry Boat,3/1/24,5,,,Test Ferry,
+75,9221,bpt,Service Vehicles,Sports Utility Vehicle,5/16/13,2,,1FDRF3FT3DEB14068,,
+76,VTA16,bpt,Service Vehicles,Pickup/Utility Truck,2/15/06,3,,1GCEK19T36Z212995,,
+77,9228,bpt,Service Vehicles,Sports Utility Vehicle,6/21/16,4,,1FM5K8AR4GGB89177,,
+78,611,org2,Service Vehicles,Other Support Vehicle,10/26/05,5,,1FDEE3FL7DDA62791,,
+79,0409-23,org2,Service Vehicles,Sedan/Station Wagon,9/30/06,2,,2G1125S36E9231557,,
+80,BSMOWER,bpt,Capital Equipment,Other Maintenance Equipment,4/6/17,1,,,Lawn Mower for Bus Stop Maintenance,
+81,HDTRUCKLIFT,org2,Capital Equipment,Bus Maintenance Equipment,6/27/05,2,,,Hydraulic Lift,
+82,CONHARNCABLE,org3,Capital Equipment,Fare Collection Systems,6/16/16,3,,,CONHARNCABLE,
+83,TIRECHBALAN,bpt,Capital Equipment,Bus Maintenance Equipment,5/21/01,4,,,Tire changer and balancer,
+84,WHDOL,org2,Capital Equipment,Bus Maintenance Equipment,5/30/05,5,,,High Rise Wheel Dolley,
+85,TOOLSETHAND,org3,Capital Equipment,Bus Maintenance Equipment,5/22/00,5,,,Hand Tool Set,
+90,04292024Rail,bpt,Rail Cars,Light Rail Car,2/16/24,5,,,,
+91,11222024,bpt,Rail Cars,Heavy Rail Car,11/1/24,5,,,,
+95,GALLAGHER2,bpt,Parking,Parking Garage,6/30/90,4,,,Gallagher II,Gallagher II Name
+96,29221 0409,org2,Parking,Bus Station,4/1/00,4.5,,,Test Jenn's Parking Lot,Attleboro Train Parking Lot
+97,GALLAGGRG,org3,Parking,Parking Garage,6/30/83,2.5,,,Gallagher I,Gallagher I
+98,ROURKE,bpt,Parking,Parking Garage,6/30/02,4,,,Rourke Parking Garage,Rourke Parking Garage
+100,463,bpt,Buses (Rubber Tire Vehicles),Bus < 30 FT,1/1/17,3,96134,1FDEE3FS5HDC51715,,
+101,1652,org2,Other Passenger Vehicles,Van,5/31/16,5,133672,1FDEE3FL3GDC25909,FRD CCI Phoenix,
+102,5802,org3,Other Passenger Vehicles,Van,7/1/19,2,17463,1FDEE3F63KDC25928,,
+103,1762,bpt,Other Passenger Vehicles,Van,5/31/17,4.9,140012,1FDEE3FS6HDC36394,FRD E350,
+104,1812,bpt,Buses (Rubber Tire Vehicles),Bus < 30 FT,9/1/18,4,62618,1FDFE4FS3JDC23912,FRD E450 MADOT TYPE C,
+105,1808,bpt,Buses (Rubber Tire Vehicles),Bus Std 35 FT,8/20/18,3,108858,15GGB3010J3191477,,
+106,1776,org2,Buses (Rubber Tire Vehicles),Bus < 30 FT,5/14/04,4,149547,2D7LB31Z03K517135,BRA CONVERSION VAN,
+107,1601,org3,Buses (Rubber Tire Vehicles),Bus Std 35 FT,6/17/16,5,232075,15GGB2716G1186496,GIL Low Floor,
+108,1107,bpt,Buses (Rubber Tire Vehicles),Bus < 30 FT,11/4/11,2,74150,1FDEE3FL3BDB00448,CEQ E350,
+109,4444,org2,Buses (Rubber Tire Vehicles),Bus Std 35 FT,1/1/18,4,212705,15GGE2719G1093090,,
+110,0409-ALL4,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,1/2/00,3,15000,1FTSW21R38EA45867,HQ,
+111,252,bpt,Buses (Rubber Tire Vehicles),Bus Std 40 FT,6/22/05,2,157345,1FDEE3FKXMDC04768,PG,
+112,815,Org2,Buses (Rubber Tire Vehicles),Bus Intercity,2/25/08,5,209779,1M8PDMBA1CP012719,LX,
+113,4092024,bpt,Passenger,Bus Shelter,2/1/00,5,,,Parking Garage,
+114,0409-7,org2,Passenger,Bus Shelter,1/3/22,5,,,Bus Station,
+115,ITC,org3,Administration,Administration Building,11/1/04,2,,,"Bus, Traing & Taxi Depot",
+116,0409-ALL7,bpt,Passenger,Bus Shelter,1/5/00,4,,,NB Terminal,
+120,FRMAINT,bpt,Maintenance,Bus Maintenance Facility,6/30/01,4,,,,FR Maintenance and Operations
+121,COTTAGE,Org2,Maintenance,Bus Maintenance Facility,1/1/18,5,,,,
+125,NB Maint,bpt,Maintenance,Other Support Facility,1/1/75,1.1,,,,RR Maintenance and Operations
+126,UMASS_BUS,org2,Maintenance,Bus Station,1/1/79,3.5,,,,
+127,FR Maint Fac,org3,Maintenance,Bus Maintenance Facility,1/1/76,5,,,,
+128,FR,bpt,Maintenance,Bus Maintenance Facility,5/5/16,2,,,,FR Garage

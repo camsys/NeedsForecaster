@@ -42,3 +42,12 @@
 .manual-column {
     width: 61px;
 }
+
+.sogr-run-filter-explanation {
+    display: flex;
+    flex-direction: column;
+}
+
+.sogr-run-filter-explanation a {
+    width: max-content;
+}

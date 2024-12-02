@@ -1,9 +1,6 @@
 package com.camsys.assetcloud.needsforecaster.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -43,5 +40,38 @@ public class Asset {
 
     public String name;
 
+    public Integer policyReplacementYear;
+
+    public void update (Asset asset) {
+        if (this.uniqueKey == null || !this.uniqueKey.equals(asset.uniqueKey))
+            throw new IllegalArgumentException("to update, the unique keys must be the same");
+
+        this.assetId = asset.assetId;
+        this.orgKey = asset.orgKey;
+        this.assetTypeKey = asset.assetTypeKey;
+        this.assetSubTypeKey = asset.assetSubTypeKey;
+        this.inServiceDate = asset.inServiceDate;
+        this.condition = asset.condition;
+        this.odometer = asset.odometer;
+        this.vin = asset.vin;
+        this.description = asset.description;
+        this.name = asset.name;
+        this.policyReplacementYear = asset.policyReplacementYear;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Asset asset = (Asset) o;
+
+        if (uniqueKey == null) return false;
+        return uniqueKey.equals(asset.uniqueKey);//if unique key's exist and are the same they are equal
+    }
+
+    @Override
+    public String toString() {
+        return assetId + ":" + orgKey + ":" + assetTypeKey + ":" + assetSubTypeKey;
+    }
 
 }

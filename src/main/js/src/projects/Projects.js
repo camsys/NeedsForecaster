@@ -8,18 +8,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-toastify/dist/ReactToastify.css';
 import './Projects.css'
 import {IconInput} from "../lib/IconInput";
-import {Link} from "react-router-dom";
 import {FullTable} from "../lib/FullTable";
+import {Link, useSearchParams} from "react-router-dom";
 
 export const Projects = () => {
-    // TODO: Add/edit projects in separate page
-    // TODO: Fiscal year formatted as YYYY when fiscal year is included in the label context, add FY to beginning when not
-    // TODO: Move search bar to filters section and have it search on project name and description
-
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [projectTypes, setProjectTypes] = useState([]);
+    let [filters, setFilters] = useState({});
+    let [searchQuery, setSearchQuery] = useState('');
     let [projects, setProjects] = useState([]);
+    let [queriedProjects, setQueriedProjects] = useState([]);
+    let [visibleProjects, setVisibleProjects] = useState([]);
+    let [selectedProject, setSelectedProject] = useState(null);
     let [columns, setColumns] = useState({
         "ownerOrganization": true,
         "fiscalYear": true,
@@ -28,7 +29,13 @@ export const Projects = () => {
         "sogr": true,
         "projectType": true
     });
+    let [page, setPage] = useState(1);
+    let [pageSize, setPageSize] = useState(10);
+    let [selectablePages, setSelectablePages] = useState([]);
     let [loading, setLoading] = useState(false);
+    let [showModal, setShowModal] = useState(false);
+    let [searchParams, setSearchParams] = useSearchParams();
+    const runId = searchParams.get("runId");
 
     const exportActionsMenuItems = [
         {
@@ -48,6 +55,17 @@ export const Projects = () => {
         "projectType": "Type"
     }
 
+    const updateFilters = (filter, value) => {
+        if (value) {
+            setFilters({...filters, [filter]: value})
+        } else {
+            setFilters(allFilters => {
+                const {[filter]: _, ...otherFilters} = allFilters;
+                return otherFilters;
+            });
+        }
+    }
+
     const fetchProjectsWithFilters = (filters) => {
         const requestOptions = {
             method: "POST",
@@ -57,12 +75,14 @@ export const Projects = () => {
         };
 
         setLoading(true);
-        fetch(`/api/projects`, requestOptions)
+        fetch(`/api/projects${runId ? `?runId=${runId}` : ""}`, requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
                         setProjects(data);
+                        setQueriedProjects(data.filter(p => !!searchQuery ? (p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description.toLowerCase().includes(searchQuery.toLowerCase())) : p));
                         setLoading(false);
                     })
             })
@@ -83,9 +103,75 @@ export const Projects = () => {
         }
     }
 
-    const searchProjects = (query) => {
+    // const selectProject = (project) => {
+    //     selectedProjects.includes(project) ? setSelectedProjects(selectedProjects.filter(p => p != project)) : setSelectedProjects([...selectedProjects, project]);
+    // }
+
+    const confirmDelete = (projectId) => {
+        setSelectedProject(projectId);
+        setShowModal(true);
+    }
+
+    const deleteProject = (projectId) => {
+        const requestOptions = {
+            method: "DELETE",
+            credentials: "include"
+        };
+        setLoading(true);
+        fetch(`/api/projects/${projectId}`, requestOptions)
+        .then((response) => {
+            if (!response.ok) {throw Error}
+
+            let updatedProjectsList = projects.filter(p=>(p.id !== projectId));
+            setProjects(updatedProjectsList);
+            setQueriedProjects(updatedProjectsList.filter(p => !!searchQuery ? (p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description.toLowerCase().includes(searchQuery.toLowerCase())) : p));
+            setSelectedProject(null);
+            setShowModal(false);
+            setLoading(false);
+        })
+        .catch((e) => {
+            setLoading(false);
+            toast.error("Could not delete project.");
+        });
+    }
+
+    const refreshSelectablePages = () => {
+        let numPages = Math.floor((queriedProjects.length - 1) / pageSize) + 1;
+        if (numPages <= 0) {
+            setSelectablePages([]);
+        }
+        else if (numPages <= 6) {
+            setSelectablePages([...Array(numPages).keys()].map(p=>p+1));
+        }
+        else if (page <= 3) {
+            let pagesList = [...Array(5).keys()].map(p=>p+1);
+            pagesList.push(numPages);
+            setSelectablePages(pagesList);
+        } else {
+            let pagesList = [1];
+            if (page >= numPages -2) {
+                for (let i = numPages - 4; i < numPages + 1; i++) {
+                    if (i <= numPages) {
+                        pagesList.push(i);
+                    }
+                }
+            }
+            else {
+                for (let i = page - 2; i < page + 3; i++) {
+                    pagesList.push(i);
+                }
+                if (pagesList[pagesList.length - 1] != numPages) {
+                    pagesList.push(numPages);
+                }
+            }
+            setSelectablePages(pagesList);
+        }
+    }
+
+    const executeSearch = (query) => {
+        setSearchQuery(query);
         setTimeout(()=>{
-            return projects.filter(p => (p.name.toLowerCase().includes(query.toLowerCase()) || p.description.toLowerCase().includes(query.toLowerCase())));
+            setQueriedProjects(projects.filter(p => (p.name.toLowerCase().includes(query.toLowerCase()) || p.description.toLowerCase().includes(query.toLowerCase()))));
         }, 500);
     }
 
@@ -96,116 +182,154 @@ export const Projects = () => {
         };
 
         const fetchOrgs = () => {
-            setLoading(true);
             fetch("/api/orgs", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
                         setOrganizations(data);
-                        setLoading(false);
                     })
             })
             .catch((e) => {
-                setLoading(false);
                 toast.error("Could not retrieve organizations.");
             });
         }
 
         const fetchFiscalYears = () => {
-            setLoading(true);
             fetch("/api/projects/fiscal-years", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
                         setFiscalYears(data);
-                        setLoading(false);
                     })
             })
             .catch((e) => {
-                setLoading(false);
                 toast.error("Could not retrieve fiscal years.");
             });
         }
 
         const fetchProjectTypes = () => {
-            setLoading(true);
             fetch("/api/projects/types", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
                             setProjectTypes(data);
-                            setLoading(false);
                         })
                 })
                 .catch((e) => {
-                    setLoading(false);
                     toast.error("Could not retrieve organizations.");
                 });
         }
         fetchOrgs();
         fetchFiscalYears();
         fetchProjectTypes();
-        fetchProjectsWithFilters({});
     }, []);
+
+    useEffect(() => {
+        fetchProjectsWithFilters(filters);
+        setPage(1);
+    }, [filters, runId]);
+
+    useEffect(() => {
+        setVisibleProjects(queriedProjects.slice(pageSize * (page - 1), pageSize * page))
+        refreshSelectablePages();
+    }, [queriedProjects, page, pageSize]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [pageSize]);
 
     return (<>
         {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
+        {showModal && <div className={"modal-container"}>
+            <div className={"modal-frame"}>
+                <div className={"modal"}>
+                    <h2 className={"modal-header"}>Delete Project</h2>
+                    <p>Are you sure you want to delete this project?</p>
+                    <div className={"modal-buttons"}><button className={"primary-button"} onClick={()=>setShowModal(false)}>Cancel</button><button className={"primary-button danger-button"} onClick={()=>deleteProject(selectedProject)}>Delete</button></div>
+                </div>
+            </div>
+        </div>}
         <Container id={"projects-page"}>
             <div className={"page-header"}>
                 <h1>Projects</h1>
                 <Link to={"/projects/new"}><button className={"primary-button"}><FontAwesomeIcon icon="plus-circle" /><p>Add Project</p></button></Link>
             </div>
-
-            <FullTable
-                records={projects}
-                columnDefs={{
-                    "ownerOrganization": {label: "Organization", visible: true},
-                    "fiscalYear": {label: "FY", visible: true},
-                    "name": {label: "Title", visible: true},
-                    "description": {label: "Project Description", visible: true},
-                    "sogr": {label: "SOGR", visible: true, className: "icon-column"},
-                    "projectType": {label: "Type", visible: true}
-                }}
-                columnsSelectable={true}
-                filterDefs={[
-                    {
-                        name: "organization",
-                        label: "Organization",
-                        options: organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name})),
-                        includeBlank: "Select"
-                    },
-                    {
-                        name: "fy",
-                        label: "FY",
-                        options: fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()})),
-                        includeBlank: "Select"
-                    },
-                    {
-                        name: "sogr",
-                        label: "SOGR",
-                        options: [{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}],
-                        includeBlank: "Select"
-                    },
-                    {
-                        name: "project_type",
-                        label: "Type",
-                        options: projectTypes.map(t => ({key: t, value: t, name: t})),
-                        includeBlank: "Select"
+            <div className={"top-filters"}>
+                <h2>Filters</h2>
+                <div className={"filters-container"}>
+                    {runId ?
+                        <div className={"sogr-run-filter-explanation"}><p>The project list has been automatically filtered to show only the projects associated with the selected SOGR Project Builder run.</p>
+                        <p>To return to the unfiltered list of all projects, please click the button below:</p>
+                        <Link to={"/projects"}><button className={"primary-button"}>Return to full projects list</button></Link></div>
+                        :
+                        <><DropdownInput name={"organization"} label={"Organization"} options={organizations.map(o => ({key: o.orgKey, value: o.orgKey, name: o.name}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("ownerOrganization", e.target.value)}/>
+                        <DropdownInput name={"fy"} label={"FY"} options={fiscalYears.map(fy => ({key: `fy_${fy.toString()}`, value: fy, name: fy.toString()}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("fiscalYear", parseInt(e.target.value))}/>
+                        <DropdownInput name={"sogr"} label={"SOGR"} options={[{key: "sogr_true", value: true, name: "Yes"},{key: "sogr_false", value: false, name: "No"}]} includeBlank={"Select"} handleChange={(e)=>updateFilters("sogr", e.target.value)}/>
+                        <DropdownInput name={"project_type"} label={"Type"} options={projectTypes.map(t => ({key: t, value: t, name: t}))} includeBlank={"Select"} handleChange={(e)=>updateFilters("projectType", e.target.value)}/>
+                        <IconInput icon={'magnifying-glass'} name={"search_bar"} label={"Search project title/description"} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/></>
                     }
-                ]}
-                handleFilters={fetchProjectsWithFilters}
-                rowsSelectable={false}
-                defaultPageSize={10}
-                tableFormatter={formatTableData}
-                handleSearch={searchProjects}
-                searchPlaceholder={"Search project title/description"}
-                rowActions={(data)=>
-                    <td className={"actions-cell"}><Link to={`/projects/${data.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link><Link to={`/projects/${data.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View Project"}/></Link></td>
-                }
-            />
+                </div>
+            </div>
+            <div className={"projects-table-container"}>
+                <div className={"table-actions"}>
+                    {/*<ActionsButton actions={exportActionsMenuItems} icon={"file-arrow-down"} label={"Export"}/>*/}
+                    <ActionsButton actions={Object.keys(columnNameLabels).map(c => ({
+                        text: columnNameLabels[c],
+                        href: void(0),
+                        icon: (columns[c] ? 'fa-regular fa-square-check' : 'fa-regular fa-square'),
+                        handleClick: ()=>setColumns({...columns, [c]: !columns[c]})
+                    }))} icon={"table-columns"} label={"Columns"}/>
+                </div>
+                <div className={"full-table"}>
+                    <Table>
+                        <thead>
+                            <tr>
+                                {/*<th className={"icon-column"} onClick={()=>setSelectedProjects(visibleProjects.every(p => selectedProjects.includes(p)) ? [] : visibleProjects)}><FontAwesomeIcon icon={visibleProjects.every(p => selectedProjects.includes(p)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>*/}
+                                {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <th className={`${col.toLowerCase()}-column`}>{columnNameLabels[col]}</th>)}
+                                <th className={"actions-column"}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {visibleProjects.map(p => <>
+                                <tr>
+                                    {/*<td className={"icon-column"} onClick={()=>selectProject(p)}><FontAwesomeIcon icon={selectedProjects.includes(p) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>*/}
+                                    {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td className={col === "sogr" ? "icon-column" : ""}>{formatTableData(col, p[col])}</td>)}
+                                    <td className={"actions-cell"}>
+                                        <div className={"column-actions-container"}>
+                                            <Link to={`/projects/${p.id}`}><FontAwesomeIcon icon={"fa-eye"} title={"View Project"}/></Link>
+                                            <Link to={`/projects/${p.id}/edit`}><FontAwesomeIcon icon={"fa-pencil"} title={"Edit Project"}/></Link>
+                                            <FontAwesomeIcon icon={"fa-trash-can"} title={"Delete Project"} onClick={()=>confirmDelete(p.id)}/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </>)}
+                        </tbody>
+                    </Table>
+                </div>
+                <div className={"table-pagination"}>
+                    <div className={"page-size-container"}>
+                        <DropdownInput name={"page_size"} options={[{key: "page_size_10", value: 10, name: "10"},{key: "page_size_20", value: 20, name: "20"},{key: "page_size_50", value: 50, name: "50"},{key: "page_size_100", value: 100, name: "100"}]} handleChange={(e)=>setPageSize(e.target.value)} defaultValue={pageSize} noArrow={true}/>Rows per page
+                    </div>
+                    <p className={"page-info"}>Showing <b>{pageSize * (page - 1) + 1} to {pageSize * page < queriedProjects.length ? pageSize * page : queriedProjects.length}</b> of {queriedProjects.length} rows</p>
+                    <div className={"page-selector"}>
+                        {page > 1 && <FontAwesomeIcon icon={"fa-angle-left"} onClick={()=>setPage(page - 1)}/>}
+                        {selectablePages.map((p) => (
+                            <>
+                                {p === selectablePages[1] && page > 4 && <div className={"bottom-align"}>...</div>}
+                                <a className={p === page ? "current-page" : ""} href={void(0)} onClick={()=>setPage(p)}>{p}</a>
+                                {p === selectablePages[selectablePages.length-2] && p < Math.floor((queriedProjects.length - 1) / pageSize) && <div className={"bottom-align"}>...</div>}
+                            </>
+                        ))}
+                        {page <= Math.floor((queriedProjects.length - 1) / pageSize) && <FontAwesomeIcon icon={"fa-angle-right"} onClick={()=>setPage(page + 1)}/>}
+                    </div>
+                </div>
+            </div>
         </Container></>
     );
 }

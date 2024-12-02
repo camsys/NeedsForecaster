@@ -16,6 +16,7 @@ export const Policies = () => {
     let [loading, setLoading] = useState(false);
     let [selectedPolicy, setSelectedPolicy] = useState({});
     let [selectedAssetType, setSelectedAssetType] = useState({});
+    let [policyTypeRules, setPolicyTypeRules] = useState([]);
     let [selectedPolicyTypeRule, setSelectedPolicyTypeRule] = useState({});
     let [policyFields, setPolicyFields] = useState({description: null});
     let [typeRuleFields, setTypeRuleFields] = useState({serviceLifeCalculationMethod: null});
@@ -28,6 +29,7 @@ export const Policies = () => {
             credentials: "include"
         })
         .then((response) => {
+            if (!response.ok) {throw Error}
             return response
                 .json()
                 .then((data) => {
@@ -50,6 +52,7 @@ export const Policies = () => {
             credentials: "include"
         })
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -73,10 +76,12 @@ export const Policies = () => {
             credentials: "include"
         })
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
                         setTypeRuleFields({serviceLifeCalculationMethod: null});
+                        setPolicyTypeRules(policyTypeRules.map(tr => tr.id === data.id ? data : tr));
                         setSelectedPolicyTypeRule(data);
                         setLoading(false);
                     })
@@ -96,6 +101,7 @@ export const Policies = () => {
             credentials: "include"
         })
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -103,6 +109,7 @@ export const Policies = () => {
                         let newSubTypeRules = selectedPolicyTypeRule.subRules.filter(sr => sr.id !== data.id);
                         newSubTypeRules.push(data);
                         newSubTypeRules.sort((a,b) => a.assetSubType.localeCompare(b.assetSubType));
+                        setPolicyTypeRules(policyTypeRules.map(tr => tr.id === selectedPolicyTypeRule.id ? {...tr, subRules: newSubTypeRules} : tr));
                         setSelectedPolicyTypeRule({...selectedPolicyTypeRule, subRules: newSubTypeRules});
                         setLoading(false);
                     })
@@ -158,6 +165,7 @@ export const Policies = () => {
         const fetchOrgs = () => {
             fetch("/api/orgs", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -172,6 +180,7 @@ export const Policies = () => {
         const fetchAssetTypes = () => {
             fetch("/api/asset-types", requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -186,6 +195,7 @@ export const Policies = () => {
         const fetchPolicies = () => {
             fetch(`/api/policies`, requestOptions)
             .then((response) => {
+                if (!response.ok) {throw Error}
                 return response
                     .json()
                     .then((data) => {
@@ -210,11 +220,12 @@ export const Policies = () => {
 
     useEffect(() => {
         setSelectedOrganization(selectedPolicy?.ownerOrganization);
+        setPolicyTypeRules(selectedPolicy?.rules);
         setSelectedAssetType(assetTypes[0]);
     }, [selectedPolicy]);
 
     useEffect(() => {
-        setSelectedPolicyTypeRule(selectedPolicy?.rules?.filter(r => r?.assetType === selectedAssetType?.key)[0]);
+        setSelectedPolicyTypeRule(policyTypeRules?.filter(r => r?.assetType === selectedAssetType?.key)[0]);
     }, [selectedAssetType]);
 
     const changePolicy = (e) => {
@@ -226,12 +237,12 @@ export const Policies = () => {
         setSelectedAssetType(assetTypes.filter(t => t.key === e.target.value)[0]);
     }
 
-    const saveSubtypeRule = (e) => {
-        // let selectedSubtype = e.target.closest("tr").children[0].innerText;
-        // setAssetSubtypes({...assetSubtypes, [selectedAssetType.key]: {...assetSubtypes[selectedAssetType.key], [selectedSubtype]: {esl_months: subtypeRuleFields.eslMonths, esl_miles: subtypeRuleFields.eslMiles}}});
-        // setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null});
+    const updateSubtypeRuleFields = (e, field) => {
+        if (/\D/g.test(e.target.value) && e.target.value !== "") {
+            return;
+        }
+        setSubtypeRuleFields({...subtypeRuleFields, [field]: e.target.value});
     }
-
     return (<>
         {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
         <Container id={"policies-page"}>
@@ -312,7 +323,7 @@ export const Policies = () => {
                     <Table id={"subtype-rules-table"}>
                         <thead>
                             <tr>
-                                <th>Asset Subtype</th>
+                                <th>Subtype</th>
                                 <th>ESL (Mo)</th>
                                 <th>ESL (Mi)</th>
                                 <th>Actions</th>
@@ -323,8 +334,8 @@ export const Policies = () => {
                                 <>
                                     <tr key={sr.id}>
                                         <td>{sr.assetSubType}</td>
-                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_months_${sr.id}`} value={subtypeRuleFields.eslMonths} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMonths: e.target.value})}/> : sr.eslMonths}</td>
-                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_miles_${sr.id}`} value={subtypeRuleFields.eslMiles} onChange={(e) => setSubtypeRuleFields({...subtypeRuleFields, eslMiles: e.target.value})}/> : sr.eslMiles}</td>
+                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_months_${sr.id}`} value={subtypeRuleFields.eslMonths} onChange={(e) => updateSubtypeRuleFields(e, "eslMonths")}/> : sr.eslMonths}</td>
+                                        <td>{subtypeRuleFields.id === sr.id ? <input key={`esl_miles_${sr.id}`} value={subtypeRuleFields.eslMiles} onChange={(e) => updateSubtypeRuleFields(e, "eslMiles")}/> : sr.eslMiles}</td>
                                         <td>
                                             {subtypeRuleFields.id === sr.id ?
                                                 <>

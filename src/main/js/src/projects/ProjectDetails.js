@@ -17,11 +17,20 @@ export const ProjectDetails = () => {
     let [project, setProject] = useState({});
     let [organizations, setOrganizations] = useState([]);
     let [searchQuery, setSearchQuery] = useState('');
+    let [assetTypes, setAssetTypes] = useState([]);
     let [assets, setAssets] = useState([]);
     let [queriedAssets, setQueriedAssets] = useState([]);
     let [visibleAssets, setVisibleAssets] = useState([]);
     let [columns, setColumns] = useState({
-        "assetId": true
+        "assetId": true,
+        "assetTypeKey": true,
+        "assetSubTypeKey": true,
+        "inServiceDate": true,
+        "odometer": true,
+        "condition": true,
+        "vin": true,
+        "name": true,
+        "description": true
     });
     let [page, setPage] = useState(1);
     let [pageSize, setPageSize] = useState(10);
@@ -29,11 +38,23 @@ export const ProjectDetails = () => {
     let [loading, setLoading] = useState(false);
 
     const columnNameLabels = {
-        "assetId": "Asset ID"
+        "assetId": "Asset ID",
+        "assetTypeKey": "Type",
+        "assetSubTypeKey": "Subtype",
+        "inServiceDate": "In Service Date",
+        "odometer": "Odometer",
+        "condition": "Condition",
+        "vin": "VIN",
+        "name": "Name",
+        "description": "Description"
     }
 
     const formatTableData = (column, data) => {
         switch (column) {
+            case "assetTypeKey":
+                return assetTypes?.filter(t=>t.key===data)[0]?.name;
+            case "inServiceDate":
+                return new Date(data).toLocaleDateString();
             default:
                 return data;
         }
@@ -75,7 +96,7 @@ export const ProjectDetails = () => {
     const executeSearch = (query) => {
         setSearchQuery(query);
         setTimeout(()=>{
-            setQueriedAssets(assets.filter(p => (p.assetId.toLowerCase().includes(query.toLowerCase()))));
+            setQueriedAssets(assets.filter(a => (a.assetId.toLowerCase().includes(query.toLowerCase()))));
         }, 500);
     }
 
@@ -84,11 +105,26 @@ export const ProjectDetails = () => {
             method: "GET",
             credentials: "include"
         };
+        const fetchAssetTypes = () => {
+            fetch("/api/asset-types", requestOptions)
+                .then((response) => {
+                    if (!response.ok) {throw Error}
+                    return response
+                        .json()
+                        .then((data) => {
+                            setAssetTypes(data);
+                        })
+                })
+                .catch((e) => {
+                    toast.error("Could not retrieve asset types.");
+                });
+        }
         const fetchProject = () => {
             setLoading(true);
             if (projectId) {
                 fetch(`/api/projects/${projectId}`, requestOptions)
                     .then((response) => {
+                        if (!response.ok) {throw Error}
                         return response
                             .json()
                             .then((data) => {
@@ -106,6 +142,7 @@ export const ProjectDetails = () => {
             setLoading(true);
             fetch("/api/orgs", requestOptions)
                 .then((response) => {
+                    if (!response.ok) {throw Error}
                     return response
                         .json()
                         .then((data) => {
@@ -118,53 +155,15 @@ export const ProjectDetails = () => {
                     toast.error("Could not retrieve organizations.");
                 });
         }
+        fetchAssetTypes();
         fetchProject();
         fetchOrgs();
     }, []);
 
     useEffect(() => {
-        const fetchAssets = () => {
-            const requestOptions = {
-                method: "POST",
-                credentials: "include",
-                headers: {"Content-Type": "Application/JSON"}
-            };
-
-            setLoading(true);
-            // TODO: Figure out how assets will be retrieved
-            let assetData = [{id: 1, assetId: "An Asset"}];
-            setAssets(assetData);
-            setQueriedAssets(assetData.filter(p => !!searchQuery ? (p.assetId.includes(searchQuery)) : p));
-            setLoading(false);
-            // fetch(`/api/projects`, requestOptions)
-            //     .then((response) => {
-            //         return response
-            //             .json()
-            //             .then((data) => {
-            //                 [...Array(80).keys()].forEach(n => {
-            //                     data.push({
-            //                         "id": n+6,
-            //                         "name": `Curl Project ${n+4}`,
-            //                         "description": `Curl Project ${n+4} description`,
-            //                         "ownerOrganization": "bpt",
-            //                         "fiscalYear": 2025,
-            //                         "projectType": "Type 2",
-            //                         "sogr": true,
-            //                         "valid": true
-            //                     });
-            //                 });
-            //                 setProjects(data);
-            //                 setQueriedProjects(data.filter(p => !!searchQuery ? (p.name.includes(searchQuery) || p.description.includes(searchQuery)) : p));
-            //                 setLoading(false);
-            //             })
-            //     })
-            //     .catch((e) => {
-            //         setLoading(false);
-            //         toast.error("Could not retrieve projects.");
-            //     });
-        }
         if (project.sogr) {
-            fetchAssets();
+            setAssets(project.assets);
+            setQueriedAssets(project.assets);
             setPage(1);
         }
     }, [project]);
