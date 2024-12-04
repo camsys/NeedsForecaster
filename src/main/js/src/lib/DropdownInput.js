@@ -1,7 +1,7 @@
 import React from "react";
 
 export const DropdownInput = ({name, label, options, handleChange, defaultValue, includeBlank, noArrow, disabled}) => {
-    if (includeBlank) {
+    if (includeBlank && !options.some(o => o.value === "")) {
         options.unshift({key: null, value: "", name: includeBlank});
     }
 

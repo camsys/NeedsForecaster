@@ -9,17 +9,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
 
-export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, handleFilters, rowsSelectable, defaultPageSize, exportOptions, tableFormatter, handleSearch, searchPlaceholder, rowActions}) => {
+export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, handleFilters, customFilterElems, rowsSelectable, defaultPageSize, exportOptions, tableFormatter, handleSearch, searchPlaceholder, rowActions}) => {
     let [filters, setFilters] = useState({});
     let [searchQuery, setSearchQuery] = useState('');
     let [queriedRecords, setQueriedRecords] = useState([]);
     let [visibleRecords, setVisibleRecords] = useState([]);
-    let [selectedRecords, setSelectedRecords] = useState([]);
+    let [selectedRecords, setSelectedRecords] = useState(null);
+    let [selectedRecord, setSelectedRecord] = useState(null);
     let [columns, setColumns] = useState(columnDefs);
     let [page, setPage] = useState(1);
     let [pageSize, setPageSize] = useState(defaultPageSize);
     let [selectablePages, setSelectablePages] = useState([]);
-    let [loading, setLoading] = useState(false);
 
     const updateFilters = (filter, value) => {
         if (value) {
@@ -34,12 +34,15 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
 
     const executeSearch = (query) => {
         setSearchQuery(query);
-        setQueriedRecords(handleSearch(query));
+        setTimeout(() => {
+            setQueriedRecords(handleSearch(query));
+            setPage(1);
+        }, 500);
     }
 
-    const selectRecord = (record) => {
-        selectedRecords?.includes(record) ? setSelectedRecords(selectedRecords?.filter(r => r != record)) : setSelectedRecords([...selectedRecords, record]);
-    }
+    // const selectRecord = (record) => {
+    //     selectedRecords?.includes(record) ? setSelectedRecords(selectedRecords?.filter(r => r != record)) : setSelectedRecords([...selectedRecords, record]);
+    // }
 
     const refreshSelectablePages = () => {
         let numPages = Math.floor((queriedRecords?.length - 1) / pageSize) + 1;
@@ -75,13 +78,13 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
     }
 
     useEffect(() => {
-        handleFilters(filters);
-    }, [filters]);
-
-    useEffect(() => {
         setQueriedRecords(searchQuery ? handleSearch(searchQuery) : records);
         setPage(1);
     }, [records]);
+
+    useEffect(() => {
+        handleFilters(filters);
+    }, [filters]);
 
     useEffect(() => {
         setVisibleRecords(queriedRecords?.slice(pageSize * (page - 1), pageSize * page))
@@ -93,11 +96,11 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
     }, [pageSize])
 
     return (<>
-            {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
-            {(filterDefs || !!handleSearch) && (<div className={"top-filters"}>
+            {(filterDefs || !!handleSearch || customFilterElems) && (<div className={"top-filters"}>
                 <h2>Filters</h2>
                 <div className={"filters-container"}>
-                    {filterDefs.map(f=>(<DropdownInput name={f.name} label={f.label} options={f.options} includeBlank={f.includeBlank} handleChange={(e)=>updateFilters(f.name, e.target.value)}/>))}
+                    {customFilterElems}
+                    {filterDefs?.map(f=>(<DropdownInput name={f.name} label={f.label} options={f.options} includeBlank={f.includeBlank} handleChange={(e)=>updateFilters(f.name, e.target.value)}/>))}
                     {!!handleSearch && <IconInput icon={'magnifying-glass'} name={"search_bar"} label={searchPlaceholder} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>}
                 </div>
             </div>)}
@@ -115,7 +118,7 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
                     <Table>
                         <thead>
                         <tr>
-                            {rowsSelectable && <th className={"icon-column"} onClick={()=>setSelectedRecords(visibleRecords?.every(r => selectedRecords?.includes(r)) ? [] : visibleRecords)}><FontAwesomeIcon icon={visibleRecords?.every(r => selectedRecords?.includes(r)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>}
+                            {/*{rowsSelectable && <th className={"icon-column"} onClick={()=>setSelectedRecords(visibleRecords?.every(r => selectedRecords?.includes(r)) ? [] : visibleRecords)}><FontAwesomeIcon icon={visibleRecords?.every(r => selectedRecords?.includes(r)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>}*/}
                             {Object.keys(columnDefs).filter(c => columns[c].visible).map(col => <th className={`${col.toLowerCase()}-column`}>{columnDefs[col].label}</th>)}
                             <th className={"actions-column"}>Actions</th>
                         </tr>
@@ -123,7 +126,7 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
                         <tbody>
                         {visibleRecords?.map(r => <>
                             <tr>
-                                {rowsSelectable && <td className={"icon-column"} onClick={()=>selectRecord(r)}><FontAwesomeIcon icon={selectedRecords.includes(r) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>}
+                                {/*{rowsSelectable && <td className={"icon-column"} onClick={()=>selectRecord(r)}><FontAwesomeIcon icon={selectedRecords.includes(r) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>}*/}
                                 {Object.keys(columnDefs).filter(c => columns[c].visible).map(col => <td className={columnDefs[col].className || ""}>{tableFormatter(col, r[col])}</td>)}
                                 {!!rowActions && rowActions(r)}
                             </tr>
