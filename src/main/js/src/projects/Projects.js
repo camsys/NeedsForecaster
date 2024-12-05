@@ -222,6 +222,7 @@ export const Projects = () => {
                 tableFormatter={formatTableData}
                 handleSearch={!runId ? executeSearch : null}
                 searchPlaceholder={"Search project title/description"}
+                searchPosition={"filters"}
                 rowActions={tableRowActions}
             />
         </Container></>

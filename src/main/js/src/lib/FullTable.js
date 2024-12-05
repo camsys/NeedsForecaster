@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
 
-export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, handleFilters, customFilterElems, rowsSelectable, defaultPageSize, exportOptions, tableFormatter, handleSearch, searchPlaceholder, rowActions}) => {
+export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, handleFilters, customFilterElems, rowsSelectable, defaultPageSize, exportOptions, tableFormatter, handleSearch, searchPlaceholder, searchPosition, rowActions}) => {
     let [filters, setFilters] = useState({});
     let [searchQuery, setSearchQuery] = useState('');
     let [queriedRecords, setQueriedRecords] = useState([]);
@@ -83,7 +83,9 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
     }, [records]);
 
     useEffect(() => {
-        handleFilters(filters);
+        if (!!handleFilters) {
+            handleFilters(filters);
+        }
     }, [filters]);
 
     useEffect(() => {
@@ -96,16 +98,17 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
     }, [pageSize])
 
     return (<>
-            {(filterDefs || !!handleSearch || customFilterElems) && (<div className={"top-filters"}>
+            {(filterDefs || (!!handleSearch && searchPosition === "filters") || customFilterElems) && (<div className={"top-filters"}>
                 <h2>Filters</h2>
                 <div className={"filters-container"}>
                     {customFilterElems}
                     {filterDefs?.map(f=>(<DropdownInput name={f.name} label={f.label} options={f.options} includeBlank={f.includeBlank} handleChange={(e)=>updateFilters(f.name, e.target.value)}/>))}
-                    {!!handleSearch && <IconInput icon={'magnifying-glass'} name={"search_bar"} label={searchPlaceholder} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>}
+                    {!!handleSearch && searchPosition === "filters" && <IconInput icon={'magnifying-glass'} name={"search_bar"} label={searchPlaceholder} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>}
                 </div>
             </div>)}
             <div className={"projects-table-container"}>
-                {(columnsSelectable || exportOptions) && <div className={"table-actions"}>
+                {(columnsSelectable || exportOptions || (!!handleSearch && searchPosition === "actions")) && <div className={"table-actions"}>
+                    {!!handleSearch && searchPosition === "actions" && <IconInput icon={'magnifying-glass'} name={"search_bar"} placeholder={searchPlaceholder} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>}
                     {exportOptions && <ActionsButton actions={exportOptions} icon={"file-arrow-down"} label={"Export"}/>}
                     {columnsSelectable && <ActionsButton actions={Object.keys(columnDefs).map(c => ({
                         text: columnDefs[c].label,
@@ -120,7 +123,7 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
                         <tr>
                             {/*{rowsSelectable && <th className={"icon-column"} onClick={()=>setSelectedRecords(visibleRecords?.every(r => selectedRecords?.includes(r)) ? [] : visibleRecords)}><FontAwesomeIcon icon={visibleRecords?.every(r => selectedRecords?.includes(r)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>}*/}
                             {Object.keys(columnDefs).filter(c => columns[c].visible).map(col => <th className={`${col.toLowerCase()}-column`}>{columnDefs[col].label}</th>)}
-                            <th className={"actions-column"}>Actions</th>
+                            {!!rowActions && <th className={"actions-column"}>Actions</th>}
                         </tr>
                         </thead>
                         <tbody>

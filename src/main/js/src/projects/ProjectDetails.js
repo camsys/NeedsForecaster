@@ -10,43 +10,27 @@ import 'react-toastify/dist/ReactToastify.css';
 import './ProjectDetails.css'
 import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
+import {FullTable} from "../lib/FullTable";
 
 export const ProjectDetails = () => {
     const projectId = useParams().projectId;
 
     let [project, setProject] = useState({});
     let [organizations, setOrganizations] = useState([]);
-    let [searchQuery, setSearchQuery] = useState('');
     let [assetTypes, setAssetTypes] = useState([]);
     let [assets, setAssets] = useState([]);
-    let [queriedAssets, setQueriedAssets] = useState([]);
-    let [visibleAssets, setVisibleAssets] = useState([]);
-    let [columns, setColumns] = useState({
-        "assetId": true,
-        "assetTypeKey": true,
-        "assetSubTypeKey": true,
-        "inServiceDate": true,
-        "odometer": true,
-        "condition": true,
-        "vin": true,
-        "name": true,
-        "description": true
-    });
-    let [page, setPage] = useState(1);
-    let [pageSize, setPageSize] = useState(10);
-    let [selectablePages, setSelectablePages] = useState([]);
     let [loading, setLoading] = useState(false);
 
-    const columnNameLabels = {
-        "assetId": "Asset ID",
-        "assetTypeKey": "Type",
-        "assetSubTypeKey": "Subtype",
-        "inServiceDate": "In Service Date",
-        "odometer": "Odometer",
-        "condition": "Condition",
-        "vin": "VIN",
-        "name": "Name",
-        "description": "Description"
+    const tableColumnDefs = {
+        "assetId": {label: "Asset ID", visible: true},
+        "assetTypeKey": {label: "Type", visible: true},
+        "assetSubTypeKey": {label: "Subtype", visible: true},
+        "inServiceDate": {label: "In Service Date", visible: true},
+        "odometer": {label: "Odometer", visible: true},
+        "condition": {label: "Condition", visible: true},
+        "vin": {label: "VIN", visible: true},
+        "name": {label: "Name", visible: true},
+        "description": {label: "Description", visible: true}
     }
 
     const formatTableData = (column, data) => {
@@ -60,44 +44,8 @@ export const ProjectDetails = () => {
         }
     }
 
-    const refreshSelectablePages = () => {
-        let numPages = Math.floor((queriedAssets.length - 1) / pageSize) + 1;
-        if (numPages <= 0) {
-            setSelectablePages([]);
-        }
-        else if (numPages <= 6) {
-            setSelectablePages([...Array(numPages).keys()].map(p=>p+1));
-        }
-        else if (page <= 3) {
-            let pagesList = [...Array(5).keys()].map(p=>p+1);
-            pagesList.push(numPages);
-            setSelectablePages(pagesList);
-        } else {
-            let pagesList = [1];
-            if (page >= numPages -2) {
-                for (let i = numPages - 4; i < numPages + 1; i++) {
-                    if (i <= numPages) {
-                        pagesList.push(i);
-                    }
-                }
-            }
-            else {
-                for (let i = page - 2; i < page + 3; i++) {
-                    pagesList.push(i);
-                }
-                if (pagesList[pagesList.length - 1] != numPages) {
-                    pagesList.push(numPages);
-                }
-            }
-            setSelectablePages(pagesList);
-        }
-    }
-
     const executeSearch = (query) => {
-        setSearchQuery(query);
-        setTimeout(()=>{
-            setQueriedAssets(assets.filter(a => (a.assetId.toLowerCase().includes(query.toLowerCase()))));
-        }, 500);
+        return assets.filter(a => (a.assetId.toLowerCase().includes(query.toLowerCase())));
     }
 
     useEffect(() => {
@@ -161,21 +109,10 @@ export const ProjectDetails = () => {
     }, []);
 
     useEffect(() => {
-        if (project.sogr) {
-            setAssets(project.assets);
-            setQueriedAssets(project.assets);
-            setPage(1);
+        if (project?.sogr) {
+            setAssets(project?.assets);
         }
     }, [project]);
-
-    useEffect(() => {
-        setVisibleAssets(queriedAssets.slice(pageSize * (page - 1), pageSize * page))
-        refreshSelectablePages();
-    }, [queriedAssets, page, pageSize]);
-
-    useEffect(() => {
-        setPage(1);
-    }, [pageSize])
 
     return (<>
             {loading && <div className="spinner-container"><div className={"spinner"}></div></div>}
@@ -207,53 +144,17 @@ export const ProjectDetails = () => {
                         </div>
                     </div>
                 </div>
-                {project.sogr && <div className={"assets-table-container"}>
-                    <div className={"table-actions"}>
-                        <IconInput icon={'magnifying-glass'} name={"search_bar"} placeholder={"Search Table..."} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>
-                        {/*<ActionsButton actions={exportActionsMenuItems} icon={"file-arrow-down"} label={"Export"}/>*/}
-                        <ActionsButton actions={Object.keys(columnNameLabels).map(c => ({
-                            text: columnNameLabels[c],
-                            href: void(0),
-                            icon: (columns[c] ? 'fa-regular fa-square-check' : 'fa-regular fa-square'),
-                            handleClick: ()=>setColumns({...columns, [c]: !columns[c]})
-                        }))} icon={"table-columns"} label={"Columns"}/>
-                    </div>
-                    <div className={"full-table"}>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    {/*<th className={"icon-column"} onClick={()=>setSelectedProjects(visibleProjects.every(p => selectedProjects.includes(p)) ? [] : visibleProjects)}><FontAwesomeIcon icon={visibleProjects.every(p => selectedProjects.includes(p)) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></th>*/}
-                                    {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <th className={`${col.toLowerCase()}-column`}>{columnNameLabels[col]}</th>)}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {visibleAssets.map(p => <>
-                                    <tr>
-                                        {/*<td className={"icon-column"} onClick={()=>selectProject(p)}><FontAwesomeIcon icon={selectedProjects.includes(p) ? "fa-regular fa-square-check" : "fa-regular fa-square"}/></td>*/}
-                                        {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td>{formatTableData(col, p[col])}</td>)}
-                                    </tr>
-                                </>)}
-                            </tbody>
-                        </Table>
-                    </div>
-                    <div className={"table-pagination"}>
-                        <div className={"page-size-container"}>
-                            <DropdownInput name={"page_size"} options={[{key: "page_size_10", value: 10, name: "10"},{key: "page_size_20", value: 20, name: "20"},{key: "page_size_50", value: 50, name: "50"},{key: "page_size_100", value: 100, name: "100"}]} handleChange={(e)=>setPageSize(e.target.value)} defaultValue={pageSize} noArrow={true}/>Rows per page
-                        </div>
-                        <p className={"page-info"}>Showing <b>{pageSize * (page - 1) + 1} to {pageSize * page < queriedAssets.length ? pageSize * page : queriedAssets.length}</b> of {queriedAssets.length} rows</p>
-                        <div className={"page-selector"}>
-                            {page > 1 && <FontAwesomeIcon icon={"fa-angle-left"} onClick={()=>setPage(page - 1)}/>}
-                            {selectablePages.map((p) => (
-                                <>
-                                    {p === selectablePages[1] && page > 4 && <div className={"bottom-align"}>...</div>}
-                                    <a className={p === page ? "current-page" : ""} href={void(0)} onClick={()=>setPage(p)}>{p}</a>
-                                    {p === selectablePages[selectablePages.length-2] && p < Math.floor((queriedAssets.length - 1) / pageSize) && <div className={"bottom-align"}>...</div>}
-                                </>
-                            ))}
-                            {page <= Math.floor((queriedAssets.length - 1) / pageSize) && <FontAwesomeIcon icon={"fa-angle-right"} onClick={()=>setPage(page + 1)}/>}
-                        </div>
-                    </div>
-                </div>}
+                {project?.sogr && <FullTable
+                    records={assets}
+                    columnDefs={tableColumnDefs}
+                    columnsSelectable={true}
+                    rowsSelectable={false}
+                    defaultPageSize={10}
+                    tableFormatter={formatTableData}
+                    handleSearch={executeSearch}
+                    searchPlaceholder={"Search Table..."}
+                    searchPosition={"actions"}
+                />}
             </Container></>
     );
 }
