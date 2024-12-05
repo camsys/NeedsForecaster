@@ -61,3 +61,57 @@
     gap: 32px;
     background: rgba(255, 255, 255, 0.5);
 }
+
+#project-form-page .page-header b {
+    font-style: italic;
+}
+
+.project-form {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 32px;
+    gap: 32px;
+    background: #F4F7F9;
+}
+
+.project-form-left, .project-form-right {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+}
+
+.project-form input, .project-form textarea {
+    width: 100%;
+}
+
+.project-form-dropdowns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.project-form-dropdowns .dropdown-group {
+    width: 100%;
+    flex: 1;
+}
+
+.project-form-left .owner-organization-group {
+    flex: 12 !important;
+}
+
+.project-form-left .fiscal-year-group {
+    flex: 3 !important;
+}
+
+.project-form-left .project-type-group {
+    flex: 5 !important;
+}
+
+.project-form-right textarea {
+    height: 114px;
+    padding: 10px 12px 10px 16px;
+    border-radius: 18px;
+}

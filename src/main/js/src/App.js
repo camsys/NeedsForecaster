@@ -9,7 +9,6 @@ import "./App.css";
 import {Home} from "./Home";
 import {Policies} from "./policies/Policies";
 import {Projects} from "./projects/Projects";
-import {ProjectForm} from "./projects/ProjectForm";
 import {ProjectDetails} from "./projects/ProjectDetails";
 import {SogrBuilder} from "./sogr-builder/SogrBuilder";
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -26,9 +25,9 @@ export default function App() {
 					<Route exact path="/" element={ <Home/> } />
 					<Route exact path="/policies" element={ <Policies/> } />
 					<Route exact path="/projects" element={ <Projects/> } />
-					<Route exact path="/projects/new" element={ <ProjectForm mode={"add"}/> } />
-					<Route exact path="/projects/:projectId" element={ <ProjectDetails/> } />
-					<Route exact path="/projects/:projectId/edit" element={ <ProjectForm mode={"edit"}/> } />
+					<Route exact path="/projects/new" element={ <ProjectDetails mode={"add"}/> } />
+					<Route exact path="/projects/:projectId" element={ <ProjectDetails mode={"view"}/> } />
+					<Route exact path="/projects/:projectId/edit" element={ <ProjectDetails mode={"edit"}/> } />
 					<Route exact path="/sogr-builder" element={ <SogrBuilder/> } />
 				</Routes>
 			</HashRouter>  		
