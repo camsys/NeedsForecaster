@@ -26,8 +26,9 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     @Query("select max(p.fiscalYear) from Project p")
     Integer getMaxProjectFiscalYear();
 
-    @Query("select p from Project p " +
+    @Query("select distinct p from Project p join fetch p._assets a " +
             "where p.sogr = true and p.fiscalYear >= :#{#run.fiscalYear} and p.fiscalYear < :#{#run.fiscalYear} + :#{#run.yearRange} " +
-            "and p.ownerOrganization = :#{#run.ownerOrganization}")
+            "and p.ownerOrganization = :#{#run.ownerOrganization} " +
+            "and a.assetTypeKey in (:#{#run.assetTypeKeys})")
     List<Project> findByRun(@Param("run") ProjectBuilderRun run);
 }

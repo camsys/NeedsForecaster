@@ -70,8 +70,7 @@ public class SogrProjectManager {
     public List<Project> getProjectsByRunId(Long runId) {
         ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
 
-        //use database to get initial list of projects and then do a final filter by the run's asset types
-        return projectRepository.findByRun(run).stream().filter(p -> run.assetTypeKeys.contains(p.assetTypeKey())).toList();
+        return projectRepository.findByRun(run);
     }
 
 }
