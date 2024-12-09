@@ -39,6 +39,8 @@ public class ProjectBuilderRun {
 
     public Date completeOn;
 
+    public Integer numProjectsInRange;
+
     public boolean isValidRunCreate() {
         return assetTypeKeys != null && assetTypeKeys.size() > 0 &&
                 yearRange != null && yearRange.intValue() > 0 &&

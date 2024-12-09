@@ -50,6 +50,10 @@ public class SogrProjectManager {
 
             @Override
             public void callbackComplete(Long runId) {
+                //update all runs project count value
+                List<ProjectBuilderRun> runs = projectBuilderRunRepository.list();
+                runs.forEach(r -> projectBuilderRunRepository.updateRunProjectCount(r));
+
                 ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();
                 run.status = ProjectBuilderRunStatus.COMPLETE;
                 run.completeOn = new Date();
