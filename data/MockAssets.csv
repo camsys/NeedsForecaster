@@ -17,9 +17,9 @@ UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer
 80,BSMOWER,bpt,Capital Equipment,Other Maintenance Equipment,4/6/2017,1,,,Lawn Mower for Bus Stop Maintenance,
 81,HDTRUCKLIFT,org2,Capital Equipment,Bus Maintenance Equipment,6/27/2005,2,,,Hydraulic Lift,
 82,CONHARNCABLE,org3,Capital Equipment,Fare Collection Systems,6/16/2016,3,,,CONHARNCABLE,
-83,TIRECHBALAN,bpt,Capital Equipment,Bus Maintenance Equipment,5/21/2001,4,,,Tire changer and balancer,
-84,WHDOL,org2,Capital Equipment,Bus Maintenance Equipment,5/30/2005,5,,,High Rise Wheel Dolley,
-85,TOOLSETHAND,org3,Capital Equipment,Bus Maintenance Equipment,5/22/2000,5,,,Hand Tool Set,
+83,TIRECHBALAN,bpt,Capital Equipment,Bus Maintenance Equipment,7/1/2001,4,,,Tire changer and balancer,
+84,WHDOL,org2,Capital Equipment,Bus Maintenance Equipment,7/1/2005,5,,,High Rise Wheel Dolley,
+85,TOOLSETHAND,org3,Capital Equipment,Bus Maintenance Equipment,7/1/2000,5,,,Hand Tool Set,
 90,04292024Rail,bpt,Rail Cars,Light Rail Car,2/16/2024,5,,,,
 91,11222024,bpt,Rail Cars,Heavy Rail Car,11/1/2024,5,,,,
 95,GALLAGHER2,bpt,Parking,Parking Garage,6/30/1990,4,,,Gallagher II,Gallagher II Name
