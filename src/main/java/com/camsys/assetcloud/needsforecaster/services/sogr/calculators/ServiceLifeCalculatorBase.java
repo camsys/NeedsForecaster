@@ -10,8 +10,8 @@ public abstract class ServiceLifeCalculatorBase  {
     //gets resulting date when adding months
     protected LocalDate addMonths(LocalDate initialDate, int months) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(initialDate.getYear(), initialDate.getMonthValue(), initialDate.getDayOfMonth());
+        calendar.set(initialDate.getYear(), initialDate.getMonthValue() - 1, initialDate.getDayOfMonth());//move from local date 1-12 months to calendar 0-11 months
         calendar.add(Calendar.MONTH, months);
-        return LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        return LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));//move back to local date 1-12 months
     }
 }
