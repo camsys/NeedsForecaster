@@ -41,7 +41,7 @@ UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer
 112,815,Org2,Buses (Rubber Tire Vehicles),Bus Intercity,2/25/2008,5,209779,1M8PDMBA1CP012719,LX,
 113,4092024,bpt,Passenger,Bus Shelter,2/1/2000,5,,,Parking Garage,
 114,0409-7,org2,Passenger,Bus Shelter,1/3/2022,5,,,Bus Station,
-115,ITC,org3,Administration,Administration Building,11/1/2004,2,,,"Bus, Traing & Taxi Depot",
+115,ITC,org3,Administration,Administration Building,11/1/2004,2,,,"Bus, Training & Taxi Depot",
 116,0409-ALL7,bpt,Passenger,Bus Shelter,1/5/2000,4,,,NB Terminal,
 120,FRMAINT,bpt,Maintenance,Bus Maintenance Facility,6/30/2001,4,,,,FR Maintenance and Operations
 121,COTTAGE,Org2,Maintenance,Bus Maintenance Facility,1/1/2018,5,,,,
@@ -49,3 +49,9 @@ UniqueKey,AssetId,OrgKey,AssetType,AssetSubType,InServiceDate,Condition,Odometer
 126,UMASS_BUS,org2,Maintenance,Bus Station,1/1/1979,3.5,,,,
 127,FR Maint Fac,org3,Maintenance,Bus Maintenance Facility,1/1/1976,5,,,,
 128,FR,bpt,Maintenance,Bus Maintenance Facility,5/5/2016,2,,,,FR Garage
+129,A3,bpt,Administration,Administration Building,11/30/2023,4,,,,Main Office
+130,B4,bpt,Administration,Administration Building,3/31/2024,4,,,,Main Office
+131,C5,bpt,Administration,Administration Building,7/1/2024,4,,,,Main Office
+132,D6,bpt,Administration,Administration Building,11/15/2024,4,,,,Main Office
+133,E7,bpt,Administration,Administration Building,12/31/2024,4,,,,Main Office
+134,F8,bpt,Administration,Administration Building,1/5/2025,4,,,,Main Office
