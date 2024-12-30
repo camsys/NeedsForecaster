@@ -331,7 +331,7 @@ export const SogrBuilder = () => {
                     <div className={"page-size-container"}>
                         <DropdownInput name={"page_size"} options={[{key: "page_size_10", value: 10, name: "10"},{key: "page_size_20", value: 20, name: "20"},{key: "page_size_50", value: 50, name: "50"},{key: "page_size_100", value: 100, name: "100"}]} handleChange={(e)=>setPageSize(e.target.value)} defaultValue={pageSize} noArrow={true}/>Rows per page
                     </div>
-                    <p className={"page-info"}>Showing <b>{pageSize * (page - 1) + 1} to {pageSize * page < queriedRuns.length ? pageSize * page : queriedRuns.length}</b> of {queriedRuns.length} rows</p>
+                    <p className={"page-info"}>Showing <b>{queriedRuns?.length > 0 ? pageSize * (page - 1) + 1 : 0} to {pageSize * page < queriedRuns.length ? pageSize * page : queriedRuns.length}</b> of {queriedRuns.length} rows</p>
                     <div className={"page-selector"}>
                         {page > 1 && <FontAwesomeIcon icon={"fa-angle-left"} onClick={()=>setPage(page - 1)}/>}
                         {selectablePages.map((p) => (
