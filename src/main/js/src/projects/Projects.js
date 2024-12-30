@@ -62,6 +62,7 @@ export const Projects = () => {
                 return response
                     .json()
                     .then((data) => {
+                        data.sort((a,b) => {return a.fiscalYear - b.fiscalYear});
                         setProjects(data);
                         setLoading(false);
                     })
