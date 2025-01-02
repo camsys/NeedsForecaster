@@ -9,7 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
 
-export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, handleFilters, customFilterElems, rowsSelectable, defaultPageSize, exportOptions, tableFormatter, handleSearch, searchPlaceholder, searchPosition, rowActions}) => {
+export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, handleFilters, customFilterElems, rowsSelectable, defaultPageSize, exportOptions, exportTitleFormatter, tableFormatter, handleSearch, searchPlaceholder, searchPosition, rowActions}) => {
+    const XLSX = require("xlsx");
     let [filters, setFilters] = useState({});
     let [searchQuery, setSearchQuery] = useState('');
     let [queriedRecords, setQueriedRecords] = useState([]);
@@ -20,6 +21,28 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
     let [page, setPage] = useState(1);
     let [pageSize, setPageSize] = useState(defaultPageSize);
     let [selectablePages, setSelectablePages] = useState([]);
+
+    const exportActionsMenuItems = [
+        {
+            text: "CSV",
+            href: void (0),
+            icon: "file-csv",
+            handleClick: () => exportTable("csv")
+        },
+        {
+            text: "XLSX",
+            href: void (0),
+            icon: "file-excel",
+            handleClick: () => exportTable("xlsx")
+        }
+    ]
+
+    const exportTable = (format) => {
+        let workbook = XLSX.utils.book_new();
+        let worksheet = XLSX.utils.json_to_sheet(queriedRecords);
+        XLSX.utils.book_append_sheet(workbook, worksheet);
+        XLSX.writeFile(workbook, `${exportTitleFormatter(filters)}_export.${format}`);
+    }
 
     const updateFilters = (filter, value) => {
         if (value) {
@@ -109,7 +132,7 @@ export const FullTable = ({records, columnDefs, columnsSelectable, filterDefs, h
             <div className={"projects-table-container"}>
                 {(columnsSelectable || exportOptions || (!!handleSearch && searchPosition === "actions")) && <div className={"table-actions"}>
                     {!!handleSearch && searchPosition === "actions" && <IconInput icon={'magnifying-glass'} name={"search_bar"} placeholder={searchPlaceholder} type={"text"} value={searchQuery} handleChange={(e) => executeSearch(e.target.value)}/>}
-                    {exportOptions && <ActionsButton actions={exportOptions} icon={"file-arrow-down"} label={"Export"}/>}
+                    {exportOptions && <ActionsButton actions={exportActionsMenuItems.filter(a => exportOptions.includes(a.text))} icon={"file-arrow-down"} label={"Export"}/>}
                     {columnsSelectable && <ActionsButton actions={Object.keys(columnDefs).map(c => ({
                         text: columnDefs[c].label,
                         href: void(0),
