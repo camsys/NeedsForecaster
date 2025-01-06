@@ -37,7 +37,8 @@
     "react-stomp": "^5.1.0",
     "react-toastify": "8.2.0",
     "react-use-cookie": "^1.4.0",
-    "universal-cookie": "^4.0.4"
+    "universal-cookie": "^4.0.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

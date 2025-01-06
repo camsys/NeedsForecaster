@@ -22,15 +22,6 @@ export const Projects = () => {
     let [searchParams, setSearchParams] = useSearchParams();
     const runId = searchParams.get("runId");
 
-    const exportActionsMenuItems = [
-        {
-            text: "Dummy Export",
-            href: void(0),
-            icon: null,
-            handleClick: ()=>console.log("Not really exporting table.")
-        }
-    ]
-
     const tableColumnDefs = {
         "ownerOrganization": {label: "Organization", visible: true},
         "fiscalYear": {label: "FY", visible: true},
@@ -62,6 +53,7 @@ export const Projects = () => {
                 return response
                     .json()
                     .then((data) => {
+                        data.sort((a,b) => {return a.fiscalYear - b.fiscalYear});
                         setProjects(data);
                         setLoading(false);
                     })
@@ -81,6 +73,18 @@ export const Projects = () => {
             default:
                 return data;
         }
+    }
+
+    const formatExportTitle = (filters) => {
+        let sogrString = () => {switch (filters.sogr) {
+            case 'true':
+                return 'SOGR';
+            case 'false':
+                return 'Manual'
+            default:
+                return 'All';
+        }};
+        return [organizations.filter(o=>(o.orgKey === filters.ownerOrganization))[0]?.name, filters.fiscalYear, sogrString(), filters.projectType].filter(Boolean).join("_") + "_Projects";
     }
 
     // const selectProject = (project) => {
@@ -224,6 +228,8 @@ export const Projects = () => {
                 searchPlaceholder={"Search project title/description"}
                 searchPosition={"filters"}
                 rowActions={tableRowActions}
+                exportOptions={["CSV", "XLSX"]}
+                exportTitleFormatter={(filters)=>formatExportTitle(filters)}
             />
         </Container></>
     );

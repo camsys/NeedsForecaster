@@ -110,7 +110,7 @@ export const ProjectDetails = ({mode}) => {
             case "assetTypeKey":
                 return assetTypes?.filter(t=>t.key===data)[0]?.name;
             case "inServiceDate":
-                return new Date(data).toLocaleDateString();
+                return new Date(data).toLocaleDateString('en-US', {timeZone: 'UTC'});
             default:
                 return data;
         }

@@ -233,6 +233,7 @@ export const Policies = () => {
     }
 
     const selectAssetType = (e) => {
+        setTypeRuleFields({serviceLifeCalculationMethod: null});
         setSubtypeRuleFields({id: null, eslMonths: null, eslMiles: null})
         setSelectedAssetType(assetTypes.filter(t => t.key === e.target.value)[0]);
     }
