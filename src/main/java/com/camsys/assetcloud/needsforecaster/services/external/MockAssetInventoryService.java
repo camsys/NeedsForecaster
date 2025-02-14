@@ -51,4 +51,14 @@ public class MockAssetInventoryService implements AssetInventoryService {
     public void broadcastAssetUpdates(List<Asset> assets) {
         System.out.println("Broadcast asset updates (size: " + assets.size() + ")");
     }
+
+    @Override
+    public void setToken(String token) {
+
+    }
+
+    @Override
+    public String testRoundTrip() {
+        return "Asset Inventory API round trip completed successfully (mock result)";
+    }
 }
