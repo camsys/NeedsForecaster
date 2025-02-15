@@ -53,6 +53,11 @@ public class MockAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
+    public void setServer(String callingServerName) {
+
+    }
+
+    @Override
     public void setToken(String token) {
 
     }

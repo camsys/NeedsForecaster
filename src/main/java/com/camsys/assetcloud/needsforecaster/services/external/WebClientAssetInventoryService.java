@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service("AIService")
 @Primary
@@ -19,6 +20,7 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
     private static final Logger LOG = LoggerFactory.getLogger(WebClientAssetInventoryService.class);
     HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory ();
     private RestTemplate restTemplate = new RestTemplate(factory);
+    private String server;
     private String token = null;
 
     @Override
@@ -39,6 +41,13 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
+    public void setServer(String callingServerName) {
+        this.server = (Objects.equals(callingServerName, "localhost"))
+                ? "http://localhost:8080"
+                : String.format("https://%s", callingServerName.replace("needs-forecaster", "inventory"));
+    }
+
+    @Override
     public void setToken(String token) {
         LOG.info("token: {}", token);
         this.token = token;
@@ -51,7 +60,7 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(token);
 
-        String resourceUrl = "http://localhost:8080/assets/schemas/list";
+        String resourceUrl = server + "/assets/schemas/list";
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         ResponseEntity<String> rawResponse = restTemplate.exchange(resourceUrl, HttpMethod.GET, entity, String.class);

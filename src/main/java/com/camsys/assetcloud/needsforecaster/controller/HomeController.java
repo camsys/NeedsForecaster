@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class HomeController extends BasePage {
@@ -29,9 +30,12 @@ public class HomeController extends BasePage {
 	}
 
 	@GetMapping("/")
-	public String index(Model model, @RequestParam(required = false)String token, @RequestParam(required = false)String username) throws Exception {
+	public String index(HttpServletRequest request, Model model, @RequestParam(required = false)String token, @RequestParam(required = false)String username) throws Exception {
+		aiService.setServer(request.getServerName());
 		if (token != null) aiService.setToken(token);
 		if (username != null) this.username = username;
+		LOG.info("The called server name is: {}", request.getServerName());
+
 		return "index";
 	}
 
