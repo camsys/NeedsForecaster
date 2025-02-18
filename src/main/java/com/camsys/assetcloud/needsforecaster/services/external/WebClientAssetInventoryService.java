@@ -3,6 +3,8 @@ package com.camsys.assetcloud.needsforecaster.services.external;
 import com.camsys.assetcloud.needsforecaster.controller.HomeController;
 import com.camsys.assetcloud.needsforecaster.model.Asset;
 import com.camsys.assetcloud.needsforecaster.model.Org;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -11,8 +13,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service("AIService")
 @Primary
@@ -25,8 +26,39 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
 
     @Override
     public List<Org> getOrgs() {
-        //TODO: use web client to get list of orgs
-        return List.of();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(token);
+
+        String resourceUrl = server + "/users/get/loggedInUserAttributes";
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, Object> map = new HashMap<>();
+
+        // Get logged in user attributes from Asset Inventory.
+        ResponseEntity<String> rawResponse = restTemplate.exchange(resourceUrl, HttpMethod.GET, entity, String.class);
+
+        // Parse readOrgs out of JSON
+        try {
+            map = mapper.readValue(rawResponse.getBody(), new TypeReference<HashMap<String, Object>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<String> orgList = (ArrayList<String>)map.get("readOrgs");
+
+        // Convert "short_name : long_name" format to Orgs orgKey and name
+        List<Org> organizations = new ArrayList<>(orgList.size());
+        Org organization = null;
+        for (String orgString : orgList) {
+            organization = new Org();
+            String[] parts = orgString.split(" : ", 2);
+            organization.orgKey = parts[0];
+            organization.name = parts[1];
+            organizations.add(organization);
+        }
+        organizations.sort((o1, o2) -> o1.name.compareTo(o2.name));
+        return organizations;
     }
 
     @Override
@@ -49,7 +81,6 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
 
     @Override
     public void setToken(String token) {
-        LOG.info("token: {}", token);
         this.token = token;
     }
 
