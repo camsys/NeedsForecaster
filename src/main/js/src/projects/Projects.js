@@ -181,7 +181,7 @@ export const Projects = () => {
                         })
                 })
                 .catch((e) => {
-                    toast.error("Could not retrieve organizations.");
+                    toast.error("Could not retrieve project types.");
                 });
         }
         fetchOrgs();
