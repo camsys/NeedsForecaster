@@ -8,12 +8,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class HomeController extends BasePage {
@@ -30,13 +31,23 @@ public class HomeController extends BasePage {
 	}
 
 	@GetMapping("/")
-	public String index(HttpServletRequest request, Model model, @RequestParam(required = false)String token, @RequestParam(required = false)String username) throws Exception {
+	public String index(HttpServletRequest request, Model model) throws Exception {
+		return "index";
+	}
+
+	@GetMapping("/module")
+	@ResponseBody
+	public Map<String, Object> getModule(HttpServletRequest request, @RequestParam String token, @RequestParam String username) throws Exception {
+		Map<String, Object> data = new HashMap<>();
+		data.put("name", "Needs Forecaster");
+		data.put("menu-items", new String[][]{{"Policies", "policies"},{"Projects", "projects"},{"SOGR Project Builder", "sogr-builder"}});
+
+		aiService.setToken(token);
 		aiService.setServer(request.getServerName());
-		if (token != null) aiService.setToken(token);
-		if (username != null) this.username = username;
+		this.username = username;
 		LOG.info("The called server name is: {}", request.getServerName());
 
-		return "index";
+		return data;
 	}
 
 	@ModelAttribute("VERSION")
