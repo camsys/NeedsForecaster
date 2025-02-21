@@ -64,7 +64,12 @@ export const SogrBuilder = () => {
         }
         switch (column) {
             case 'ownerOrganization':
-                return organizations.filter(o=>(o.orgKey === data))[0].name;
+                let filtered = organizations.filter(o=>(o.orgKey === data));
+                if (filtered.length > 0) {
+                    return filtered[0].name;
+                } else {
+                    return data;
+                }
             case 'yearsRange':
                 return data === 1 ? '1 year' : `${data} years`;
             case 'assetTypeKeys':
