@@ -21,7 +21,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
     private final AssetRepository assetRepository;
 
 
-    public ReplacementOnlySogrBuilder(@Qualifier("mockAIService") AssetInventoryService aiService,
+    public ReplacementOnlySogrBuilder(@Qualifier("AIService") AssetInventoryService aiService,
                                       ProjectRepository projectRepository,
                                       ReplacementYearPolicyApplication replacementYearPolicyApplication,
                                       PolicyRepository policyRepository,
@@ -35,11 +35,6 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
 
     @Override
     public boolean build(ProjectBuilderRun run) {
-        //artificially add some time to the beginning of the build
-        try {
-            Thread.sleep(10000);//simulate run work
-        } catch (InterruptedException e) { e.printStackTrace();}
-
         //get all relevant assets
         List<Asset> activeAssets = null;
         try {
@@ -116,12 +111,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
             //swallow any exception here since we don't want to undo the whole transaction just because we couldn't broadcast successfully
             ex.printStackTrace();
         }
-
-        //artificially add some time to the end of the build
-        try {
-            Thread.sleep(10000);//simulate run work
-        } catch (InterruptedException e) { e.printStackTrace();}
-
+        
         return true;//build was successful
     }
 
