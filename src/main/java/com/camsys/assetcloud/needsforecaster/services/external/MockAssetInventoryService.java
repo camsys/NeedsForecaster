@@ -61,9 +61,4 @@ public class MockAssetInventoryService implements AssetInventoryService {
     public void setToken(String token) {
 
     }
-
-    @Override
-    public String testRoundTrip() {
-        return "Asset Inventory API round trip completed successfully (mock result)";
-    }
 }

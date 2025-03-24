@@ -11,5 +11,4 @@ public interface AssetInventoryService {
     void broadcastAssetUpdates(List<Asset> assets);
     void setServer(String callingServerName);
     void setToken(String token);
-    String testRoundTrip();
 }

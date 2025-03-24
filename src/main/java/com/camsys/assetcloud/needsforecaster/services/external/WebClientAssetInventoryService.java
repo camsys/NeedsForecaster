@@ -147,19 +147,4 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
     public void setToken(String token) {
         this.token = token;
     }
-
-    @Override
-    public String testRoundTrip() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.setBearerAuth(token);
-
-        String resourceUrl = server + "/assets/schemas/list";
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> rawResponse = restTemplate.exchange(resourceUrl, HttpMethod.GET, entity, String.class);
-
-        return rawResponse.toString();
-    }
 }

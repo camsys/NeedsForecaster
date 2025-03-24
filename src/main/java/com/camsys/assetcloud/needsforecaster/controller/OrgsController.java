@@ -21,11 +21,4 @@ public class OrgsController {
     public List<Org> listOrgs() {
         return aiService.getOrgs();
     }
-
-    // Piggybacking here for now
-    @GetMapping(value = "/api/test_api", produces = "text/plain")
-    public String testApi() {
-        return aiService.testRoundTrip();
-    }
-
 }
