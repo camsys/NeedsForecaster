@@ -24,6 +24,9 @@ public class HomeController extends BasePage {
 	@Value( "${asset-cloud.version}" )
 	private String assetCloudVersionId = null;
 
+	@Value("${module-info.menu-json}")
+	private String menuJson;
+
 	private String username = "Mr. Nobody";
 
 	public HomeController(@Qualifier("AIService") AssetInventoryService aiService) {
@@ -35,19 +38,15 @@ public class HomeController extends BasePage {
 		return "index";
 	}
 
-	@GetMapping("/module")
+	@GetMapping(value = "/module", produces = "application/json")
 	@ResponseBody
-	public Map<String, Object> getModule(HttpServletRequest request, @RequestParam String token, @RequestParam String username) throws Exception {
-		Map<String, Object> data = new HashMap<>();
-		data.put("name", "Needs Forecaster");
-		data.put("menu-items", new String[][]{{"Policies", "policies"},{"Projects", "projects"},{"SOGR Project Builder", "sogr-builder"}});
-
+	public String getModule(HttpServletRequest request, @RequestParam String token, @RequestParam String username) throws Exception {
 		aiService.setToken(token);
 		aiService.setServer(request.getServerName());
 		this.username = username;
 		LOG.info("The called server name is: {}", request.getServerName());
 
-		return data;
+		return this.menuJson;
 	}
 
 	@ModelAttribute("VERSION")
