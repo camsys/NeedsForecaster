@@ -1,8 +1,7 @@
 .DS_Store
 derby.log
 **/node_modules/**
-**/resources/static/js/**
-**/resources/static/css/**
+**/resources/static/**
 **/bin/**
 **/target/**
 **/build/**
@@ -15,3 +14,4 @@ derby.log
 .idea/*
 *.iml
 lib/*
+**/dist/**

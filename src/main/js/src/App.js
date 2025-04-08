@@ -38,7 +38,6 @@ export default function App() {
 				newestOnTop={false}
 				closeOnClick/>
 
-			<div hidden>NFv{window.env.VERSION}</div>
 		</>
 	);
 }
