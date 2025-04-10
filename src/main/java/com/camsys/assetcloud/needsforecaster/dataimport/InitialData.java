@@ -8,6 +8,7 @@ import com.camsys.assetcloud.needsforecaster.repositories.PolicyRuleRepository;
 import com.camsys.assetcloud.needsforecaster.repositories.PolicySubRuleRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class InitialData {
@@ -29,7 +31,20 @@ public class InitialData {
         this.policySubRuleRepository = policySubRuleRepository;
     }
 
-    public void load() throws IOException {
+    /**
+     * Accepted command line argument is "--resetPolicy=true" if you want to clear and reload master policy
+     **/
+    public void load(ApplicationArguments args) throws IOException {
+        List<String> values = args.getOptionValues("resetPolicy");
+        if (values != null) {
+            System.out.println("Value of resetPolicy: " + values.get(0));
+            String resetPolicy = values.get(0);
+            if ("true".equals(resetPolicy)) {//clear current policy for reload
+                policySubRuleRepository.deleteAll();
+                policyRuleRepository.deleteAll();
+                policyRepository.deleteAll();
+            }
+        }
 
         //only load if there is no policy already in the database
         if (policyRepository.count() == 0) {
