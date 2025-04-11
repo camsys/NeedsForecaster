@@ -5,5 +5,6 @@ public enum ProjectBuilderRunStatus {
     WAITING,
     PROCESSING,
     COMPLETE,
+    WARNING,
     ERROR
 }
