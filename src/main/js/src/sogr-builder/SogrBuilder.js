@@ -10,7 +10,7 @@ import {ActionsButton} from "../lib/ActionsButton";
 import {Link} from "react-router-dom";
 import {IconInput} from "../lib/IconInput";
 
-export const SogrBuilder = () => {
+export const SogrBuilder = ({ urlPath }) => {
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [rangesOfYears, setRangesOfYears] = useState([]);
@@ -93,7 +93,7 @@ export const SogrBuilder = () => {
         };
 
         setLoading(true);
-        fetch(`/api/runs`, requestOptions)
+        fetch(urlPath + `/api/runs`, requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -130,7 +130,7 @@ export const SogrBuilder = () => {
             body: JSON.stringify(formData)
         };
         setLoading(true);
-        fetch("/api/runs/new", requestOptions)
+        fetch(urlPath + "/api/runs/new", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -186,7 +186,7 @@ export const SogrBuilder = () => {
         };
 
         const fetchOrgs = () => {
-            fetch("/api/orgs", requestOptions)
+            fetch(urlPath + "/api/orgs", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -201,7 +201,7 @@ export const SogrBuilder = () => {
         }
 
         const fetchFiscalYears = () => {
-            fetch("/api/runs/fiscal-years", requestOptions)
+            fetch(urlPath + "/api/runs/fiscal-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -216,7 +216,7 @@ export const SogrBuilder = () => {
         }
 
         const fetchRangesOfYears = () => {
-            fetch("/api/runs/range-years", requestOptions)
+            fetch(urlPath + "/api/runs/range-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -231,7 +231,7 @@ export const SogrBuilder = () => {
         }
 
         const fetchAssetTypes = () => {
-            fetch("/api/asset-types", requestOptions)
+            fetch(urlPath + "/api/asset-types", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response

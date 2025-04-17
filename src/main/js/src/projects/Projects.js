@@ -11,7 +11,7 @@ import {IconInput} from "../lib/IconInput";
 import {FullTable} from "../lib/FullTable";
 import {Link, useSearchParams} from "react-router-dom";
 
-export const Projects = () => {
+export const Projects = ({ urlPath }) => {
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [projectTypes, setProjectTypes] = useState([]);
@@ -47,7 +47,7 @@ export const Projects = () => {
         };
 
         setLoading(true);
-        fetch(`/api/projects${runId ? `?runId=${runId}` : ""}`, requestOptions)
+        fetch(urlPath + `/api/projects${runId ? `?runId=${runId}` : ""}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -102,7 +102,7 @@ export const Projects = () => {
             credentials: "include"
         };
         setLoading(true);
-        fetch(`/api/projects/${projectId}`, requestOptions)
+        fetch(urlPath + `/api/projects/${projectId}`, requestOptions)
         .then((response) => {
             if (!response.ok) {throw Error}
 
@@ -141,7 +141,7 @@ export const Projects = () => {
         };
 
         const fetchOrgs = () => {
-            fetch("/api/orgs", requestOptions)
+            fetch(urlPath + "/api/orgs", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -156,7 +156,7 @@ export const Projects = () => {
         }
 
         const fetchFiscalYears = () => {
-            fetch("/api/projects/fiscal-years", requestOptions)
+            fetch(urlPath + "/api/projects/fiscal-years", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -171,7 +171,7 @@ export const Projects = () => {
         }
 
         const fetchProjectTypes = () => {
-            fetch("/api/projects/types", requestOptions)
+            fetch(urlPath + "/api/projects/types", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response

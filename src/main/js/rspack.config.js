@@ -49,7 +49,7 @@ module.exports = {
             library: { type: 'var', name: 'needs_forecaster' },
             filename: 'remoteEntry.js',
             exposes: {
-                './App': './src/App',
+                './RemoteApp': './src/RemoteApp',
             },
             // adds react as shared module
             // version is inferred from package.json
