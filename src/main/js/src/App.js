@@ -20,24 +20,25 @@ export default function App() {
 		<>
 			<HashRouter>
 				<Routes>
-					<Route exact path="/" element={ <Home/> } />
-					<Route exact path="/policies" element={ <Policies/> } />
+					<Route exact path="/" element={<Home/>}/>
+					<Route exact path="/policies" element={<Policies/>}/>
 					<Route path="projects">
-						<Route exact path="" element={ <Projects /> } />
-						<Route exact path="new" element={ <ProjectDetails mode={"add"}/> } />
-						<Route exact path=":projectId" element={ <ProjectDetails mode={"view"}/> } />
-						<Route exact path=":projectId/edit" element={ <ProjectDetails mode={"edit"}/> } />
+						<Route exact path="" element={<Projects/>}/>
+						<Route exact path="new" element={<ProjectDetails mode={"add"}/>}/>
+						<Route exact path=":projectId" element={<ProjectDetails mode={"view"}/>}/>
+						<Route exact path=":projectId/edit" element={<ProjectDetails mode={"edit"}/>}/>
 					</Route>
-					<Route exact path="/sogr-builder" element={ <SogrBuilder/> } />
+					<Route exact path="/sogr-builder" element={<SogrBuilder/>}/>
 				</Routes>
-			</HashRouter>  		
-			<ToastContainer 
+			</HashRouter>
+			<ToastContainer
 				position="bottom-left"
 				autoClose={5000}
 				hideProgressBar
 				newestOnTop={false}
 				closeOnClick/>
 
+			<div hidden>NFv{window.env.VERSION}</div>
 		</>
 	);
 }
