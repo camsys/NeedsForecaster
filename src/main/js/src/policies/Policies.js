@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-toastify/dist/ReactToastify.css';
 import './Policies.css'
 
-export const Policies = ({ urlPath }) => {
+export const Policies = ({ urlPath = '' }) => {
     let [organizations, setOrganizations] = useState([]);
     let [assetTypes, setAssetTypes] = useState([]);
     let [policies, setPolicies] = useState([]);

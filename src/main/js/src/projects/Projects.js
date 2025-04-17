@@ -11,7 +11,7 @@ import {IconInput} from "../lib/IconInput";
 import {FullTable} from "../lib/FullTable";
 import {Link, useSearchParams} from "react-router-dom";
 
-export const Projects = ({ urlPath }) => {
+export const Projects = ({ urlPath = '' }) => {
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [projectTypes, setProjectTypes] = useState([]);

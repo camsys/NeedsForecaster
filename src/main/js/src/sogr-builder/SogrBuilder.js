@@ -10,7 +10,7 @@ import {ActionsButton} from "../lib/ActionsButton";
 import {Link} from "react-router-dom";
 import {IconInput} from "../lib/IconInput";
 
-export const SogrBuilder = ({ urlPath }) => {
+export const SogrBuilder = ({ urlPath = '' }) => {
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [rangesOfYears, setRangesOfYears] = useState([]);

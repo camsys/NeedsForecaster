@@ -1,15 +1,11 @@
 const { ModuleFederationPlugin } = require('@module-federation/enhanced/rspack');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const path = require('path');
 const deps = require('./package.json').dependencies;
 module.exports = {
-    entry: './src/index',
-    mode: 'development',
-    devServer: {
-        static: {
-            directory: path.join(__dirname, 'dist'),
-        },
-        port: 3003,
+    entry: {
+        main: './src/index.js',
     },
     target: 'web',
     output: {

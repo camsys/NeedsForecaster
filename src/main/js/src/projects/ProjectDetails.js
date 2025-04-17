@@ -12,7 +12,7 @@ import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
 import {FullTable} from "../lib/FullTable";
 
-export const ProjectDetails = ({mode, urlPath}) => {
+export const ProjectDetails = ({mode, urlPath = ''}) => {
     const navigate = useNavigate();
     let [projectId, setProjectId] = useState(useParams().projectId);
     let [project, setProject] = useState({});

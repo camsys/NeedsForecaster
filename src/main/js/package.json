@@ -58,10 +58,10 @@
   },
   "scripts": {
     "start": "rspack serve",
-    "build": "rspack --mode production && rm -rf ../resources/static/* && cp -a build/static/* ../resources/static && cp -a dist/* ../resources/static",
+    "build": "rspack --mode production -o build/static/js && rm -rf ../resources/static/*  && cp -a build/static/* ../resources/static",
     "legacy:start": "webpack-cli serve",
     "legacy:build": "webpack --mode production",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf build/static"
   },
   "proxy": "http://localhost:8080",
   "browserslist": [
