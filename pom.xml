@@ -6,7 +6,7 @@
 		<parent>
 			<groupId>com.camsys.assetcloud</groupId>
 			<artifactId>CSAssetCloud</artifactId>
-			<version>1.17-RELEASE</version>
+			<version>1.18-RELEASE</version>
 		</parent>
 
 		<artifactId>NeedsForecaster</artifactId>
