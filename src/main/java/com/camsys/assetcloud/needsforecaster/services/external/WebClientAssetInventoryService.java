@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -132,8 +134,46 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
-    public void broadcastAssetUpdates(List<Asset> assets) {
-        //TODO: use web client to post asset data changes to asset inventory module
+    public void broadcastAssetUpdates(List<Asset> assets) throws Exception {
+        // Set up the request
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(token);
+
+        // Get org name from the first asset in the list
+        Optional<Org> optionalOrg = cachedOrgs.stream().filter((o) -> {return Objects.equals(o.orgKey, assets.get(0).orgKey);}).findFirst();
+        if (optionalOrg.isPresent()) {
+            String orgName = optionalOrg.get().toString();
+            // Org name must be in list to use in MultiValueMap with assets
+            List<String> orgNameContainer = new ArrayList<>();
+            orgNameContainer.add(orgName);
+            MultiValueMap<String, List<?>> requestBody = new LinkedMultiValueMap<String, List<?>>();
+
+            requestBody.add("org", orgNameContainer);
+            requestBody.add("assets", assets);
+
+            HttpEntity<?> entity = new HttpEntity<>(requestBody, headers);
+            ResponseEntity<String> rawResponse = restTemplate.exchange(server + "/assets/broadcastUpdates", HttpMethod.POST, entity, String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(rawResponse.getBody());
+
+            // If results are returned, print the number of assets updated, then the updated SOGR replacement year for each asset
+            if (rootNode != null) {
+                if (rootNode.get("data") != null) {
+                    System.out.println("Broadcast asset updates (size: " + ((ArrayNode) rootNode.get("data")).size() + ")");
+                    for (JsonNode asset : rootNode.get("data")) {
+                        System.out.println("SOGR Replacement Year updated to " + asset.path("Operations").path("SOGR Replacement Date").asText().replace("FY", "") + " for asset with ID: " + asset.path("Identification & Classification").path("Asset ID").asText());
+                    }
+                } else {
+                    System.out.println("No asset updates to broadcast.");
+                }
+            } else {
+                System.out.println("No response returned.");
+            }
+        } else {
+            System.out.println("Could not fetch org from assets.");
+        }
     }
 
     @Override

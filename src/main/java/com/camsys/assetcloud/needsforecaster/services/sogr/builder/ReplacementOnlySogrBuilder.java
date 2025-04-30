@@ -114,6 +114,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
         } catch (Exception ex) {
             //swallow any exception here since we don't want to undo the whole transaction just because we couldn't broadcast successfully
             ex.printStackTrace();
+            return ProjectBuilderRunResult.WARNING;
         }
 
         //build was ok, but had at least one warning
