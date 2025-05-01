@@ -160,9 +160,9 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
 
             // If results are returned, print the number of assets updated, then the updated SOGR replacement year for each asset
             if (rootNode != null) {
-                if (rootNode.get("data") != null) {
-                    System.out.println("Broadcast asset updates (size: " + ((ArrayNode) rootNode.get("data")).size() + ")");
-                    for (JsonNode asset : rootNode.get("data")) {
+                if (rootNode.size() != 0) {
+                    System.out.println("Broadcast asset updates (size: " + Integer.toString(rootNode.size()) + ")");
+                    for (JsonNode asset : rootNode) {
                         System.out.println("SOGR Replacement Year updated to " + asset.path("Operations").path("SOGR Replacement Date").asText().replace("FY", "") + " for asset with ID: " + asset.path("Identification & Classification").path("Asset ID").asText());
                     }
                 } else {
