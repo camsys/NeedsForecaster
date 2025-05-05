@@ -18,7 +18,6 @@ export const Home = () => {
 					<Nav.Link href="#/sogr-builder">SOGR Project Builder</Nav.Link>
 				</Nav>
 			</Navbar>
-			<h1>Welcome to Needs Forecaster, {window.env.USER_NAME}!</h1>
 		</Container>
 	);
 }

@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class HomeController extends BasePage {
@@ -27,8 +25,6 @@ public class HomeController extends BasePage {
 	@Value("${module-info.menu-json}")
 	private String menuJson;
 
-	private String username = "Mr. Nobody";
-
 	public HomeController(@Qualifier("AIService") AssetInventoryService aiService) {
 		this.aiService = aiService;
 	}
@@ -40,10 +36,8 @@ public class HomeController extends BasePage {
 
 	@GetMapping(value = "/module", produces = "application/json")
 	@ResponseBody
-	public String getModule(HttpServletRequest request, @RequestParam String token, @RequestParam String username) throws Exception {
-		aiService.setToken(token);
-		aiService.setServer(request.getServerName());
-		this.username = username;
+	public String getModule(HttpServletRequest request) throws Exception {
+		aiService.setServer(request.getServerName());//can set this here since only one AI server will be calling this instance of NF
 		LOG.info("The called server name is: {}", request.getServerName());
 
 		return this.menuJson;
@@ -52,11 +46,6 @@ public class HomeController extends BasePage {
 	@ModelAttribute("VERSION")
 	public String getVersion() {
 		return assetCloudVersionId;
-	}
-
-	@ModelAttribute("USER_NAME")
-	public String getUserName() {
-		return username;
 	}
 
 }

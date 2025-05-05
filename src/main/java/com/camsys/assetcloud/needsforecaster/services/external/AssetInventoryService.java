@@ -6,9 +6,8 @@ import com.camsys.assetcloud.needsforecaster.model.Org;
 import java.util.List;
 
 public interface AssetInventoryService {
-    List<Org> getOrgs();
-    List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) throws Exception;
-    void broadcastAssetUpdates(List<Asset> assets);
+    List<Org> getOrgs(String token);
+    List<Asset> getActiveAssets(String token, String orgKey, List<String> assetTypeKeys) throws Exception;
+    void broadcastAssetUpdates(String token, List<Asset> assets);
     void setServer(String callingServerName);
-    void setToken(String token);
 }

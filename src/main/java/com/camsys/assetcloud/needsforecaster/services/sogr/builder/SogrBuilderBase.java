@@ -16,7 +16,7 @@ public abstract class SogrBuilderBase implements SogrBuilder {
 
     //adds the context when executed asynchronously and also make sure this build happens on its own transaction
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public abstract ProjectBuilderRunResult build(ProjectBuilderRun run);
+    public abstract ProjectBuilderRunResult build(String token, ProjectBuilderRun run);
 
     public abstract Policy getCurrentPolicy(String orgKey);
 

@@ -1,6 +1,5 @@
 package com.camsys.assetcloud.needsforecaster.services.external;
 
-import com.camsys.assetcloud.needsforecaster.controller.HomeController;
 import com.camsys.assetcloud.needsforecaster.model.Asset;
 import com.camsys.assetcloud.needsforecaster.model.Org;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,18 +27,11 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
     HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory ();
     private RestTemplate restTemplate = new RestTemplate(factory);
     private String server;
-    private String token = null;
-    private List<Org> cachedOrgs = null;
 
     @Override
-    public List<Org> getOrgs() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.setBearerAuth(token);
-
-        String resourceUrl = server + "/users/get/loggedInUserAttributes";
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+    public List<Org> getOrgs(String token) {
+        HttpEntity<?> entity = createHttpEntity(token);
+        String resourceUrl = server + "/users/get/userAttributes";
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, Object> map = new HashMap<>();
 
@@ -65,29 +57,28 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
             organizations.add(organization);
         }
         organizations.sort((o1, o2) -> o1.name.compareTo(o2.name));
-        cachedOrgs = organizations;
         return organizations;
     }
 
     @Override
-    public List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) throws JsonProcessingException {
-        //TODO: use web client to get list of assets
-        Optional<Org> optionalOrg = cachedOrgs.stream().filter((o) -> {return Objects.equals(o.orgKey, orgKey);}).findFirst();
+    public List<Asset> getActiveAssets(String token, String orgKey, List<String> assetTypeKeys) throws JsonProcessingException {
+
+        List<Org> allOrgsForUser = this.getOrgs(token);
+
+        //look for requested org in user's list
+        Optional<Org> optionalOrg = allOrgsForUser.stream().filter((o) -> Objects.equals(o.orgKey, orgKey)).findFirst();
+
         if (optionalOrg.isPresent()) {
             String orgName = optionalOrg.get().toString();
             List<Asset> assets = new ArrayList<>();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-            headers.setBearerAuth(token);
-            HttpEntity<?> entity = new HttpEntity<>(headers);
+            HttpEntity<?> entity = createHttpEntity(token);
 
             // UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/assets/{org}/{types}");
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(server).path("/assets/{org}/{types}");
 
             UriComponents components = builder.buildAndExpand(orgName, assetTypeKeys.toString().replace("[", "").replace("]",""));
-            LOG.info(components.toUriString());
+
             //components = components.encode();
             LOG.info(components.toUriString());
 
@@ -132,8 +123,16 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
-    public void broadcastAssetUpdates(List<Asset> assets) {
+    public void broadcastAssetUpdates(String token, List<Asset> assets) {
         //TODO: use web client to post asset data changes to asset inventory module
+    }
+
+    private HttpEntity<?> createHttpEntity(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(headers);
     }
 
     @Override
@@ -143,8 +142,4 @@ public class WebClientAssetInventoryService implements AssetInventoryService {
                 : String.format("https://%s", callingServerName.replace("needs-forecaster", "inventory"));
     }
 
-    @Override
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

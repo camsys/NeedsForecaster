@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +55,12 @@ public class ProjectBuilderRunController {
     }
 
     @PostMapping(value = "/api/runs/new", consumes = "application/json", produces = "application/json")
-    public ProjectBuilderRun createRun(@RequestBody(required = true) ProjectBuilderRun params) {
-        if (params != null && params.isValidRunCreate())
-            return sogrProjectManager.create(params);
+    public ProjectBuilderRun createRun(HttpServletRequest request, @RequestBody(required = true) ProjectBuilderRun params) {
+        if (params != null && params.isValidRunCreate()) {
+            String token = request.getHeader("Authorization");
+            token = token != null ? token.substring(7) : null;//leave off leading "Bearer"
+            return sogrProjectManager.create(token, params);
+        }
         else throw new IllegalArgumentException("Invalid run params");
     }
 }

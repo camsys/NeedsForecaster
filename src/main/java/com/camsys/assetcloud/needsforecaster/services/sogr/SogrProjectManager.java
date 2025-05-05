@@ -30,7 +30,7 @@ public class SogrProjectManager {
         this.runner = runner;
     }
 
-    public ProjectBuilderRun create(ProjectBuilderRun newRun) {
+    public ProjectBuilderRun create(String token, ProjectBuilderRun newRun) {
         if (newRun == null) throw new IllegalArgumentException("'run' arg cannot be null");
 
         //create run
@@ -40,7 +40,7 @@ public class SogrProjectManager {
         newRun = projectBuilderRunRepository.save(newRun);
 
         //add new run to the task queue
-        runner.run(newRun, builder, new RunnerCallback() {
+        runner.run(token, newRun, builder, new RunnerCallback() {
             @Override
             public void callbackBegin(Long runId) {
                 ProjectBuilderRun run = projectBuilderRunRepository.findById(runId).orElseThrow();

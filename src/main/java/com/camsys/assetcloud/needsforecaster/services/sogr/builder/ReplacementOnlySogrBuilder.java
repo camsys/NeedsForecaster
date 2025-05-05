@@ -36,11 +36,11 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
     }
 
     @Override
-    public ProjectBuilderRunResult build(ProjectBuilderRun run) {
+    public ProjectBuilderRunResult build(String token, ProjectBuilderRun run) {
         //get all relevant assets
         List<Asset> activeAssets = null;
         try {
-            activeAssets = aiService.getActiveAssets(run.ownerOrganization, run.assetTypeKeys);
+            activeAssets = aiService.getActiveAssets(token, run.ownerOrganization, run.assetTypeKeys);
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -110,7 +110,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
 
         //call Asset Inventory API to update policy replacement years on assets
         try {
-            aiService.broadcastAssetUpdates(activeAssets);
+            aiService.broadcastAssetUpdates(token, activeAssets);
         } catch (Exception ex) {
             //swallow any exception here since we don't want to undo the whole transaction just because we couldn't broadcast successfully
             ex.printStackTrace();

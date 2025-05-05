@@ -11,14 +11,14 @@ public class AsyncSogrRunner implements SogrRunner {
 
     @Async("sogrRunnerTaskExecutor")
     @Override
-    public void run(ProjectBuilderRun run, SogrBuilder builder, RunnerCallback callbacks) {
+    public void run(String token, ProjectBuilderRun run, SogrBuilder builder, RunnerCallback callbacks) {
         System.out.println("Execute sogr run - " + Thread.currentThread().getName());
 
         if (callbacks != null) {
             callbacks.callbackBegin(run.id);
         }
 
-        ProjectBuilderRunResult result = builder.build(run);
+        ProjectBuilderRunResult result = builder.build(token, run);
         callbacks.callbackComplete(run.id, result);
 
         System.out.println("Task sogr run completed - " + Thread.currentThread().getName());
