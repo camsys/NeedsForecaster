@@ -8,6 +8,6 @@ import java.util.List;
 public interface AssetInventoryService {
     List<Org> getOrgs(String token);
     List<Asset> getActiveAssets(String token, String orgKey, List<String> assetTypeKeys) throws Exception;
-    void broadcastAssetUpdates(String token, List<Asset> assets);
+    void broadcastAssetUpdates(String token, List<Asset> assets) throws Exception;
     void setServer(String callingServerName);
 }
