@@ -12,7 +12,7 @@ import {IconInput} from "../lib/IconInput";
 import {Link} from "react-router-dom";
 import {FullTable} from "../lib/FullTable";
 
-export const ProjectDetails = ({mode}) => {
+export const ProjectDetails = ({mode, urlPath = ''}) => {
     const navigate = useNavigate();
     let [projectId, setProjectId] = useState(useParams().projectId);
     let [project, setProject] = useState({});
@@ -37,7 +37,7 @@ export const ProjectDetails = ({mode}) => {
         };
         if (projectId) {
             setLoading(true);
-            fetch(`/api/projects/${projectId}`, requestOptions)
+            fetch(urlPath + `/api/projects/${projectId}`, requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -72,7 +72,7 @@ export const ProjectDetails = ({mode}) => {
         };
 
         setLoading(true);
-        fetch(`/api/projects/${mode === "add" ? "new" : projectId}`, requestOptions)
+        fetch(urlPath + `/api/projects/${mode === "add" ? "new" : projectId}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -126,7 +126,7 @@ export const ProjectDetails = ({mode}) => {
             credentials: "include"
         };
         const fetchAssetTypes = () => {
-            fetch("/api/asset-types", requestOptions)
+            fetch(urlPath + "/api/asset-types", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -141,7 +141,7 @@ export const ProjectDetails = ({mode}) => {
         }
         const fetchOrgs = () => {
             setLoading(true);
-            fetch("/api/orgs", requestOptions)
+            fetch(urlPath + "/api/orgs", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -158,7 +158,7 @@ export const ProjectDetails = ({mode}) => {
         }
         const fetchFiscalYears = () => {
             setLoading(true);
-            fetch("/api/projects/fiscal-years", requestOptions)
+            fetch(urlPath + "/api/projects/fiscal-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -175,7 +175,7 @@ export const ProjectDetails = ({mode}) => {
         }
         const fetchProjectTypes = () => {
             setLoading(true);
-            fetch("/api/projects/types", requestOptions)
+            fetch(urlPath + "/api/projects/types", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response

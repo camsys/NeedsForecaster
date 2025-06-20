@@ -10,7 +10,7 @@ import {ActionsButton} from "../lib/ActionsButton";
 import {Link} from "react-router-dom";
 import {IconInput} from "../lib/IconInput";
 
-export const SogrBuilder = () => {
+export const SogrBuilder = ({ urlPath = '' }) => {
     let [organizations, setOrganizations] = useState([]);
     let [fiscalYears, setFiscalYears] = useState([]);
     let [rangesOfYears, setRangesOfYears] = useState([]);
@@ -64,7 +64,12 @@ export const SogrBuilder = () => {
         }
         switch (column) {
             case 'ownerOrganization':
-                return organizations.filter(o=>(o.orgKey === data))[0].name;
+                let filtered = organizations.filter(o=>(o.orgKey === data));
+                if (filtered.length > 0) {
+                    return filtered[0].name;
+                } else {
+                    return data;
+                }
             case 'yearsRange':
                 return data === 1 ? '1 year' : `${data} years`;
             case 'assetTypeKeys':
@@ -88,7 +93,7 @@ export const SogrBuilder = () => {
         };
 
         setLoading(true);
-        fetch(`/api/runs`, requestOptions)
+        fetch(urlPath + `/api/runs`, requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -125,7 +130,7 @@ export const SogrBuilder = () => {
             body: JSON.stringify(formData)
         };
         setLoading(true);
-        fetch("/api/runs/new", requestOptions)
+        fetch(urlPath + "/api/runs/new", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -181,7 +186,7 @@ export const SogrBuilder = () => {
         };
 
         const fetchOrgs = () => {
-            fetch("/api/orgs", requestOptions)
+            fetch(urlPath + "/api/orgs", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -196,7 +201,7 @@ export const SogrBuilder = () => {
         }
 
         const fetchFiscalYears = () => {
-            fetch("/api/runs/fiscal-years", requestOptions)
+            fetch(urlPath + "/api/runs/fiscal-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -211,7 +216,7 @@ export const SogrBuilder = () => {
         }
 
         const fetchRangesOfYears = () => {
-            fetch("/api/runs/range-years", requestOptions)
+            fetch(urlPath + "/api/runs/range-years", requestOptions)
                 .then((response) => {
                     if (!response.ok) {throw Error}
                     return response
@@ -226,7 +231,7 @@ export const SogrBuilder = () => {
         }
 
         const fetchAssetTypes = () => {
-            fetch("/api/asset-types", requestOptions)
+            fetch(urlPath + "/api/asset-types", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -319,7 +324,7 @@ export const SogrBuilder = () => {
                                 {Object.keys(columnNameLabels).filter(c => columns[c]).map(col => <td>{formatTableData(col, r[col])}</td>)}
                                 <td className={"actions-cell"}>
                                     <div className={"column-actions-container"}>
-                                        {r.status === "COMPLETE" && r.numProjectsInRange > 0 && <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/>({r.numProjectsInRange})</Link>}
+                                        {(r.status === "COMPLETE" || r.status === "WARNING") && r.numProjectsInRange > 0 && <Link to={`/projects?runId=${r.id}`}><FontAwesomeIcon icon={"fa-book"} title={"View Associated Projects"}/>({r.numProjectsInRange})</Link>}
                                     </div>
                                 </td>
                             </tr>

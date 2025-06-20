@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import {Container, Nav, Navbar} from 'react-bootstrap';
 
 import 'react-toastify/dist/ReactToastify.css';
+import {toast} from "react-toastify";
 
 // Home component only needed when NF is deployed alone.  Not needed as part of Asset Cloud workflow
 
 export const Home = () => {
-
 	return (
 		<Container>
 			<Navbar bg="dark" variant="dark">
@@ -18,7 +18,6 @@ export const Home = () => {
 					<Nav.Link href="#/sogr-builder">SOGR Project Builder</Nav.Link>
 				</Nav>
 			</Navbar>
-			<h1>Welcome to Needs Forecaster!</h1>
 		</Container>
 	);
 }

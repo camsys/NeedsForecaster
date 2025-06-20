@@ -6,13 +6,13 @@
 		<parent>
 			<groupId>com.camsys.assetcloud</groupId>
 			<artifactId>CSAssetCloud</artifactId>
-			<version>1.17-RELEASE</version>
+			<version>1.18-RELEASE</version>
 		</parent>
 
 		<artifactId>NeedsForecaster</artifactId>
 		<name>NeedsForecaster</name>
 		<description>NeedsForecaster</description>
-		<version>0.0.6-QA</version>
+		<version>0.1.0-SNAPSHOT</version>
 
 		<properties>
 			<java.version>17</java.version>

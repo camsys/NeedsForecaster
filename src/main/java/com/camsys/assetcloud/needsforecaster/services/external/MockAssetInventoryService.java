@@ -19,7 +19,7 @@ public class MockAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
-    public List<Org> getOrgs() {
+    public List<Org> getOrgs(String token) {
         //TBD call AI API to get list of current organizations (use same model class from AssetCloud Core?)
         //WebClient client = WebClient.create(/*put asset inventory base domain here*/);//TBD
         List<Org> organizations = new ArrayList<>();//TBD
@@ -42,13 +42,18 @@ public class MockAssetInventoryService implements AssetInventoryService {
     }
 
     @Override
-    public List<Asset> getActiveAssets(String orgKey, List<String> assetTypeKeys) throws Exception {
+    public List<Asset> getActiveAssets(String token, String orgKey, List<String> assetTypeKeys) throws Exception {
         List<Asset> allAssets = mockAssets.load();
         return allAssets.stream().filter(a -> a.orgKey.equals(orgKey) && assetTypeKeys.contains(a.assetTypeKey)).toList();
     }
 
     @Override
-    public void broadcastAssetUpdates(List<Asset> assets) {
+    public void broadcastAssetUpdates(String token, List<Asset> assets) {
         System.out.println("Broadcast asset updates (size: " + assets.size() + ")");
+    }
+
+    @Override
+    public void setServer(String callingServerName) {
+
     }
 }

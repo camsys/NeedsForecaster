@@ -1,6 +1,8 @@
 package com.camsys.assetcloud.needsforecaster.services.sogr.builder;
 
 import com.camsys.assetcloud.needsforecaster.model.*;
+import com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunResult;
+import com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunStatus;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectType;
 import com.camsys.assetcloud.needsforecaster.repositories.*;
 import com.camsys.assetcloud.needsforecaster.services.Utility;
@@ -21,7 +23,7 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
     private final AssetRepository assetRepository;
 
 
-    public ReplacementOnlySogrBuilder(@Qualifier("mockAIService") AssetInventoryService aiService,
+    public ReplacementOnlySogrBuilder(@Qualifier("AIService") AssetInventoryService aiService,
                                       ProjectRepository projectRepository,
                                       ReplacementYearPolicyApplication replacementYearPolicyApplication,
                                       PolicyRepository policyRepository,
@@ -34,24 +36,19 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
     }
 
     @Override
-    public boolean build(ProjectBuilderRun run) {
-        //artificially add some time to the beginning of the build
-        try {
-            Thread.sleep(10000);//simulate run work
-        } catch (InterruptedException e) { e.printStackTrace();}
-
+    public ProjectBuilderRunResult build(String token, ProjectBuilderRun run) {
         //get all relevant assets
         List<Asset> activeAssets = null;
         try {
-            activeAssets = aiService.getActiveAssets(run.ownerOrganization, run.assetTypeKeys);
+            activeAssets = aiService.getActiveAssets(token, run.ownerOrganization, run.assetTypeKeys);
         }
         catch (Exception ex) {
             ex.printStackTrace();
-            return false;//something went wrong - in this case, the asset import
+            return ProjectBuilderRunResult.ERROR;//something went wrong - in this case, the asset import
         }
 
         if (activeAssets == null) {
-            return false;//something went wrong so don't assume all assets are disposed
+            return ProjectBuilderRunResult.ERROR;//something went wrong so don't assume all assets are disposed
         }
 
         //get all current sogr projects for org requested in run
@@ -73,7 +70,9 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
                 replacementYearPolicyApplication.apply(policy, asset);
             } catch (Exception e) {
                 System.err.println("Replacement policy application error: policyId=" + policy.id + ", asset=" + asset.toString());
-                throw e;
+                //throw e;
+                run.status = ProjectBuilderRunStatus.WARNING;
+                continue;//go to next asset
             }
 
             //calc min allowed year
@@ -111,18 +110,16 @@ public class ReplacementOnlySogrBuilder extends SogrBuilderBase implements SogrB
 
         //call Asset Inventory API to update policy replacement years on assets
         try {
-            aiService.broadcastAssetUpdates(activeAssets);
+            aiService.broadcastAssetUpdates(token, activeAssets);
         } catch (Exception ex) {
             //swallow any exception here since we don't want to undo the whole transaction just because we couldn't broadcast successfully
             ex.printStackTrace();
         }
 
-        //artificially add some time to the end of the build
-        try {
-            Thread.sleep(10000);//simulate run work
-        } catch (InterruptedException e) { e.printStackTrace();}
+        //build was ok, but had at least one warning
+        if (run.status == ProjectBuilderRunStatus.WARNING) return ProjectBuilderRunResult.WARNING;
 
-        return true;//build was successful
+        return ProjectBuilderRunResult.SUCCESS;//build was successful
     }
 
     //TODO: MVP assumes one policy in system that everyone uses

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-toastify/dist/ReactToastify.css';
 import './Policies.css'
 
-export const Policies = () => {
+export const Policies = ({ urlPath = '' }) => {
     let [organizations, setOrganizations] = useState([]);
     let [assetTypes, setAssetTypes] = useState([]);
     let [policies, setPolicies] = useState([]);
@@ -24,7 +24,7 @@ export const Policies = () => {
 
     const getPolicy = (id) => {
         setLoading(true);
-        fetch(`/api/policies/${id}`, {
+        fetch(urlPath + `/api/policies/${id}`, {
             method: "GET",
             credentials: "include"
         })
@@ -45,7 +45,7 @@ export const Policies = () => {
 
     const editPolicy = (policy) => {
         setLoading(true);
-        fetch(`/api/policies/${selectedPolicy.id}`, {
+        fetch(urlPath + `/api/policies/${selectedPolicy.id}`, {
             method: "PUT",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(policy),
@@ -69,7 +69,7 @@ export const Policies = () => {
 
     const editPolicyRule = (policyRule) => {
         setLoading(true);
-        fetch(`/api/policy-rules/${selectedPolicyTypeRule.id}`, {
+        fetch(urlPath + `/api/policy-rules/${selectedPolicyTypeRule.id}`, {
             method: "PUT",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(policyRule),
@@ -94,7 +94,7 @@ export const Policies = () => {
 
     const editPolicySubRule = (policySubRule) => {
         setLoading(true);
-        fetch(`/api/policy-sub-rules/${policySubRule.id}`, {
+        fetch(urlPath + `/api/policy-sub-rules/${policySubRule.id}`, {
             method: "PUT",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(policySubRule),
@@ -163,7 +163,7 @@ export const Policies = () => {
         };
 
         const fetchOrgs = () => {
-            fetch("/api/orgs", requestOptions)
+            fetch(urlPath + "/api/orgs", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -178,7 +178,7 @@ export const Policies = () => {
         }
 
         const fetchAssetTypes = () => {
-            fetch("/api/asset-types", requestOptions)
+            fetch(urlPath + "/api/asset-types", requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response
@@ -193,7 +193,7 @@ export const Policies = () => {
         }
 
         const fetchPolicies = () => {
-            fetch(`/api/policies`, requestOptions)
+            fetch(urlPath + `/api/policies`, requestOptions)
             .then((response) => {
                 if (!response.ok) {throw Error}
                 return response

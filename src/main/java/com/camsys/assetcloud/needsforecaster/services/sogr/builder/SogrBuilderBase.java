@@ -4,6 +4,7 @@ import com.camsys.assetcloud.needsforecaster.model.Asset;
 import com.camsys.assetcloud.needsforecaster.model.Policy;
 import com.camsys.assetcloud.needsforecaster.model.Project;
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
+import com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunResult;
 import com.camsys.assetcloud.needsforecaster.model.enums.ProjectType;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ public abstract class SogrBuilderBase implements SogrBuilder {
 
     //adds the context when executed asynchronously and also make sure this build happens on its own transaction
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public abstract boolean build(ProjectBuilderRun run);
+    public abstract ProjectBuilderRunResult build(String token, ProjectBuilderRun run);
 
     public abstract Policy getCurrentPolicy(String orgKey);
 

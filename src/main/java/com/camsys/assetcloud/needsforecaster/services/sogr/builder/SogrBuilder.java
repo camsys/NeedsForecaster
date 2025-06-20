@@ -1,7 +1,8 @@
 package com.camsys.assetcloud.needsforecaster.services.sogr.builder;
 
 import com.camsys.assetcloud.needsforecaster.model.ProjectBuilderRun;
+import com.camsys.assetcloud.needsforecaster.model.enums.ProjectBuilderRunResult;
 
 public interface SogrBuilder {
-    boolean build(ProjectBuilderRun run);
+    ProjectBuilderRunResult build(String token, ProjectBuilderRun run);
 }
