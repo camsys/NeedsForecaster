@@ -131,7 +131,7 @@
 			<dependency>
 				<groupId>com.camsys.assetcloud</groupId>
 				<artifactId>Core</artifactId>
-				<version>1.17-RELEASE</version>
+				<version>1.18-RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
