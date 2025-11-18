@@ -1,5 +1,5 @@
 ﻿SubType,ESLMonths,ESLMiles
-Bus Shelter,48,
-Bus Station,120,
-Ferry Dock,120,
-Intermodal Terminal,120,
+Bus Shelter,360,
+Bus Station,360,
+Ferry Dock,999,
+Intermodal Terminal,999,
